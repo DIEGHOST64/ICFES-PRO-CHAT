@@ -1,0 +1,115 @@
+version: '3.9'
+
+services:
+  # ─────────────────────────────────────────
+  # Base de datos relacional
+  # ─────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: icfes_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - icfes_net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────────
+  # Base de datos vectorial
+  # ─────────────────────────────────────────
+  chromadb:
+    image: chromadb/chroma:0.5.23
+    container_name: icfes_chromadb
+    restart: unless-stopped
+    volumes:
+      - chroma_data:/chroma/chroma
+    ports:
+      - "8001:8000"
+    networks:
+      - icfes_net
+
+  # ─────────────────────────────────────────
+  # Backend principal – Laravel 11
+  # ─────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: icfes_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      APP_KEY: ${APP_KEY}
+      AI_SERVICE_URL: http://ai-service:8000
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "8080:80"
+    networks:
+      - icfes_net
+
+  # ─────────────────────────────────────────
+  # Microservicio IA – FastAPI
+  # ─────────────────────────────────────────
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: icfes_ai
+    restart: unless-stopped
+    depends_on:
+      - chromadb
+    environment:
+      CHROMA_HOST: chromadb
+      CHROMA_PORT: 8000
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3-flash-preview}
+    volumes:
+      - ./ai-service:/app
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
+    networks:
+      - icfes_net
+
+  # ─────────────────────────────────────────
+  # Frontend – React 18 + Nginx
+  # ─────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: icfes_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - icfes_net
+
+volumes:
+  postgres_data:
+  chroma_data:
+
+
+networks:
+  icfes_net:
+    driver: bridge

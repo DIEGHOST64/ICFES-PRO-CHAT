@@ -1,0 +1,38 @@
+# ── Copilot / agente interno ─────────────────────────────
+.agent/
+
+# ── Entorno y secretos ───────────────────────────────────
+.env
+*.env.local
+
+# ── Dependencias (se regeneran) ──────────────────────────
+backend/vendor/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ── Cache Python ─────────────────────────────────────────
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+ai-service/.venv/
+
+# ── Laravel ──────────────────────────────────────────────
+backend/storage/logs/*.log
+backend/storage/framework/cache/
+backend/storage/framework/sessions/
+backend/storage/framework/views/
+backend/bootstrap/cache/*.php
+
+# ── Docker ───────────────────────────────────────────────
+# Los volúmenes de datos de Docker no se guardan en el repo
+
+# ── OS ───────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE ──────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.swp
