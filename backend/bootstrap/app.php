@@ -12,8 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // API usa Bearer tokens  no necesita CSRF ni sesiones
+        // API usa Bearer tokens — no necesita CSRF ni sesiones
         $middleware->validateCsrfTokens(except: ['api/*']);
+
+        // Registrar aliases de Sanctum — necesarios en Laravel 11
+        $middleware->alias([
+            'ability'   => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+            'abilities' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

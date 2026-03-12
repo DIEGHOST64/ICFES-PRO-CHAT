@@ -1,30 +1,73 @@
 """
 RF-09, RF-23: Endpoint GET /sugerencias — Preguntas de práctica
 Devuelve preguntas aleatorias filtradas por módulo (general o específico del programa).
-
-Routing:
-  - competencia != "Específica"  →  modulo = "general"
-  - competencia == "Específica"  →  modulo = slug del programa
+Usa Gemini para generar preguntas estructuradas desde fragmentos del cuadernillo ICFES.
 """
 
+import json
 import random
+import asyncio
 from fastapi import APIRouter, Query as QueryParam
 from pydantic import BaseModel
 
 from app.services.chroma_client import ChromaService
 from app.services.rag_service import get_modulo
+from app.services.gemini_client import get_gemini_quiz_model
 
 router = APIRouter()
 
 
 class Pregunta(BaseModel):
     id: str
+    texto_base: str = ""
     enunciado: str
     opciones: list[str]
     respuesta_correcta: str
     explicacion: str
     competencia: str
     programa: str
+
+
+def _generate_questions_sync(fragments: list[str], cantidad: int,
+                             competencia: str | None, programa: str) -> list[dict]:
+    """
+    Llama a Gemini para generar preguntas de selección múltiple
+    basadas en fragmentos reales del cuadernillo ICFES.
+    """
+    context = "\n\n---\n\n".join(fragments[:5])
+    comp_label = competencia or "Competencias Genéricas Saber Pro"
+    prompt = (
+        f"Eres un experto en la prueba Saber Pro de Colombia (ICFES).\n"
+        f"Basándote EXCLUSIVAMENTE en los siguientes fragmentos del cuadernillo oficial, "
+        f"genera exactamente {cantidad} preguntas de selección múltiple para un estudiante "
+        f"de {programa} en la competencia de {comp_label}.\n\n"
+        f"FRAGMENTOS DEL CUADERNILLO:\n{context}\n\n"
+        f"REGLAS ESTRICTAS:\n"
+        f"- Cada pregunta debe ser directamente respondible con los fragmentos dados.\n"
+        f"- 4 opciones por pregunta (A, B, C, D). Solo UNA correcta.\n"
+        f"- texto_base: copia 2-5 oraciones del fragmento original que el estudiante NECESITA "
+        f"leer para poder responder la pregunta. Debe ser el contexto directo, no un resumen.\n"
+        f"- La explicación debe ser corta (1-2 oraciones) y explicar POR QUÉ la opción es correcta.\n"
+        f"- Devuelve ÚNICAMENTE un array JSON válido, sin markdown, sin texto extra.\n\n"
+        f'Formato: [{{"texto_base":"...","enunciado":"...","opciones":["A. ...","B. ...","C. ...","D. ..."],'
+        f'"respuesta_correcta":"A. ...","explicacion":"...","competencia":"{comp_label}"}}]'
+    )
+    model = get_gemini_quiz_model()
+    response = model.generate_content(prompt)
+    text = response.text.strip()
+    # Limpiar bloque markdown si Gemini lo incluye
+    if "```" in text:
+        parts = text.split("```")
+        text = parts[1] if len(parts) > 1 else parts[0]
+        if text.startswith("json"):
+            text = text[4:]
+    text = text.strip()
+    # Extraer solo el array JSON (por si Gemini añade texto antes/después)
+    start_idx = text.find("[")
+    end_idx = text.rfind("]")
+    if start_idx != -1 and end_idx != -1:
+        text = text[start_idx:end_idx + 1]
+    return json.loads(text)
 
 
 def _get_docs(collection, where: dict, limit: int = 200) -> tuple:
@@ -80,44 +123,55 @@ async def sugerencias(
     cantidad: int = QueryParam(5, ge=1, le=20, description="Número de preguntas"),
 ):
     """
-    Devuelve fragmentos de práctica desde ChromaDB.
-    Routing automático:
-      - Módulos comunes (Lectura Crítica, etc.)  →  busca en modulo='general'
-      - Módulo Específico                         →  busca en modulo=<slug del programa>
-    Prioridad: banco JSON estructurado (tipo=pregunta) → practica PDF → ejemplo PDF
+    Genera preguntas de práctica estructuradas usando Gemini sobre fragmentos del cuadernillo ICFES.
+    1. Recupera fragmentos de ChromaDB según módulo/competencia
+    2. Llama a Gemini para generar N preguntas de selección múltiple reales
+    3. Devuelve lista de Pregunta con opciones, respuesta correcta y explicación
     """
     collection = ChromaService.get_collection()
-
     if collection.count() == 0:
         return []
 
-    # Determinar módulo basándose en la competencia
     modulo = get_modulo(programa, competencia)
 
-    # Prioridad 1: banco JSON con preguntas estructuradas
-    docs, metas, ids = _get_docs_for_modulo(collection, modulo, "pregunta")
-
-    # Prioridad 2: fragmentos del cuadernillo de práctica
-    if not docs:
-        docs, metas, ids = _get_docs_for_modulo(collection, modulo, "practica")
-
-    # Prioridad 3: fragmentos de ejemplos explicados
+    # Recuperar fragmentos de contexto (practica > ejemplo > cualquier cosa)
+    docs, metas, ids = _get_docs_for_modulo(collection, modulo, "practica")
     if not docs:
         docs, metas, ids = _get_docs_for_modulo(collection, modulo, "ejemplo")
-
     if not docs:
         return []
 
-    indices = random.sample(range(len(docs)), min(cantidad, len(docs)))
+    # Seleccionar fragmentos aleatorios variados para que Gemini tenga contexto rico
+    sample_size = min(len(docs), max(cantidad * 2, 6))
+    indices = random.sample(range(len(docs)), sample_size)
+    fragments = [docs[i] for i in indices]
+    comp_meta = metas[indices[0]].get("competencia", competencia or "General") if metas else (competencia or "General")
 
-    return [
-        _adaptar_a_pregunta(
-            docs[i],
-            metas[i] if i < len(metas) else {},
-            ids[i] if i < len(ids) else str(i),
-            competencia,
-            programa,
+    # Generar preguntas con Gemini en thread pool
+    loop = asyncio.get_event_loop()
+    try:
+        raw = await loop.run_in_executor(
+            None, _generate_questions_sync, fragments, cantidad, competencia, programa
         )
-        for i in indices
-    ]
+    except Exception as e:
+        # Si Gemini falla o el JSON no es válido, devolver vacío
+        return []
+
+    preguntas = []
+    for i, item in enumerate(raw[:cantidad]):
+        try:
+            preguntas.append(Pregunta(
+                id=f"gen_{i}_{modulo}",
+                texto_base=item.get("texto_base", ""),
+                enunciado=item.get("enunciado", ""),
+                opciones=item.get("opciones", []),
+                respuesta_correcta=item.get("respuesta_correcta", ""),
+                explicacion=item.get("explicacion", ""),
+                competencia=item.get("competencia", comp_meta),
+                programa=programa,
+            ))
+        except Exception:
+            continue
+
+    return preguntas
 

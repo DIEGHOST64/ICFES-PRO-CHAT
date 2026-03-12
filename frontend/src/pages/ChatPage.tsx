@@ -6,19 +6,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { aiAPI, queriesAPI } from '../api/client';
+import { queriesAPI } from '../api/client';
 import type { ChatMessage, QueryRecord } from '../types';
 
 
 // Typing indicator animado
-const TypingIndicator: React.FC = () => (
-    <div style={{ display: 'flex', gap: '5px', padding: '14px 18px', alignItems: 'center' }}>
-        {[0, 1, 2].map(i => (
-            <span key={i} className="typing-dot" style={{ animationDelay: `${i * 0.16}s` }} />
-        ))}
-    </div>
-);
-
 // Burbuja de mensaje
 const MessageBubble: React.FC<{
     msg: ChatMessage;
@@ -55,7 +47,11 @@ const MessageBubble: React.FC<{
                     fontSize: '14px', lineHeight: '1.6',
                     boxShadow: isUser ? 'var(--shadow-glow)' : 'var(--shadow-sm)',
                 }}>
-                    {msg.content}
+                    {msg.streaming && !msg.content
+                        ? <div style={{ display: 'flex', gap: '5px', alignItems: 'center', padding: '2px 0' }}>
+                            {[0, 1, 2].map(i => <span key={i} className="typing-dot" style={{ animationDelay: `${i * 0.16}s` }} />)}
+                          </div>
+                        : <>{msg.content}{msg.streaming && <span className="streaming-cursor" />}</>}
                 </div>
 
                 {/* Fuentes + Acciones (solo asistente) */}
@@ -129,49 +125,87 @@ export const ChatPage: React.FC = () => {
 
     const handleSend = async () => {
         if (!input.trim() || loading) return;
-        if (input.trim().length < 2) return;
 
         const pregunta = input.trim();
         const programa = student?.programa || 'General';
+        const nombre = student?.nombre?.split(' ')[0] || '';
         setInput('');
         setLoading(true);
 
-        // Mensaje del usuario
         const userMsg: ChatMessage = {
             id: Date.now().toString(),
             role: 'user', content: pregunta, timestamp: new Date(),
         };
         setMessages(prev => [...prev, userMsg]);
 
+        // Placeholder de streaming
+        const aiMsgId = Date.now().toString() + '_ai';
+        setMessages(prev => [...prev, {
+            id: aiMsgId, role: 'assistant', content: '',
+            timestamp: new Date(), rated: null, streaming: true,
+        }]);
+
+        let fullText = '';
+        let fuentes: string[] = [];
+
         try {
-            const res = await aiAPI.consultar({ pregunta, programa });
-            const { respuesta, fuentes, tiempo_ms } = res.data;
-
-            // Guardar en Laravel
-            const saveRes = await queriesAPI.save({
-                programa,
-                pregunta, respuesta,
-                tiempo_respuesta_ms: tiempo_ms,
+            const AI_URL = import.meta.env.VITE_AI_URL ?? 'http://localhost:8000';
+            const res = await fetch(`${AI_URL}/consultar/stream`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pregunta, programa, nombre_estudiante: nombre }),
             });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-            const aiMsg: ChatMessage = {
-                id: Date.now().toString() + '_ai',
-                role: 'assistant', content: respuesta,
-                sources: fuentes, timestamp: new Date(),
-                rated: null, queryId: saveRes.data.id,
-            };
-            setMessages(prev => [...prev, aiMsg]);
+            const reader = res.body!.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+
+            outer: while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() ?? '';
+                for (const line of lines) {
+                    if (!line.startsWith('data: ')) continue;
+                    const raw = line.slice(6).trim();
+                    if (raw === '[DONE]') { reader.cancel(); break outer; }
+                    try {
+                        const parsed = JSON.parse(raw);
+                        if (parsed.fuentes) {
+                            fuentes = parsed.fuentes;
+                        } else if (parsed.chunk) {
+                            fullText += parsed.chunk;
+                            setMessages(prev => prev.map(m =>
+                                m.id === aiMsgId ? { ...m, content: fullText } : m
+                            ));
+                        } else if (parsed.error) {
+                            fullText = fullText || 'No pude obtener respuesta. Intenta de nuevo.';
+                        }
+                    } catch { /* JSON parcial — ignorar */ }
+                }
+            }
         } catch {
-            setMessages(prev => [...prev, {
-                id: Date.now().toString() + '_err',
-                role: 'assistant',
-                content: 'Hubo un problema al procesar tu pregunta. Por favor intenta de nuevo.',
-                timestamp: new Date(), rated: null,
-            }]);
-        } finally {
-            setLoading(false);
-            inputRef.current?.focus();
+            fullText = fullText || 'Hubo un problema al procesar tu pregunta. Intenta de nuevo.';
         }
+
+        // Guardar en Laravel solo si hay respuesta
+        let queryId: number | undefined;
+        if (fullText) {
+            try {
+                const saveRes = await queriesAPI.save({ programa, pregunta, respuesta: fullText, tiempo_respuesta_ms: 0 });
+                queryId = saveRes.data.id;
+            } catch { /* continuar aunque falle el guardado */ }
+        }
+
+        setMessages(prev => prev.map(m =>
+            m.id === aiMsgId
+                ? { ...m, content: fullText, sources: fuentes, streaming: false, rated: null, queryId }
+                : m
+        ));
+        setLoading(false);
+        inputRef.current?.focus();
     };
 
     const handleRate = async (queryId: number, util: boolean) => {
@@ -191,26 +225,36 @@ export const ChatPage: React.FC = () => {
             <aside style={{
                 width: '260px', flexShrink: 0,
                 background: 'var(--surface)', borderRight: '1px solid var(--border)',
-                display: 'flex', flexDirection: 'column', padding: 'var(--space-md)',
+                display: 'flex', flexDirection: 'column',
             }}>
-                {/* Logo */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'var(--space-xl)', padding: '4px 0' }}>
-                    <div style={{ background: 'var(--primary)', borderRadius: 'var(--radius-md)', padding: '8px', boxShadow: 'var(--shadow-glow)' }}>
-                        <BookOpen size={18} color="#fff" />
+                {/* Cabecera del sidebar con gradiente */}
+                <div style={{
+                    background: 'var(--grad-primary)',
+                    padding: 'var(--space-lg) var(--space-md)',
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: 'var(--radius-md)', padding: '8px' }}>
+                            <BookOpen size={18} color="#fff" />
+                        </div>
+                        <div>
+                            <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '15px', color: '#fff', lineHeight: 1 }}>Saber Pro</p>
+                            <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.4 }}>Asistente IA</p>
+                        </div>
                     </div>
-                    <div>
-                        <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '15px', lineHeight: 1 }}>Saber Pro</p>
-                        <p style={{ fontSize: '11px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Asistente IA</p>
+                    {/* Info estudiante */}
+                    <div style={{ marginTop: 'var(--space-md)', paddingTop: 'var(--space-md)', borderTop: '1px solid rgba(255,255,255,0.15)' }}>
+                        <p style={{ fontWeight: 600, fontSize: '13px', color: '#fff', marginBottom: '4px' }}>{student?.nombre}</p>
+                        <span style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '4px',
+                            background: 'rgba(255,255,255,0.2)', color: '#fff',
+                            borderRadius: 'var(--radius-full)', padding: '3px 10px',
+                            fontSize: '11px', fontWeight: 600,
+                        }}>{student?.programa}</span>
                     </div>
-                </div>
-
-                {/* Info estudiante */}
-                <div style={{ background: 'var(--surface-2)', borderRadius: 'var(--radius-md)', padding: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
-                    <p style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>{student?.nombre}</p>
-                    <span className="badge badge-primary" style={{ fontSize: '11px' }}>{student?.programa}</span>
                 </div>
 
                 {/* Nav Buttons */}
+                <div style={{ padding: 'var(--space-md)', flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <button onClick={() => navigate('/practica')}
                     className="btn btn-secondary" style={{ marginBottom: 'var(--space-sm)', justifyContent: 'flex-start', gap: 'var(--space-sm)' }}>
                     <Dumbbell size={16} /> Preguntas de Práctica
@@ -256,6 +300,7 @@ export const ChatPage: React.FC = () => {
                         <LogOut size={15} />
                     </button>
                 </div>
+                </div>{/* end nav wrapper */}
             </aside>
 
             {/* ── Chat Area ──────────────────────────────────── */}
@@ -282,16 +327,6 @@ export const ChatPage: React.FC = () => {
                     {messages.map(msg => (
                         <MessageBubble key={msg.id} msg={msg} onRate={handleRate} />
                     ))}
-                    {loading && (
-                        <div style={{ display: 'flex', gap: 'var(--space-sm)', alignItems: 'flex-end', marginBottom: 'var(--space-md)' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-full)', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-glow)' }}>
-                                <BookOpen size={15} color="#fff" />
-                            </div>
-                            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm)', boxShadow: 'var(--shadow-sm)' }}>
-                                <TypingIndicator />
-                            </div>
-                        </div>
-                    )}
                     <div ref={bottomRef} />
                 </div>
 

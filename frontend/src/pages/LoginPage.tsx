@@ -71,44 +71,59 @@ export const LoginPage: React.FC = () => {
             justifyContent: 'center', padding: 'var(--space-lg)',
             background: 'var(--bg)',
         }}>
-            {/* Fondo decorativo */}
-            <div style={{
-                position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none',
-                zIndex: 0,
-            }}>
+            {/* Fondo decorativo — manchas de color suaves */}
+            <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
                 <div style={{
-                    position: 'absolute', top: '-20%', left: '-10%',
-                    width: '500px', height: '500px', borderRadius: '50%',
-                    background: 'radial-gradient(circle, var(--primary-glow) 0%, transparent 70%)',
+                    position: 'absolute', top: '-15%', right: '-8%',
+                    width: '480px', height: '480px', borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(79,70,229,0.10) 0%, transparent 70%)',
                 }} />
                 <div style={{
-                    position: 'absolute', bottom: '-20%', right: '-10%',
-                    width: '400px', height: '400px', borderRadius: '50%',
-                    background: 'radial-gradient(circle, var(--primary-glow) 0%, transparent 70%)',
+                    position: 'absolute', bottom: '-15%', left: '-8%',
+                    width: '420px', height: '420px', borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(5,150,105,0.10) 0%, transparent 70%)',
                 }} />
+                {/* Puntos decorativos tipo "estudiantil" */}
+                <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.04 }}>
+                    <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+                        <circle cx="3" cy="3" r="2" fill="var(--primary)" />
+                    </pattern>
+                    <rect width="100%" height="100%" fill="url(#dots)" />
+                </svg>
             </div>
 
             <div className="animate-scale-in" style={{
                 width: '100%', maxWidth: '440px', position: 'relative', zIndex: 1,
             }}>
-                {/* Logo */}
+                {/* Logo + header */}
                 <div style={{ textAlign: 'center', marginBottom: 'var(--space-xl)' }}>
+                    {/* Badge UDEC */}
                     <div style={{
-                        display: 'inline-flex', padding: '14px',
-                        background: 'var(--primary)', borderRadius: 'var(--radius-lg)',
-                        marginBottom: 'var(--space-md)',
-                        boxShadow: 'var(--shadow-glow)',
+                        display: 'inline-flex', alignItems: 'center', gap: '6px',
+                        background: 'var(--accent-soft)', color: 'var(--accent)',
+                        border: '1px solid rgba(5,150,105,0.25)',
+                        borderRadius: 'var(--radius-full)', padding: '4px 12px',
+                        fontSize: '11px', fontWeight: 600, marginBottom: 'var(--space-md)',
+                        letterSpacing: '0.04em',
                     }}>
-                        <BookOpen size={28} color="#fff" />
+                        <GraduationCap size={12} /> UDEC · Fusagasugá
                     </div>
-                    <h1 style={{ fontSize: '28px', marginBottom: '6px' }}>Asistente Saber Pro</h1>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
-                        Universidad de Cundinamarca · Fusagasugá
+                    <div style={{
+                        display: 'inline-flex', padding: '16px',
+                        background: 'var(--grad-primary)', borderRadius: 'var(--radius-xl)',
+                        marginBottom: 'var(--space-md)',
+                        boxShadow: '0 8px 24px rgba(79,70,229,0.30)',
+                    }}>
+                        <BookOpen size={30} color="#fff" />
+                    </div>
+                    <h1 style={{ fontSize: '26px', marginBottom: '6px', letterSpacing: '-0.5px' }}>Asistente Saber Pro</h1>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.5 }}>
+                        Prepárate con IA para tu examen de estado
                     </p>
                 </div>
 
                 {/* Card */}
-                <div className="card" style={{ padding: 'var(--space-xl)' }}>
+                <div className="card" style={{ padding: 'var(--space-xl)', boxShadow: 'var(--shadow-lg)', borderTop: '3px solid var(--primary)' }}>
                     {/* Tabs */}
                     <div style={{
                         display: 'flex', background: 'var(--surface-2)',

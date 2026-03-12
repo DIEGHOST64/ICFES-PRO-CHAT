@@ -9,7 +9,7 @@ from functools import lru_cache
 from sentence_transformers import SentenceTransformer
 
 from app.services.chroma_client import ChromaService
-from app.services.gemini_client import generate_response
+from app.services.gemini_client import generate_response, generate_response_stream
 
 # Mapping nombre de programa → slug de módulo específico en ChromaDB
 PROGRAMA_MODULO: dict[str, str] = {
@@ -48,7 +48,25 @@ def _encode_sync(pregunta: str) -> list:
     return get_embedding_model().encode(pregunta).tolist()
 
 
-async def rag_query(pregunta: str, programa: str, competencia: str | None = None) -> dict:
+# Palabras/frases que indican charla sin contenido académico específico
+_CHITCHAT = {
+    "hola", "hi", "hey", "buenas", "saludos", "qué tal", "que tal",
+    "cómo estás", "como estas", "buenos días", "buenas tardes", "buenas noches",
+    "gracias", "ok", "okay", "perfecto", "genial", "bien", "claro",
+    "de nada", "hasta luego", "adios", "adiós", "chao",
+    # Mensajes cortos de acción / dirección sin contenido específico
+    "practicar", "práctica", "empezar", "comenzar", "vamos", "dale",
+    "listo", "bueno", "claro", "sí", "si", "no", "nada",
+    "por donde", "por dónde", "ayuda", "ayudame", "ayúdame",
+}
+
+def _is_chitchat(pregunta: str) -> bool:
+    """Detecta mensajes sin contenido académico para saltar el RAG."""
+    clean = pregunta.lower().strip().rstrip("!?.¡¿ ")
+    return len(pregunta) < 30 and clean in _CHITCHAT
+
+
+async def rag_query(pregunta: str, programa: str, nombre: str = "", competencia: str | None = None) -> dict:
     """
     Pipeline RAG completo:
     1. Genera embedding de la pregunta (en thread pool, no bloquea event loop)
@@ -57,6 +75,11 @@ async def rag_query(pregunta: str, programa: str, competencia: str | None = None
     4. Genera respuesta con Gemini Flash
     """
     start = time.time()
+
+    # Camino rápido: saludos/charla → saltar embedding + ChromaDB
+    if _is_chitchat(pregunta):
+        result = await generate_response(pregunta=pregunta, contexto=[], nombre=nombre)
+        return {**result, "tiempo_ms": int((time.time() - start) * 1000), "fragmentos_usados": 0}
 
     # Determinar módulo según competencia
     modulo = get_modulo(programa, competencia)
@@ -96,10 +119,10 @@ async def rag_query(pregunta: str, programa: str, competencia: str | None = None
     all_metas  = metas_ej + metas_pr
     all_dists  = dists_ej + dists_pr
 
-    # 3. Filtrar por similitud aceptable
+    # 3. Filtrar por similitud aceptable (umbral relajado para capturar más contexto)
     contexto = []
     for doc, meta, dist in zip(all_docs, all_metas, all_dists):
-        if dist < 0.75:
+        if dist < 0.85:
             contexto.append({
                 "text":      doc,
                 "tipo":      meta.get("tipo", "documento"),
@@ -110,7 +133,7 @@ async def rag_query(pregunta: str, programa: str, competencia: str | None = None
             })
 
     # 4. Generación con Gemini
-    result = await generate_response(pregunta=pregunta, contexto=contexto)
+    result = await generate_response(pregunta=pregunta, contexto=contexto, nombre=nombre)
 
     tiempo_ms = int((time.time() - start) * 1000)
 
@@ -119,3 +142,62 @@ async def rag_query(pregunta: str, programa: str, competencia: str | None = None
         "tiempo_ms":         tiempo_ms,
         "fragmentos_usados": len(contexto),
     }
+
+
+async def rag_query_stream(pregunta: str, programa: str, nombre: str = "", competencia: str | None = None):
+    """
+    Versión streaming del pipeline RAG.
+    Yields: primero un dict {"fuentes": [...]}, luego str chunks de Gemini.
+    """
+    # Camino rápido: saludos/charla sin RAG
+    if _is_chitchat(pregunta):
+        yield {"fuentes": []}
+        async for chunk in generate_response_stream(pregunta, [], nombre):
+            yield chunk
+        return
+
+    modulo = get_modulo(programa, competencia)
+    loop = asyncio.get_event_loop()
+    embedding = await loop.run_in_executor(None, _encode_sync, pregunta)
+
+    def query_tipo(tipo: str, n: int):
+        try:
+            return ChromaService.query(
+                embedding=embedding,
+                programa=programa,
+                n_results=n,
+                where_extra={"tipo": tipo},
+                modulo=modulo,
+            )
+        except Exception:
+            return {"documents": [[]], "metadatas": [[]], "distances": [[]]}
+
+    results_ej = query_tipo("ejemplo",  2)
+    results_pr = query_tipo("practica", 2)
+
+    def extraer(results):
+        return (
+            results.get("documents", [[]])[0],
+            results.get("metadatas", [[]])[0],
+            results.get("distances", [[]])[0],
+        )
+
+    docs_ej, metas_ej, dists_ej = extraer(results_ej)
+    docs_pr, metas_pr, dists_pr = extraer(results_pr)
+
+    contexto = []
+    for doc, meta, dist in zip(docs_ej + docs_pr, metas_ej + metas_pr, dists_ej + dists_pr):
+        if dist < 0.85:
+            contexto.append({
+                "text":     doc,
+                "tipo":     meta.get("tipo", "documento"),
+                "fuente":   meta.get("fuente", "Guía ICFES"),
+                "programa": meta.get("programa", programa),
+                "pagina":   meta.get("pagina"),
+            })
+
+    fuentes = list(set(c.get("fuente", "Guía ICFES") for c in contexto if c.get("fuente")))
+    yield {"fuentes": fuentes}
+
+    async for chunk in generate_response_stream(pregunta, contexto, nombre):
+        yield chunk

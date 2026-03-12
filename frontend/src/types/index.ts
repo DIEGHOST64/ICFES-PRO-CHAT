@@ -32,10 +32,12 @@ export interface ChatMessage {
     timestamp: Date;
     rated?: boolean | null;
     queryId?: number;
+    streaming?: boolean;
 }
 
 export interface Pregunta {
     id: string;
+    texto_base?: string;
     enunciado: string;
     opciones: string[];
     respuesta_correcta: string;

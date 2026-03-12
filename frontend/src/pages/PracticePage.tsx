@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle, XCircle, ChevronRight, RefreshCw, Trophy, BookOpen, ArrowLeft, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { aiAPI } from '../api/client';
+import { aiAPI, queriesAPI } from '../api/client';
 import type { Pregunta } from '../types';
 
 const COMPETENCIAS = ['Lectura Crítica', 'Razonamiento Cuantitativo', 'Comunicación Escrita', 'Inglés', 'Ciudadanas', 'Específica'];
@@ -27,7 +27,7 @@ export const PracticePage: React.FC = () => {
             const res = await aiAPI.sugerencias({
                 programa: student!.programa,
                 competencia: competencia || undefined,
-                cantidad: 10,
+                cantidad: 5,
             });
             if (res.data.length === 0) { setError('No hay preguntas disponibles para esos filtros.'); }
             else setPreguntas(res.data);
@@ -44,7 +44,17 @@ export const PracticePage: React.FC = () => {
         if (revealed) return;
         setSelected(opcion);
         setRevealed(true);
-        if (opcion === q.respuesta_correcta) setScore(s => s + 1);
+        const correcta = opcion === q.respuesta_correcta;
+        if (correcta) setScore(s => s + 1);
+
+        // Guardar la respuesta del estudiante en el historial
+        queriesAPI.save({
+            programa: student!.programa,
+            competencia: q.competencia,
+            pregunta: q.enunciado,
+            respuesta: `Respuesta elegida: ${opcion}\nRespuesta correcta: ${q.respuesta_correcta}\n${q.explicacion}`,
+            tiempo_respuesta_ms: 0,
+        }).catch(() => { /* no bloquear la UI si falla el guardado */ });
     };
 
     const handleNext = () => {
@@ -150,6 +160,26 @@ export const PracticePage: React.FC = () => {
                             <div style={{ display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-md)' }}>
                                 <span className="badge badge-primary">{q.competencia}</span>
                             </div>
+
+                            {/* Texto base / pasaje lector */}
+                            {q.texto_base && (
+                                <div style={{
+                                    background: 'var(--surface-3)',
+                                    border: '1px solid var(--border)',
+                                    borderLeft: '4px solid var(--primary)',
+                                    borderRadius: 'var(--radius-md)',
+                                    padding: 'var(--space-md)',
+                                    marginBottom: 'var(--space-md)',
+                                }}>
+                                    <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                                        📄 Texto de referencia
+                                    </p>
+                                    <p style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                                        {q.texto_base}
+                                    </p>
+                                </div>
+                            )}
+
                             <p style={{ fontSize: '16px', lineHeight: '1.65', fontWeight: 500 }}>{q.enunciado}</p>
                         </div>
 

@@ -34,6 +34,8 @@ export const DashboardPage: React.FC = () => {
     const [dateFrom, setDateFrom] = useState('');
     const [dateTo, setDateTo] = useState('');
     const [exportLoading, setExLoad] = useState(false);
+    const [dataLoading, setDataLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     const isDark = theme === 'dark';
     const plotBg = isDark ? '#18181B' : '#FFFFFF';
@@ -41,19 +43,28 @@ export const DashboardPage: React.FC = () => {
     const plotGrid = isDark ? '#3F3F46' : '#E2E8F0';
 
     const loadData = async () => {
-        const params = { programa: progFilter, fecha_inicio: dateFrom, fecha_fin: dateTo };
-        const [m, bp, tr, tp, pr] = await Promise.all([
-            coordinatorAPI.metrics(params),
-            coordinatorAPI.byProgram(params),
-            coordinatorAPI.trend(params),
-            coordinatorAPI.topTopics(params),
-            coordinatorAPI.programs(),
-        ]);
-        setMetrics(m.data);
-        setByProgram(bp.data);
-        setTrend(tr.data);
-        setTopics(tp.data);
-        setPrograms(pr.data);
+        setDataLoading(true);
+        setError(null);
+        try {
+            const params = { programa: progFilter, fecha_inicio: dateFrom, fecha_fin: dateTo };
+            const [m, bp, tr, tp, pr] = await Promise.all([
+                coordinatorAPI.metrics(params),
+                coordinatorAPI.byProgram(params),
+                coordinatorAPI.trend(params),
+                coordinatorAPI.topTopics(params),
+                coordinatorAPI.programs(),
+            ]);
+            setMetrics(m.data);
+            setByProgram(bp.data);
+            setTrend(tr.data);
+            setTopics(tp.data);
+            setPrograms(pr.data);
+        } catch (e: unknown) {
+            const msg = (e as { response?: { data?: { message?: string } } })?.response?.data?.message;
+            setError(msg || 'Error cargando datos del dashboard. Verifica tu sesión.');
+        } finally {
+            setDataLoading(false);
+        }
     };
 
     useEffect(() => { loadData(); }, [progFilter, dateFrom, dateTo]);
@@ -66,16 +77,26 @@ export const DashboardPage: React.FC = () => {
 
     const exportExcel = async () => {
         setExLoad(true);
-        const res = await aiAPI.exportExcel({ programa: progFilter, fecha_inicio: dateFrom, fecha_fin: dateTo });
-        downloadBlob(res.data, `reporte_saberpro_${Date.now()}.xlsx`);
-        setExLoad(false);
+        try {
+            const res = await aiAPI.exportExcel({ programa: progFilter, fecha_inicio: dateFrom, fecha_fin: dateTo });
+            downloadBlob(res.data, `reporte_saberpro_${Date.now()}.xlsx`);
+        } catch {
+            alert('Error generando el Excel. Intenta de nuevo.');
+        } finally {
+            setExLoad(false);
+        }
     };
 
     const exportPDF = async () => {
         setExLoad(true);
-        const res = await aiAPI.exportPDF({ programa: progFilter, fecha_inicio: dateFrom, fecha_fin: dateTo });
-        downloadBlob(res.data, `reporte_saberpro_${Date.now()}.pdf`);
-        setExLoad(false);
+        try {
+            const res = await aiAPI.exportPDF({ programa: progFilter, fecha_inicio: dateFrom, fecha_fin: dateTo });
+            downloadBlob(res.data, `reporte_saberpro_${Date.now()}.pdf`);
+        } catch {
+            alert('Error generando el PDF. Intenta de nuevo.');
+        } finally {
+            setExLoad(false);
+        }
     };
 
     return (
@@ -99,6 +120,19 @@ export const DashboardPage: React.FC = () => {
             </header>
 
             <div style={{ flex: 1, padding: 'var(--space-xl)', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+                {/* Banner de error */}
+                {error && (
+                    <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 'var(--radius-md)', padding: 'var(--space-md)', marginBottom: 'var(--space-lg)', color: '#DC2626', fontSize: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>⚠️ {error}</span>
+                        <button onClick={loadData} style={{ background: '#DC2626', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', padding: '4px 12px', cursor: 'pointer', fontSize: '12px' }}>Reintentar</button>
+                    </div>
+                )}
+                {/* Loading skeleton */}
+                {dataLoading && !metrics && (
+                    <div style={{ textAlign: 'center', padding: 'var(--space-xl)', color: 'var(--text-muted)' }}>
+                        Cargando datos del dashboard…
+                    </div>
+                )}
                 {/* Filtros */}
                 <div className="card animate-fade-up" style={{ marginBottom: 'var(--space-lg)', display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap', alignItems: 'flex-end' }}>
                     <Filter size={16} style={{ color: 'var(--text-muted)', alignSelf: 'center' }} />

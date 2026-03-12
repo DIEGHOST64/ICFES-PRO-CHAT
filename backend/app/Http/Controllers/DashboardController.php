@@ -62,20 +62,12 @@ class DashboardController extends Controller
      */
     public function trend(Request $request)
     {
-        $granularity = $request->get('granularity', 'day'); // 'day' | 'week'
         $q = $this->applyFilters(Query::query(), $request);
 
-        if ($granularity === 'week') {
-            $groupBy = DB::raw("DATE_TRUNC('week', created_at)::date");
-        }
-        else {
-            $groupBy = DB::raw("DATE(created_at)");
-        }
-
-        $data = $q->select($groupBy->getValue(DB::connection()->getQueryGrammar()) . ' as fecha',
-            DB::raw('count(*) as total'))
-            ->groupBy('fecha')
-            ->orderBy('fecha')
+        $data = $q
+            ->selectRaw("DATE(created_at) as fecha, COUNT(*) as total")
+            ->groupByRaw("DATE(created_at)")
+            ->orderByRaw("DATE(created_at)")
             ->get();
 
         return response()->json($data);

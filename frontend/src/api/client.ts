@@ -44,10 +44,20 @@ export const aiAPI = {
         axios.post(`${import.meta.env.VITE_AI_URL ?? 'http://localhost:8000'}/consultar`, data),
     sugerencias: (params: { programa: string; competencia?: string; cantidad?: number }) =>
         axios.get(`${import.meta.env.VITE_AI_URL ?? 'http://localhost:8000'}/sugerencias`, { params }),
-    exportExcel: (params: Record<string, string>) =>
-        axios.get(`${import.meta.env.VITE_AI_URL ?? 'http://localhost:8000'}/reportes/excel`, { params, responseType: 'blob' }),
-    exportPDF: (params: Record<string, string>) =>
-        axios.get(`${import.meta.env.VITE_AI_URL ?? 'http://localhost:8000'}/reportes/pdf`, { params, responseType: 'blob' }),
+    exportExcel: (params: Record<string, string>) => {
+        const token = localStorage.getItem('sp_token');
+        return axios.get(`${import.meta.env.VITE_AI_URL ?? 'http://localhost:8000'}/reportes/excel`, {
+            params, responseType: 'blob',
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+    },
+    exportPDF: (params: Record<string, string>) => {
+        const token = localStorage.getItem('sp_token');
+        return axios.get(`${import.meta.env.VITE_AI_URL ?? 'http://localhost:8000'}/reportes/pdf`, {
+            params, responseType: 'blob',
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+    },
 };
 
 export const queriesAPI = {

@@ -9,7 +9,7 @@ import httpx
 import pandas as pd
 import plotly.graph_objects as go
 from datetime import datetime
-from fastapi import APIRouter, Query as QueryParam, HTTPException
+from fastapi import APIRouter, Query as QueryParam, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from jinja2 import Environment, BaseLoader
 
@@ -18,8 +18,8 @@ router = APIRouter()
 BACKEND_URL = "http://backend/api"
 
 
-async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: str | None) -> dict:
-    """Obtiene datos desde el backend Laravel."""
+async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: str | None, auth_header: str = "") -> dict:
+    """Obtiene datos desde el backend Laravel reenviando la autenticación del coordinador."""
     params = {}
     if programa:
         params["programa"] = programa
@@ -28,12 +28,15 @@ async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: 
     if fecha_fin:
         params["fecha_fin"] = fecha_fin
 
-    # Nota: en producción se debe incluir header de autenticación interna
+    headers = {}
+    if auth_header:
+        headers["Authorization"] = auth_header
+
     async with httpx.AsyncClient(timeout=10) as client:
-        metrics   = (await client.get(f"{BACKEND_URL}/dashboard/metrics", params=params)).json()
-        by_prog   = (await client.get(f"{BACKEND_URL}/dashboard/by-program", params=params)).json()
-        trend     = (await client.get(f"{BACKEND_URL}/dashboard/trend", params=params)).json()
-        top_topics= (await client.get(f"{BACKEND_URL}/dashboard/top-topics", params=params)).json()
+        metrics   = (await client.get(f"{BACKEND_URL}/dashboard/metrics",    params=params, headers=headers)).json()
+        by_prog   = (await client.get(f"{BACKEND_URL}/dashboard/by-program",  params=params, headers=headers)).json()
+        trend     = (await client.get(f"{BACKEND_URL}/dashboard/trend",       params=params, headers=headers)).json()
+        top_topics= (await client.get(f"{BACKEND_URL}/dashboard/top-topics",  params=params, headers=headers)).json()
 
     return {
         "metrics":    metrics,
@@ -45,13 +48,15 @@ async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: 
 
 @router.get("/excel")
 async def export_excel(
+    request: Request,
     programa: str | None = QueryParam(None),
     fecha_inicio: str | None = QueryParam(None),
     fecha_fin: str | None = QueryParam(None),
 ):
     """RF-20, RF-24: Genera reporte Excel con múltiples hojas."""
     try:
-        data = await fetch_data(programa, fecha_inicio, fecha_fin)
+        auth_header = request.headers.get("authorization", "")
+        data = await fetch_data(programa, fecha_inicio, fecha_fin, auth_header)
 
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
@@ -88,6 +93,7 @@ async def export_excel(
 
 @router.get("/pdf")
 async def export_pdf(
+    request: Request,
     programa: str | None = QueryParam(None),
     fecha_inicio: str | None = QueryParam(None),
     fecha_fin: str | None = QueryParam(None),
@@ -96,7 +102,8 @@ async def export_pdf(
     try:
         from weasyprint import HTML
 
-        data = await fetch_data(programa, fecha_inicio, fecha_fin)
+        auth_header = request.headers.get("authorization", "")
+        data = await fetch_data(programa, fecha_inicio, fecha_fin, auth_header)
 
         # Gráfico de barras: consultas por programa
         by_prog = data["by_program"]

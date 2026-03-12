@@ -3,21 +3,21 @@ RF-22: Endpoint POST /consultar — Pipeline RAG principal
 Recibe pregunta + programa, consulta ChromaDB y responde con Gemini Flash.
 """
 
+import json
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field, field_validator
 
-from app.services.rag_service import rag_query
+from app.services.rag_service import rag_query, rag_query_stream
 
 router = APIRouter()
 
 
 class ConsultaRequest(BaseModel):
-    pregunta: str = Field(..., min_length=1, max_length=2000,
-                          description="Pregunta del estudiante en lenguaje natural")
-    programa: str = Field(default="General", max_length=100,
-                          description="Programa académico del estudiante")
-    competencia: str | None = Field(default=None, max_length=100,
-                                    description="Competencia activa (para routing de módulo)")
+    pregunta: str = Field(..., min_length=1, max_length=2000)
+    programa: str = Field(default="General", max_length=100)
+    competencia: str | None = Field(default=None, max_length=100)
+    nombre_estudiante: str = Field(default="", max_length=150)
 
     @field_validator("programa", mode="before")
     @classmethod
@@ -43,22 +43,43 @@ class ConsultaResponse(BaseModel):
 
 @router.post("", response_model=ConsultaResponse)
 async def consultar(body: ConsultaRequest):
-    """
-    Procesa una consulta estudiantil usando el pipeline RAG:
-    1. Genera embedding de la pregunta
-    2. Recupera fragmentos relevantes de ChromaDB (filtrado por programa)
-    3. Envía contexto a Gemini Flash
-    4. Retorna respuesta fundamentada con fuentes ICFES
-    """
     try:
         result = await rag_query(
             pregunta=body.pregunta,
             programa=body.programa,
+            nombre=body.nombre_estudiante,
             competencia=body.competencia,
         )
         return result
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error procesando la consulta: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Error procesando la consulta: {str(e)}")
+
+
+@router.post("/stream")
+async def consultar_stream(body: ConsultaRequest):
+    """
+    Versión SSE del pipeline RAG — los chunks de Gemini llegan en tiempo real.
+    Formato: data: {"fuentes":[...]}  → data: {"chunk":"..."}  → data: [DONE]
+    """
+    async def event_generator():
+        try:
+            async for event in rag_query_stream(
+                pregunta=body.pregunta,
+                programa=body.programa,
+                nombre=body.nombre_estudiante,
+                competencia=body.competencia,
+            ):
+                if isinstance(event, dict):
+                    yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+                else:
+                    yield f"data: {json.dumps({'chunk': event}, ensure_ascii=False)}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+        finally:
+            yield "data: [DONE]\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
