@@ -20,6 +20,11 @@ class QueryController extends Controller
             'pregunta' => 'required|string',
             'respuesta' => 'required|string',
             'tiempo_respuesta_ms' => 'nullable|integer',
+            'es_practica' => 'nullable|boolean',
+            'acierto' => 'nullable|boolean',
+            'nivel_objetivo' => 'nullable|string|max:20',
+            'nivel_pregunta' => 'nullable|string|max:20',
+            'tipo_pregunta' => 'nullable|string|max:40',
         ]);
 
         $student = $request->user(); // Autenticado con Sanctum
@@ -28,12 +33,19 @@ class QueryController extends Controller
         $studentHash = hash('sha256', 'icfes_salt_' . $student->id);
 
         $query = Query::create([
+            'student_id' => $student->id,
+            'student_nombre' => $student->nombre,
             'student_hash' => $studentHash,
             'programa' => $request->programa,
             'competencia' => $request->competencia,
             'pregunta' => $request->pregunta,
             'respuesta' => $request->respuesta,
             'tiempo_respuesta_ms' => $request->tiempo_respuesta_ms,
+            'es_practica' => $request->boolean('es_practica', false),
+            'acierto' => $request->has('acierto') ? $request->boolean('acierto') : null,
+            'nivel_objetivo' => $request->get('nivel_objetivo'),
+            'nivel_pregunta' => $request->get('nivel_pregunta'),
+            'tipo_pregunta' => $request->get('tipo_pregunta'),
             'calificacion' => null,
         ]);
 
@@ -54,7 +66,7 @@ class QueryController extends Controller
         $queries = Query::where('student_hash', $studentHash)
             ->where('created_at', '>=', now()->subDays(5))
             ->orderBy('created_at', 'asc')
-            ->select(['id', 'pregunta', 'respuesta', 'competencia', 'calificacion', 'created_at'])
+            ->select(['id', 'pregunta', 'respuesta', 'competencia', 'calificacion', 'es_practica', 'acierto', 'created_at'])
             ->get();
 
         return response()->json($queries);

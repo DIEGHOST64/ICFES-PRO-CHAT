@@ -1,0 +1,181 @@
+{
+  "version": "1.0",
+  "descripcion": "Lote curado piloto desde PDFs oficiales 2019 con referencia base 2018 y soporte 2021.",
+  "fuentes": {
+    "2019": [
+      "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_razonamiento_cuantitativo_saber_pro_2019.pdf",
+      "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_lectura_critica_saber_pro_2019.pdf",
+      "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_competencias_ciudadanas_saber_pro_2019.pdf"
+    ],
+    "2021": [
+      "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_Ingles_Saber_Pro_2021.pdf"
+    ]
+  },
+  "preguntas": [
+    {
+      "pregunta_id": "RAZONAMIENTO_2019_Q1",
+      "modulo": "general",
+      "metadatos": {
+        "competencia": "Interpretación y representación",
+        "afirmacion": "Interpreta relaciones cuantitativas en tablas para sustentar conclusiones.",
+        "fuente": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_razonamiento_cuantitativo_saber_pro_2019.pdf",
+        "anio_fuente": "2019",
+        "tipo_origen": "ejemplo_explicado",
+        "fuente_base_2018": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/practica/02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf",
+        "fuente_apoyo_2021": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_Ingles_Saber_Pro_2021.pdf"
+      },
+      "contenido": {
+        "contexto": "La tabla resume los sismos del planeta entre 2001 y 2010 por rangos de magnitud (5,0-5,9; 6,0-6,9; 7,0-7,9; 8,0-8,9). En cada año, los eventos de menor magnitud aparecen en cantidades mucho mayores que los de magnitud alta. El análisis debe comparar frecuencia y magnitud, no un dato aislado.",
+        "enunciado": "Según el registro histórico, ¿qué relación justifica que en cualquier año sean más probables los sismos de baja magnitud?",
+        "opciones": {
+          "A": "A mayor magnitud, mayor cantidad de sismos.",
+          "B": "A mayor magnitud, menor cantidad de sismos.",
+          "C": "A mayor cantidad de sismos, menor magnitud de estos.",
+          "D": "A mayor cantidad de sismos, mayor magnitud de estos."
+        }
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "En los registros del contexto, al aumentar la magnitud disminuye la frecuencia observada; la relación correcta es inversa.",
+        "analisis_distractores": {
+          "A": "Distractor típico: parece plausible, pero no satisface completamente el criterio de interpretación y representación ni la evidencia explícita del enunciado.",
+          "B": "Corresponde con la interpretación más sólida del contexto y el criterio evaluado.",
+          "C": "Distractor típico: parece plausible, pero no satisface completamente el criterio de interpretación y representación ni la evidencia explícita del enunciado.",
+          "D": "Distractor típico: parece plausible, pero no satisface completamente el criterio de interpretación y representación ni la evidencia explícita del enunciado."
+        }
+      }
+    },
+    {
+      "pregunta_id": "RAZONAMIENTO_2019_Q2",
+      "modulo": "general",
+      "metadatos": {
+        "competencia": "Formulación y ejecución",
+        "afirmacion": "Evalúa predicciones en fenómenos aleatorios usando evidencia disponible.",
+        "fuente": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_razonamiento_cuantitativo_saber_pro_2019.pdf",
+        "anio_fuente": "2019",
+        "tipo_origen": "ejemplo_explicado",
+        "fuente_base_2018": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/practica/02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf",
+        "fuente_apoyo_2021": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_Ingles_Saber_Pro_2021.pdf"
+      },
+      "contenido": {
+        "contexto": "Con base en el histórico 2001-2010, una persona predice exactamente 173 sismos de magnitud igual o superior a 6,0 para 2011. Los datos muestran variación anual y corresponden a eventos aleatorios; no se presenta una ley determinista que fije un valor exacto para el año siguiente.",
+        "enunciado": "Que esta persona acierte su predicción es:",
+        "opciones": {
+          "A": "Imposible, pues el número de sismos, de cualquier magnitud, ha ido disminuyendo desde 2007.",
+          "B": "Poco probable, porque de acuerdo con la tendencia el número de sismos en el 2011 será mayor que 173.",
+          "C": "Incierta, pues a partir del número de sismos de cualquier magnitud presentado en el pasado no se puede predecir el número de sismos futuros.",
+          "D": "Seguro, pues la tendencia de los dos años anteriores a 2011 indica que se presentarán 151 sismos de magnitud entre 6,0 y 6,9; 21 de magnitud entre 7,0 y 7,9; y 1 de magnitud superior a 8,0."
+        }
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El histórico no permite fijar exactamente un valor futuro para un evento aleatorio; por eso la predicción exacta es incierta.",
+        "analisis_distractores": {
+          "A": "Distractor típico: parece plausible, pero no satisface completamente el criterio de formulación y ejecución ni la evidencia explícita del enunciado.",
+          "B": "Distractor típico: parece plausible, pero no satisface completamente el criterio de formulación y ejecución ni la evidencia explícita del enunciado.",
+          "C": "Corresponde con la interpretación más sólida del contexto y el criterio evaluado.",
+          "D": "Distractor típico: parece plausible, pero no satisface completamente el criterio de formulación y ejecución ni la evidencia explícita del enunciado."
+        }
+      }
+    },
+    {
+      "pregunta_id": "RAZONAMIENTO_2019_Q3",
+      "modulo": "general",
+      "metadatos": {
+        "competencia": "Argumentación",
+        "afirmacion": "Selecciona procedimientos de estimación coherentes con la magnitud solicitada.",
+        "fuente": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_razonamiento_cuantitativo_saber_pro_2019.pdf",
+        "anio_fuente": "2019",
+        "tipo_origen": "ejemplo_explicado",
+        "fuente_base_2018": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/practica/02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf",
+        "fuente_apoyo_2021": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_Ingles_Saber_Pro_2021.pdf"
+      },
+      "contenido": {
+        "contexto": "Se dispone del total anual de sismos y se solicita una estimación mensual. La operación debe conservar la unidad temporal (mes), por lo que el total anual debe relacionarse con la cantidad de meses del año, y no con días o con rangos de magnitud.",
+        "enunciado": "Las autoridades necesitan estimar la cantidad de sismos mensuales. Una forma correcta de determinar esta frecuencia es:",
+        "opciones": {
+          "A": "El total de sismos sobre meses del año.",
+          "B": "El total de sismos por año sobre meses del año.",
+          "C": "El total de sismos por año sobre días del año.",
+          "D": "El total de sismos sobre su magnitud."
+        }
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "Para una frecuencia mensual desde total anual, se divide el total de sismos por año entre los meses del año.",
+        "analisis_distractores": {
+          "A": "Distractor típico: parece plausible, pero no satisface completamente el criterio de argumentación ni la evidencia explícita del enunciado.",
+          "B": "Corresponde con la interpretación más sólida del contexto y el criterio evaluado.",
+          "C": "Distractor típico: parece plausible, pero no satisface completamente el criterio de argumentación ni la evidencia explícita del enunciado.",
+          "D": "Distractor típico: parece plausible, pero no satisface completamente el criterio de argumentación ni la evidencia explícita del enunciado."
+        }
+      }
+    },
+    {
+      "pregunta_id": "LECTURA_2019_Q2",
+      "modulo": "general",
+      "metadatos": {
+        "competencia": "Comprensión global",
+        "afirmacion": "Identifica ideas centrales y relaciones de oposición en textos argumentativos.",
+        "fuente": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_lectura_critica_saber_pro_2019.pdf",
+        "anio_fuente": "2019",
+        "tipo_origen": "ejemplo_explicado",
+        "fuente_base_2018": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/practica/01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf",
+        "fuente_apoyo_2021": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_Ingles_Saber_Pro_2021.pdf"
+      },
+      "contenido": {
+        "contexto": "En el texto base, el autor reconoce la crueldad de la lidia, pero cuestiona la coherencia de exigir prohibición mientras se acepta el consumo de carne. Su tesis no es celebrar las corridas, sino problematizar una prohibición presentada sin una consistencia ética general.",
+        "enunciado": "De las siguientes ideas, la que se opone a la idea central defendida por el autor es:",
+        "opciones": {
+          "A": "Las corridas de toros deben prohibirse.",
+          "B": "Las fiestas taurinas son un ritual de tortura.",
+          "C": "La crianza de animales es una acción hipócrita.",
+          "D": "La tolerancia es el medio para superar el desacuerdo."
+        }
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "Si la tesis central no defiende la prohibición, la antítesis correcta es la opción que afirma que las corridas deben prohibirse.",
+        "analisis_distractores": {
+          "A": "Corresponde con la interpretación más sólida del contexto y el criterio evaluado.",
+          "B": "Distractor típico: parece plausible, pero no satisface completamente el criterio de comprensión global ni la evidencia explícita del enunciado.",
+          "C": "Distractor típico: parece plausible, pero no satisface completamente el criterio de comprensión global ni la evidencia explícita del enunciado.",
+          "D": "Distractor típico: parece plausible, pero no satisface completamente el criterio de comprensión global ni la evidencia explícita del enunciado."
+        }
+      }
+    },
+    {
+      "pregunta_id": "CIUDADANAS_2019_Q2",
+      "modulo": "general",
+      "metadatos": {
+        "competencia": "Pensamiento sistémico",
+        "afirmacion": "Analiza conflictos entre dimensiones sociales, ambientales e institucionales.",
+        "fuente": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_competencias_ciudadanas_saber_pro_2019.pdf",
+        "anio_fuente": "2019",
+        "tipo_origen": "ejemplo_explicado",
+        "fuente_base_2018": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/practica/03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf",
+        "fuente_apoyo_2021": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_Ingles_Saber_Pro_2021.pdf"
+      },
+      "contenido": {
+        "contexto": "Para resolver la basura de la capital, el departamento propone construir un relleno sanitario en un municipio cercano y ofrecer compensación económica. Aunque el proyecto tiene licencias, la comunidad local vota mayoritariamente en contra por riesgos de salud, impacto ambiental y pérdida de valor de la tierra. El conflicto contrapone bienestar sanitario regional y voluntad de la población receptora.",
+        "enunciado": "En esta situación, ¿cuáles de los siguientes aspectos están en conflicto?",
+        "opciones": {
+          "A": "El medio ambiente en la capital y la voluntad del Gobierno departamental.",
+          "B": "La economía del municipio y las políticas medioambientales de la capital.",
+          "C": "La salubridad de la capital y la voluntad de los habitantes del municipio.",
+          "D": "Las políticas económicas de la alcaldía del municipio y la salubridad de la capital."
+        }
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El caso enfrenta dos intereses legítimos: la salubridad de la capital y la voluntad de los habitantes del municipio donde se proyecta el relleno.",
+        "analisis_distractores": {
+          "A": "Distractor típico: parece plausible, pero no satisface completamente el criterio de pensamiento sistémico ni la evidencia explícita del enunciado.",
+          "B": "Distractor típico: parece plausible, pero no satisface completamente el criterio de pensamiento sistémico ni la evidencia explícita del enunciado.",
+          "C": "Corresponde con la interpretación más sólida del contexto y el criterio evaluado.",
+          "D": "Distractor típico: parece plausible, pero no satisface completamente el criterio de pensamiento sistémico ni la evidencia explícita del enunciado."
+        }
+      }
+    }
+  ]
+}

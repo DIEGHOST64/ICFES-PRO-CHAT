@@ -60,13 +60,50 @@ _CHITCHAT = {
     "por donde", "por dónde", "ayuda", "ayudame", "ayúdame",
 }
 
+_ACADEMIC_HINTS = {
+    "saber pro", "icfes", "competencia", "lectura", "critica", "crítica", "ingles", "inglés",
+    "razonamiento", "cuantitativo", "comunicacion", "comunicación", "ciudadanas", "especifica", "específica",
+    "pregunta", "ejercicio", "tema", "estudiar", "estudio", "repasar", "practicar", "practica", "práctica",
+    "base de datos", "modelo relacional", "programacion", "programación", "matematicas", "matemáticas",
+}
+
+_OFFTOPIC_HINTS = {
+    "novia", "novio", "pareja", "despecho", "ruptura", "me dejo", "me dejó", "corazon", "corazón",
+    "triste", "deprimido", "deprimida", "ansiedad", "angustia", "familia", "problema personal",
+}
+
 def _is_chitchat(pregunta: str) -> bool:
     """Detecta mensajes sin contenido académico para saltar el RAG."""
     clean = pregunta.lower().strip().rstrip("!?.¡¿ ")
     return len(pregunta) < 30 and clean in _CHITCHAT
 
 
-async def rag_query(pregunta: str, programa: str, nombre: str = "", competencia: str | None = None) -> dict:
+def _is_academic_message(pregunta: str) -> bool:
+    q = pregunta.lower()
+    return any(hint in q for hint in _ACADEMIC_HINTS)
+
+
+def _is_offtopic_message(pregunta: str) -> bool:
+    q = pregunta.lower()
+    return any(hint in q for hint in _OFFTOPIC_HINTS)
+
+
+def _build_focus_redirect(nombre: str) -> str:
+    nombre_corto = nombre.strip().split()[0].title() if nombre.strip() else "parce"
+    return (
+        f"{nombre_corto}, siento que estés pasando por un momento pesado. "
+        "Si quieres, aquí te acompaño a enfocarte en el estudio para que avances paso a paso. "
+        "Para seguir en modo Saber Pro, dime: ¿quieres repasar Lectura Crítica, Razonamiento Cuantitativo o Inglés?"
+    )
+
+
+async def rag_query(
+    pregunta: str,
+    programa: str,
+    nombre: str = "",
+    competencia: str | None = None,
+    historial: list[dict] | None = None,
+) -> dict:
     """
     Pipeline RAG completo:
     1. Genera embedding de la pregunta (en thread pool, no bloquea event loop)
@@ -76,9 +113,18 @@ async def rag_query(pregunta: str, programa: str, nombre: str = "", competencia:
     """
     start = time.time()
 
+    # Guardarraíl de contexto: mensajes personales no académicos.
+    if _is_offtopic_message(pregunta) and not _is_academic_message(pregunta):
+        return {
+            "respuesta": _build_focus_redirect(nombre),
+            "fuentes": [],
+            "tiempo_ms": int((time.time() - start) * 1000),
+            "fragmentos_usados": 0,
+        }
+
     # Camino rápido: saludos/charla → saltar embedding + ChromaDB
     if _is_chitchat(pregunta):
-        result = await generate_response(pregunta=pregunta, contexto=[], nombre=nombre)
+        result = await generate_response(pregunta=pregunta, contexto=[], nombre=nombre, historial=historial)
         return {**result, "tiempo_ms": int((time.time() - start) * 1000), "fragmentos_usados": 0}
 
     # Determinar módulo según competencia
@@ -133,7 +179,7 @@ async def rag_query(pregunta: str, programa: str, nombre: str = "", competencia:
             })
 
     # 4. Generación con Gemini
-    result = await generate_response(pregunta=pregunta, contexto=contexto, nombre=nombre)
+    result = await generate_response(pregunta=pregunta, contexto=contexto, nombre=nombre, historial=historial)
 
     tiempo_ms = int((time.time() - start) * 1000)
 
@@ -144,15 +190,30 @@ async def rag_query(pregunta: str, programa: str, nombre: str = "", competencia:
     }
 
 
-async def rag_query_stream(pregunta: str, programa: str, nombre: str = "", competencia: str | None = None):
+async def rag_query_stream(
+    pregunta: str,
+    programa: str,
+    nombre: str = "",
+    competencia: str | None = None,
+    historial: list[dict] | None = None,
+):
     """
     Versión streaming del pipeline RAG.
     Yields: primero un dict {"fuentes": [...]}, luego str chunks de Gemini.
     """
+    if _is_offtopic_message(pregunta) and not _is_academic_message(pregunta):
+        yield {"fuentes": []}
+        texto = _build_focus_redirect(nombre)
+        chunk_size = 140
+        for i in range(0, len(texto), chunk_size):
+            yield texto[i:i + chunk_size]
+            await asyncio.sleep(0)
+        return
+
     # Camino rápido: saludos/charla sin RAG
     if _is_chitchat(pregunta):
         yield {"fuentes": []}
-        async for chunk in generate_response_stream(pregunta, [], nombre):
+        async for chunk in generate_response_stream(pregunta, [], nombre, historial):
             yield chunk
         return
 
@@ -199,5 +260,5 @@ async def rag_query_stream(pregunta: str, programa: str, nombre: str = "", compe
     fuentes = list(set(c.get("fuente", "Guía ICFES") for c in contexto if c.get("fuente")))
     yield {"fuentes": fuentes}
 
-    async for chunk in generate_response_stream(pregunta, contexto, nombre):
+    async for chunk in generate_response_stream(pregunta, contexto, nombre, historial):
         yield chunk

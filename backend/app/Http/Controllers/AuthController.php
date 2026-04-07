@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    private function normalizeCedula(?string $cedula): string
+    {
+        $raw = trim((string) $cedula);
+        $digits = preg_replace('/\D+/', '', $raw) ?? '';
+        return $digits !== '' ? $digits : $raw;
+    }
+
     /**
      * RF-01, RF-02: Registro de estudiante
      * Campos: cedula, nombre, programa, clave_secreta
@@ -17,6 +24,11 @@ class AuthController extends Controller
      */
     public function registerStudent(Request $request)
     {
+        $request->merge([
+            'cedula' => $this->normalizeCedula($request->input('cedula')),
+            'clave_secreta' => trim((string) $request->input('clave_secreta')),
+        ]);
+
         $validator = Validator::make($request->all(), [
             'cedula' => 'required|string|max:20|unique:students,cedula',
             'nombre' => 'required|string|max:150',
@@ -58,6 +70,15 @@ class AuthController extends Controller
      */
     public function loginStudent(Request $request)
     {
+        $rawCedula = trim((string) $request->input('cedula'));
+        $normalizedCedula = $this->normalizeCedula($rawCedula);
+        $clave = trim((string) $request->input('clave_secreta'));
+
+        $request->merge([
+            'cedula' => $normalizedCedula,
+            'clave_secreta' => $clave,
+        ]);
+
         $validator = Validator::make($request->all(), [
             'cedula' => 'required|string',
             'clave_secreta' => 'required|string',
@@ -67,9 +88,21 @@ class AuthController extends Controller
             return response()->json(['message' => 'Cédula y clave secreta son requeridas.'], 422);
         }
 
-        $student = Student::where('cedula', $request->cedula)->first();
+        $student = Student::query()
+            ->where('cedula', $request->cedula)
+            ->orWhere('cedula', $rawCedula)
+            ->first();
 
-        if (!$student || !Hash::check($request->cedula . $request->clave_secreta, $student->password_hash)) {
+        $candidateCurrentNormalized = $request->cedula . $request->clave_secreta;
+        $candidateCurrentStored = $student ? ((string) $student->cedula) . $request->clave_secreta : '';
+        $candidateLegacy = $request->clave_secreta;
+        $matchesCurrent = $student
+            ? (Hash::check($candidateCurrentNormalized, $student->password_hash)
+                || Hash::check($candidateCurrentStored, $student->password_hash))
+            : false;
+        $matchesLegacy = $student ? Hash::check($candidateLegacy, $student->password_hash) : false;
+
+        if (!$student || (!$matchesCurrent && !$matchesLegacy)) {
             return response()->json([
                 'message' => 'Credenciales incorrectas. Verifica tu cédula y clave secreta.',
             ], 401);
@@ -93,6 +126,13 @@ class AuthController extends Controller
      */
     public function loginCoordinator(Request $request)
     {
+        $normalizedEmail = strtolower(trim((string) $request->input('email')));
+        $normalizedPassword = trim((string) $request->input('password'));
+        $request->merge([
+            'email' => $normalizedEmail,
+            'password' => $normalizedPassword,
+        ]);
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
@@ -102,7 +142,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Correo y contraseña son requeridos.'], 422);
         }
 
-        $coordinator = Coordinator::where('email', $request->email)->first();
+    $coordinator = Coordinator::whereRaw('LOWER(email) = ?', [$request->email])->first();
 
         if (!$coordinator || !Hash::check($request->password, $coordinator->password)) {
             return response()->json([

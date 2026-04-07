@@ -31,7 +31,11 @@ Route::middleware(['auth:sanctum', 'ability:role:coordinator'])->group(function 
 
     // Dashboard e indicadores — RF-15 a RF-19
     Route::get('dashboard/metrics', [DashboardController::class , 'metrics']);
+    Route::get('dashboard/programs', [DashboardController::class , 'programs']);
     Route::get('dashboard/by-program', [DashboardController::class , 'byProgram']);
     Route::get('dashboard/trend', [DashboardController::class , 'trend']);
     Route::get('dashboard/top-topics', [DashboardController::class , 'topTopics']);
+    Route::get('dashboard/practice-students', [DashboardController::class , 'practiceStudents']);
+    Route::get('dashboard/practice-competencies', [DashboardController::class , 'practiceCompetencies']);
+    Route::get('dashboard/level-progression', [DashboardController::class , 'levelProgression']);
 });

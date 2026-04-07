@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --upgrade --no-cache-dir pip setuptools wheel && \
+    python -m pip install --no-cache-dir --force-reinstall -r requirements.txt
 
 # Pre-descargar el modelo de embeddings (para acelerar el arranque)
 # Se hace aquí para evitar latencia en el primer request
@@ -24,4 +25,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

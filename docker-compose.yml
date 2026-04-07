@@ -37,8 +37,6 @@ services:
       - "8001:8000"
     networks:
       - icfes_net
-$key = (Get-Content .env | Select-String "GEMINI_API_KEY").ToString().Split("=")[1]
-Invoke-RestMethod "https://generativelanguage.googleapis.com/v1beta/models?key=$key" | ConvertTo-Json -Depth 5 | Select-String "name"
   # ─────────────────────────────────────────
   # Backend principal – Laravel 11
   # ─────────────────────────────────────────
@@ -81,7 +79,8 @@ Invoke-RestMethod "https://generativelanguage.googleapis.com/v1beta/models?key=$
       CHROMA_HOST: chromadb
       CHROMA_PORT: 8000
       GEMINI_API_KEY: ${GEMINI_API_KEY}
-      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3-flash-preview}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      GEMINI_IMAGE_MODEL: ${GEMINI_IMAGE_MODEL:-gemini-2.0-flash-preview-image-generation}
     volumes:
       - ./ai-service:/app
       - ./data:/app/data

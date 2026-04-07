@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { LoginPage } from './pages/LoginPage';
-import { ChatPage } from './pages/ChatPage';
-import { PracticePage } from './pages/PracticePage';
-import { CoordinadorLoginPage } from './pages/CoordinadorLoginPage';
-import { DashboardPage } from './pages/DashboardPage';
+
+const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })));
+const ChatPage = lazy(() => import('./pages/ChatPage').then(m => ({ default: m.ChatPage })));
+const PracticePage = lazy(() => import('./pages/PracticePage').then(m => ({ default: m.PracticePage })));
+const CoordinadorLoginPage = lazy(() => import('./pages/CoordinadorLoginPage').then(m => ({ default: m.CoordinadorLoginPage })));
+const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
 
 // Guard: solo estudiantes autenticados
 const StudentRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -25,7 +27,7 @@ const CoordinatorRoute: React.FC<{ children: React.ReactNode }> = ({ children })
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/coordinador" element={<CoordinadorLoginPage />} />
 
@@ -47,7 +49,9 @@ function App() {
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <AppRoutes />
+          <Suspense fallback={<div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', color: 'var(--text-muted)' }}>Cargando experiencia...</div>}>
+            <AppRoutes />
+          </Suspense>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

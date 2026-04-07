@@ -41,6 +41,8 @@ USO:
 import os
 import argparse
 import hashlib
+import json
+import re
 from pathlib import Path
 from collections import Counter
 
@@ -60,6 +62,33 @@ SUBCARPETA_TIPO = {
     "ejemplos": "ejemplo",
     "practica": "practica",
 }
+
+
+def _plain(text: str) -> str:
+    s = (text or "").strip().lower()
+    s = s.replace("_", " ").replace("-", " ")
+    s = s.replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u")
+    return " ".join(s.split())
+
+
+def inferir_competencia(nombre_archivo: str, modulo: str) -> str:
+    base = _plain(nombre_archivo)
+    mod = _plain(modulo)
+
+    if mod != "general":
+        return "Específica"
+
+    if "lectura critica" in base or ("lectura" in base and "critica" in base):
+        return "Lectura Crítica"
+    if "razonamiento cuantitativo" in base or "cuantitativo" in base:
+        return "Razonamiento Cuantitativo"
+    if "comunicacion escrita" in base or ("comunicacion" in base and "escrita" in base):
+        return "Comunicación Escrita"
+    if "ingles" in base or "english" in base:
+        return "Inglés"
+    if "ciudadanas" in base or "ciudadana" in base:
+        return "Ciudadanas"
+    return "General"
 
 
 # ── Utilidades ───────────────────────────────────────────
@@ -105,6 +134,184 @@ def load_file(path: Path) -> str:
             return f.read()
 
 
+def _clean_line_for_meta(value: str) -> str:
+    return re.sub(r"\s+", " ", str(value or "").strip())
+
+
+def _normalize_correct_letter(value: str) -> str:
+    m = re.match(r"^\s*([A-Da-d])", str(value or "").strip())
+    if not m:
+        return ""
+    return m.group(1).upper()
+
+
+def _extract_options_list(raw_options) -> list[str]:
+    if isinstance(raw_options, dict):
+        out = []
+        for letter in ("A", "B", "C", "D"):
+            txt = _clean_line_for_meta(raw_options.get(letter, ""))
+            if txt:
+                out.append(f"{letter}. {txt}")
+        return out
+
+    if isinstance(raw_options, list):
+        out = []
+        for i, item in enumerate(raw_options[:4]):
+            letter = chr(ord("A") + i)
+            txt = _clean_line_for_meta(item)
+            txt = re.sub(r"^[A-Da-d][\)\.\:\-]\s*", "", txt)
+            if txt:
+                out.append(f"{letter}. {txt}")
+        return out
+
+    return []
+
+
+def _resolve_correct_option(correct_raw: str, opciones: list[str]) -> str:
+    if not opciones:
+        return ""
+
+    letter = _normalize_correct_letter(correct_raw)
+    if letter:
+        idx = ord(letter) - ord("A")
+        if 0 <= idx < len(opciones):
+            return opciones[idx]
+
+    normalized_correct = _clean_line_for_meta(correct_raw)
+    normalized_correct = re.sub(r"^[A-Da-d][\)\.\:\-]\s*", "", normalized_correct).lower()
+    for opt in opciones:
+        core = re.sub(r"^[A-Da-d]\.\s*", "", opt).lower()
+        if normalized_correct and normalized_correct == core:
+            return opt
+    for opt in opciones:
+        core = re.sub(r"^[A-Da-d]\.\s*", "", opt).lower()
+        if normalized_correct and normalized_correct in core:
+            return opt
+
+    return opciones[0]
+
+
+def _build_justification_blob(solucion: dict) -> str:
+    justificacion = _clean_line_for_meta(solucion.get("justificacion_tecnica", ""))
+    distractores = solucion.get("analisis_distractores", {})
+    lines = []
+    if justificacion:
+        lines.append(f"Justificacion tecnica: {justificacion}")
+
+    if isinstance(distractores, dict):
+        for letter in ("A", "B", "C", "D"):
+            txt = _clean_line_for_meta(distractores.get(letter, ""))
+            if txt:
+                lines.append(f"Distractor {letter}: {txt}")
+
+    return "\n".join(lines).strip()
+
+
+def _parse_question_bank(path: Path) -> list[dict]:
+    try:
+        with open(path, "r", encoding="utf-8", errors="replace") as f:
+            payload = json.load(f)
+    except Exception as e:
+        print(f"[Indexar] WARN: no se pudo leer {path.name}: {e}")
+        return []
+
+    if isinstance(payload, list):
+        return [p for p in payload if isinstance(p, dict)]
+
+    if isinstance(payload, dict):
+        if isinstance(payload.get("preguntas"), list):
+            return [p for p in payload["preguntas"] if isinstance(p, dict)]
+        # Permite indexar un solo objeto pregunta en archivo JSON.
+        if "contenido" in payload and "solucion" in payload:
+            return [payload]
+
+    return []
+
+
+def _indexar_question_bank_json(
+    collection,
+    model,
+    file_path: Path,
+    modulo: str,
+    programa: str,
+    fuente_default: str,
+    tipo_origen: str,
+) -> int:
+    preguntas = _parse_question_bank(file_path)
+    if not preguntas:
+        return 0
+
+    ids, docs, embeddings, metas = [], [], [], []
+
+    for idx, item in enumerate(preguntas, start=1):
+        metadatos = item.get("metadatos", {}) if isinstance(item.get("metadatos"), dict) else {}
+        contenido = item.get("contenido", {}) if isinstance(item.get("contenido"), dict) else {}
+        solucion = item.get("solucion", {}) if isinstance(item.get("solucion"), dict) else {}
+
+        pregunta_id = _clean_line_for_meta(item.get("pregunta_id", f"{file_path.stem}_{idx}"))
+        competencia = _clean_line_for_meta(metadatos.get("competencia", "General")) or "General"
+        afirmacion = _clean_line_for_meta(metadatos.get("afirmacion", ""))
+        fuente = _clean_line_for_meta(metadatos.get("fuente", fuente_default)) or fuente_default
+
+        contexto = _clean_line_for_meta(contenido.get("contexto", ""))
+        enunciado = _clean_line_for_meta(contenido.get("enunciado", ""))
+        opciones = _extract_options_list(contenido.get("opciones", {}))
+        if len(opciones) < 4:
+            continue
+
+        correcta = _resolve_correct_option(str(solucion.get("correcta", "")), opciones)
+        explicacion = _build_justification_blob(solucion)
+
+        doc_text = (
+            f"Pregunta {pregunta_id}\n"
+            f"Competencia: {competencia}\n"
+            f"Afirmacion: {afirmacion}\n"
+            f"Contexto: {contexto}\n"
+            f"Enunciado: {enunciado}\n"
+            f"Opciones:\n- " + "\n- ".join(opciones) + "\n"
+            f"Respuesta correcta: {correcta}\n"
+            f"Explicacion: {explicacion}"
+        ).strip()
+
+        if len(doc_text) < 120:
+            continue
+
+        doc_id = hashlib.md5(f"{modulo}_pregunta_{file_path.name}_{pregunta_id}".encode()).hexdigest()
+        ids.append(doc_id)
+        docs.append(doc_text)
+        embeddings.append(model.encode(doc_text).tolist())
+        metas.append({
+            "modulo": modulo,
+            "tipo": "pregunta",
+            "origen_tipo": tipo_origen,
+            "competencia": competencia,
+            "afirmacion": afirmacion,
+            "fuente": fuente,
+            "archivo": file_path.name,
+            "programa": programa,
+            "pregunta_id": pregunta_id,
+            "contexto": contexto,
+            "enunciado": enunciado,
+            "opciones_json": json.dumps(opciones, ensure_ascii=False),
+            "respuesta_correcta": correcta,
+            "explicacion": explicacion,
+        })
+
+    if not ids:
+        return 0
+
+    for i in range(0, len(ids), 50):
+        collection.upsert(
+            ids=ids[i:i + 50],
+            documents=docs[i:i + 50],
+            embeddings=embeddings[i:i + 50],
+            metadatas=metas[i:i + 50],
+        )
+
+    print(f"    {file_path.name}: {len(ids)} preguntas curadas indexadas (tipo=pregunta)")
+    return len(ids)
+
+
 def get_chroma_collection(client):
     return client.get_or_create_collection(
         name=COLLECTION_NAME,
@@ -122,16 +329,31 @@ def indexar_directorio(collection, model, dir_path: Path,
     tipo:   'ejemplo' o 'practica'.
     """
     archivos = [f for f in sorted(dir_path.iterdir())
-                if f.suffix.lower() in (".pdf", ".txt") and f.is_file()]
+                if f.suffix.lower() in (".pdf", ".txt", ".json") and f.is_file()]
     if not archivos:
         print(f"[Indexar] INFO: Carpeta vacía: {dir_path}")
         return 0
 
     n_pdf = sum(1 for f in archivos if f.suffix.lower() == ".pdf")
-    print(f"\n  [modulo={modulo} | tipo={tipo}] -> {len(archivos)} archivos ({n_pdf} PDF)")
+    n_txt = sum(1 for f in archivos if f.suffix.lower() == ".txt")
+    n_json = sum(1 for f in archivos if f.suffix.lower() == ".json")
+    print(f"\n  [modulo={modulo} | tipo={tipo}] -> {len(archivos)} archivos ({n_pdf} PDF, {n_txt} TXT, {n_json} JSON)")
 
     ids, docs, embeddings, metas = [], [], [], []
+    inserted_from_json = 0
     for file_path in archivos:
+        if file_path.suffix.lower() == ".json":
+            inserted_from_json += _indexar_question_bank_json(
+                collection=collection,
+                model=model,
+                file_path=file_path,
+                modulo=modulo,
+                programa=programa,
+                fuente_default=fuente,
+                tipo_origen=tipo,
+            )
+            continue
+
         texto = load_file(file_path)
         if not texto.strip():
             print(f"    WARN: {file_path.name} vacío, se omite.")
@@ -143,9 +365,11 @@ def indexar_directorio(collection, model, dir_path: Path,
             ids.append(doc_id)
             docs.append(chunk)
             embeddings.append(model.encode(chunk).tolist())
+            competencia = inferir_competencia(file_path.name, modulo)
             metas.append({
                 "modulo":   modulo,
                 "tipo":     tipo,
+                "competencia": competencia,
                 "fuente":   fuente,
                 "archivo":  file_path.name,
                 "programa": programa,
@@ -153,7 +377,7 @@ def indexar_directorio(collection, model, dir_path: Path,
             })
 
     if not ids:
-        return 0
+        return inserted_from_json
 
     for i in range(0, len(ids), 50):
         collection.upsert(
@@ -163,7 +387,7 @@ def indexar_directorio(collection, model, dir_path: Path,
             metadatas=metas[i:i + 50],
         )
     print(f"  OK {len(ids)} fragmentos insertados.")
-    return len(ids)
+    return len(ids) + inserted_from_json
 
 
 def indexar_modulo(collection, model, modulo_path: Path, modulo: str, programa: str) -> int:

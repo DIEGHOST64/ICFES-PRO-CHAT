@@ -10,6 +10,37 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     /**
+     * Programas disponibles para filtros de analitica, normalizados.
+     */
+    public function programs()
+    {
+        $rawPrograms = Query::query()
+            ->whereNotNull('programa')
+            ->pluck('programa')
+            ->all();
+
+        $bucket = [];
+        foreach ($rawPrograms as $value) {
+            $normalized = $this->normalizeProgramValue((string) $value);
+            if ($normalized === '') {
+                continue;
+            }
+
+            $key = function_exists('mb_strtolower')
+                ? mb_strtolower($normalized, 'UTF-8')
+                : strtolower($normalized);
+            if (!isset($bucket[$key])) {
+                $bucket[$key] = $normalized;
+            }
+        }
+
+        $programs = array_values($bucket);
+        natcasesort($programs);
+
+        return response()->json(array_values($programs));
+    }
+
+    /**
      * RF-15: Indicadores generales del dashboard del coordinador.
      */
     public function metrics(Request $request)
@@ -91,12 +122,90 @@ class DashboardController extends Controller
     }
 
     /**
+     * Analitica de practica por estudiante y programa.
+     */
+    public function practiceStudents(Request $request)
+    {
+        $q = $this->applyFilters(Query::query(), $request)
+            ->where('es_practica', true)
+            ->whereNotNull('acierto');
+
+        $q = $this->excludeCoordinatorRecords($q);
+
+        $rows = $q->select(
+            'programa',
+            DB::raw("COALESCE(NULLIF(student_nombre, ''), CONCAT('Estudiante ', SUBSTRING(student_hash, 1, 8))) as estudiante"),
+            'student_hash',
+            DB::raw('COUNT(*) as intentos'),
+            DB::raw('SUM(CASE WHEN acierto = true THEN 1 ELSE 0 END) as aciertos'),
+            DB::raw('ROUND(AVG(CASE WHEN acierto = true THEN 1 ELSE 0 END) * 100, 1) as puntaje_promedio')
+        )
+            ->groupBy('programa', 'student_hash', 'student_nombre')
+            ->orderByDesc('puntaje_promedio')
+            ->limit(200)
+            ->get();
+
+        return response()->json($rows);
+    }
+
+    /**
+     * Promedio de calificacion por competencia y programa para comparativas.
+     */
+    public function practiceCompetencies(Request $request)
+    {
+        $q = $this->applyFilters(Query::query(), $request)
+            ->where('es_practica', true)
+            ->whereNotNull('acierto')
+            ->whereNotNull('competencia');
+
+        $rows = $q->select(
+            'programa',
+            'competencia',
+            DB::raw('COUNT(*) as intentos'),
+            DB::raw('SUM(CASE WHEN acierto = true THEN 1 ELSE 0 END) as aciertos'),
+            DB::raw('ROUND(AVG(CASE WHEN acierto = true THEN 1 ELSE 0 END) * 100, 1) as promedio_competencia')
+        )
+            ->groupBy('programa', 'competencia')
+            ->orderBy('programa')
+            ->orderByDesc('promedio_competencia')
+            ->get();
+
+        return response()->json($rows);
+    }
+
+    /**
+     * Evolucion de nivel por competencia en el tiempo para seguimiento adaptativo.
+     */
+    public function levelProgression(Request $request)
+    {
+        $q = $this->applyFilters(Query::query(), $request)
+            ->where('es_practica', true)
+            ->where(function ($sub) {
+                $sub->whereNotNull('nivel_pregunta')
+                    ->orWhereNotNull('acierto');
+            })
+            ->whereNotNull('competencia');
+
+        $rows = $q->selectRaw("\n            DATE(created_at) as fecha,\n            competencia,\n            COUNT(*) as intentos,\n            SUM(CASE WHEN acierto = true THEN 1 ELSE 0 END) as aciertos,\n            ROUND(AVG(CASE WHEN acierto = true THEN 1 ELSE 0 END) * 100, 1) as tasa_acierto,\n            ROUND(AVG(\n                CASE\n                    WHEN LOWER(nivel_pregunta) = 'basico' THEN 1\n                    WHEN LOWER(nivel_pregunta) IN ('intermedio', 'a2') THEN 2\n                    WHEN LOWER(nivel_pregunta) IN ('avanzado', 'b1') THEN 3\n                    WHEN nivel_pregunta IS NULL AND (LOWER(competencia) LIKE '%ingles%' OR LOWER(competencia) LIKE '%inglés%' OR LOWER(competencia) LIKE '%english%') THEN CASE WHEN acierto = true THEN 3 ELSE 2 END\n                    WHEN nivel_pregunta IS NULL THEN CASE WHEN acierto = true THEN 2 ELSE 1 END\n                    ELSE NULL\n                END\n            ), 2) as nivel_promedio\n        ")
+            ->groupByRaw('DATE(created_at), competencia')
+            ->orderByRaw('DATE(created_at)')
+            ->orderBy('competencia')
+            ->get();
+
+        return response()->json($rows);
+    }
+
+    /**
      * Helper: aplica filtros de programa y rango de fechas — RF-18
      */
     private function applyFilters($query, Request $request)
     {
         if ($request->has('programa') && $request->programa) {
-            $query->where('programa', $request->programa);
+            $programa = $this->normalizeProgramValue((string) $request->programa);
+            $query->whereRaw(
+                "LOWER(REGEXP_REPLACE(TRIM(programa), '\\s+', ' ', 'g')) = LOWER(?)",
+                [$programa]
+            );
         }
         if ($request->has('fecha_inicio') && $request->fecha_inicio) {
             $query->whereDate('created_at', '>=', $request->fecha_inicio);
@@ -105,5 +214,29 @@ class DashboardController extends Controller
             $query->whereDate('created_at', '<=', $request->fecha_fin);
         }
         return $query;
+    }
+
+    private function normalizeProgramValue(string $value): string
+    {
+        $trimmed = trim($value);
+        if ($trimmed === '') {
+            return '';
+        }
+
+        return preg_replace('/\s+/u', ' ', $trimmed) ?? $trimmed;
+    }
+
+    /**
+     * Excluye registros de coordinación en métricas de estudiantes.
+     */
+    private function excludeCoordinatorRecords($query)
+    {
+        return $query->where(function ($sub) {
+            $sub->whereNull('student_nombre')
+                ->orWhere(function ($byName) {
+                    $byName->whereRaw("LOWER(student_nombre) NOT LIKE '%coordinador%'")
+                        ->whereRaw("LOWER(student_nombre) NOT LIKE '%coordinator%'");
+                });
+        });
     }
 }

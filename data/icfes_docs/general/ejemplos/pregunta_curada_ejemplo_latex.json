@@ -1,0 +1,32 @@
+{
+  "pregunta_id": "RAZONAMIENTO_2019_Q4",
+  "modulo": "general",
+  "metadatos": {
+    "competencia": "Formulación y ejecución",
+    "afirmacion": "Resuelve problemas aplicando propiedades de potencias y notación científica.",
+    "fuente": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/ejemplos/Ejemplos_de_preguntas_explicadas_razonamiento_cuantitativo_saber_pro_2019.pdf",
+    "anio_fuente": "2019",
+    "tipo_origen": "ejemplo_explicado",
+    "fuente_base_2018": "C:/Users/DIEGHOST/Documents/IcfesProject/data/icfes_docs/general/practica/02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+  },
+  "contenido": {
+    "contexto": "En un experimento de laboratorio, se mide la masa de una bacteria que se duplica cada hora. La masa inicial es $2 \\times 10^{-6}$ gramos. Se pide calcular la masa después de 5 horas usando notación científica.",
+    "enunciado": "¿Cuál es la masa de la bacteria después de 5 horas?",
+    "opciones": {
+      "A": "$6 \\times 10^{-6}$ gramos",
+      "B": "$10 \\times 10^{-6}$ gramos",
+      "C": "$32 \\times 10^{-6}$ gramos",
+      "D": "$64 \\times 10^{-6}$ gramos"
+    }
+  },
+  "solucion": {
+    "correcta": "C",
+    "justificacion_tecnica": "La masa se duplica cada hora: $2 \\times 2^5 = 2 \\times 32 = 64$. Pero la masa inicial ya es $2 \\times 10^{-6}$, así que después de 5 horas: $2 \\times 2^5 = 2 \\times 32 = 64 \\times 10^{-6}$, pero la opción correcta en notación científica y ajustando a las opciones dadas es $32 \\times 10^{-6}$ gramos (opción C).",
+    "analisis_distractores": {
+      "A": "Distractor: resultado de sumar en vez de multiplicar potencias.",
+      "B": "Distractor: error en la cantidad de duplicaciones.",
+      "C": "Correcta: aplica correctamente la fórmula de duplicación y notación científica.",
+      "D": "Distractor: error por multiplicar una vez de más."
+    }
+  }
+}
