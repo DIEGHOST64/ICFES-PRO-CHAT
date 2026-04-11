@@ -2070,8 +2070,13 @@ async def _background_question_miner(
     dificultad_objetivo: str | None, cantidad: int, entrenamiento_general: bool,
     modulo: str, is_english: bool, comp_meta: str, cache_key: str
 ):
-    print(f"[*] INICIANDO background miner para {modulo} - {comp_meta} (Meta: {cantidad} preguntas)...")
-    cantidad_bg = max(cantidad, 45) # Oversample
+    # Si es tráfico web (usuario estudiante), solo generamos 2 de fondo para ahorrar API.
+    # Si es el script nocturno (empieza por pregen_), respetamos la cuota grande (ej. 45).
+    is_pregen = cache_key.startswith("pregen_")
+    cantidad_bg = max(cantidad, 45) if is_pregen else 2
+    
+    print(f"[*] INICIANDO background miner para {modulo} - {comp_meta} (Meta Generación LLM: {cantidad_bg} preguntas)...", flush=True)
+
     # Evito reescribir variables abajo.
     cantidad = cantidad_bg
     collection = ChromaService.get_collection()
