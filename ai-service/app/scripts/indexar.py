@@ -1,4 +1,4 @@
-﻿"""
+"""
 Script de indexación de documentos ICFES → ChromaDB.
 
 ESTRUCTURA DE CARPETAS:
@@ -93,12 +93,85 @@ def inferir_competencia(nombre_archivo: str, modulo: str) -> str:
 
 # ── Utilidades ───────────────────────────────────────────
 
+
+# Señales que indican texto administrativo/introductorio del cuadernillo.
+# Un solo hit descarta el chunk — nunca deben entrar a ChromaDB.
+_NON_ACADEMIC_CHUNK_SIGNALS = [
+    "hoja de respuestas",
+    "marque a, b o c",
+    "marque a, b, c",
+    "en su hoja de",
+    "mcer",
+    "cefr",
+    "guia de orientacion",
+    "guía de orientación",
+    "marco de referencia disponible",
+    "portal web",
+    "invitamos a consultar",
+    "columna de la derecha",
+    "columna de la izquierda",
+    "concuerda con cada descripcion",
+    "preguntas de seleccion multiple",
+    "seleccione la opcion",
+    "habilidad especifica relacionada",
+    "habilidad específica relacionada",
+    "situaciones de evaluacion",
+    "situaciones de evaluación",
+    "nivel de comprension lectora del evaluado",
+    "caracteristicas del modulo",
+    "el examen saber pro se compone de modulos",
+    "competencias genericas y especificas",
+    "marco comun europeo de referencia",
+    "instrucciones generales",
+    "no escriba en este cuadernillo",
+    "llene la hoja de respuestas",
+    "terminos y condiciones",
+    "derechos de autor",
+    "todos los derechos reservados",
+    "prohibida su reproduccion",
+    "copyright",
+    # Solucionarios / claves de respuesta
+    "respuesta correcta para la descripcion",
+    "opciones de respuesta no validas",
+    "no son correctas dado que incluyen",
+    "opciones a, b, c, d, e, f",
+    "opciones de respuesta conversaciones",
+    "muestra la interaccion entre dos personas",
+    "primer participante invita al segundo",
+    "parte 3 opciones",
+    "parte 2 opciones",
+    "parte 1 opciones",
+    "ninguna otra opcion se ajusta",
+    "se refiere a la opcion",
+    # Explicaciones del PDF 'Ejemplos de preguntas explicadas'
+    "en el texto base el autor",
+    "en el texto base, el autor",
+    "enfoque evaluado:",
+    "identifica ideas centrales",
+    "la respuesta correcta es la opcion",
+    "las opciones incorrectas",
+    "clave de respuesta",
+    "justificacion de la respuesta",
+    "por que es correcta",
+]
+
+
+def _is_chunk_academic(text: str) -> bool:
+    """Devuelve False si el chunk es texto administrativo/introductorio del cuadernillo."""
+    normalized = text.lower()
+    # Quitar tildes para comparación robusta
+    for a, b in [("á","a"),("é","e"),("í","i"),("ó","o"),("ú","u"),("ñ","n")]:
+        normalized = normalized.replace(a, b)
+    return not any(signal in normalized for signal in _NON_ACADEMIC_CHUNK_SIGNALS)
+
+
 def chunk_text(text: str, chunk_size=CHUNK_SIZE, overlap=CHUNK_OVERLAP):
     chunks, start = [], 0
     while start < len(text):
         chunks.append(text[start:start + chunk_size].strip())
         start += chunk_size - overlap
-    return [c for c in chunks if len(c) > 60]
+    return [c for c in chunks if len(c) > 60 and _is_chunk_academic(c)]
+
 
 
 def _fix_encoding(text: str) -> str:
@@ -256,10 +329,16 @@ def _indexar_question_bank_json(
         contexto = _clean_line_for_meta(contenido.get("contexto", ""))
         enunciado = _clean_line_for_meta(contenido.get("enunciado", ""))
         opciones = _extract_options_list(contenido.get("opciones", {}))
-        if len(opciones) < 4:
-            continue
-
-        correcta = _resolve_correct_option(str(solucion.get("correcta", "")), opciones)
+        
+        is_escrita = "comunicacion" in file_path.name.lower() or "escrita" in file_path.name.lower()
+        if is_escrita:
+            opciones = []
+            correcta = ""
+        else:
+            min_opts = 3 if ("ingles" in file_path.name.lower() or "english" in file_path.name.lower()) else 4
+            if len(opciones) < min_opts:
+                continue
+            correcta = _resolve_correct_option(str(solucion.get("correcta", "")), opciones)
         explicacion = _build_justification_blob(solucion)
 
         doc_text = (

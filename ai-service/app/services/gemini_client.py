@@ -14,16 +14,16 @@ from typing import AsyncGenerator
 import google.generativeai as genai
 from functools import lru_cache
 
-# Config para el chat RAG — respuestas conversacionales cortas
+# Config para el chat RAG — tokens suficientes para simulacros y respuestas largas
 GENERATION_CONFIG = {
-    "max_output_tokens": 900,
+    "max_output_tokens": 2500,
     "temperature": 0.3,
     "top_p": 0.75,
 }
 
 # Config para generación de preguntas de práctica — necesita más tokens para el JSON
 GENERATION_CONFIG_QUIZ = {
-    "max_output_tokens": 3200,
+    "max_output_tokens": 8192,
     "temperature": 0.25,
     "top_p": 0.75,
 }

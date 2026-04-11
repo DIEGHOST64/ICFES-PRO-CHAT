@@ -1,0 +1,541 @@
+{
+  "origen": "27-septiembre-ingles-saber-pro-2024.pdf",
+  "total_preguntas": 27,
+  "preguntas": [
+    {
+      "contenido": {
+        "contexto": "Términos y condiciones de uso para \npublicaciones y obras de propiedad \ndel Icfes\nEl Instituto Colombiano para la Evaluación de \nla Educación (Icfes) pone a disposición de la \ncomunidad educativa y del público en general, \nde forma gratuita y libre de cualquier cargo, \nun conjunto de publicaciones a través de su \nportal     www icfes.gov.co. Dichos materiales \ny documentos están normados por la presente \npolítica y están protegidos por derechos de \npropiedad intelectual y derechos de autor a \nfavor del Icfes. Si tiene conocimiento de alguna \nutilización contraria a lo establecido en estas \ncondiciones de uso, por favor, infórmenos al \ncorreo prensaicfes@icfes.gov.co.\nQueda prohibido el uso o publicación total \no parcial de este material con fines de lucro. \nÚnicamente está autorizado su uso para \nfines académicos e investigativos. Ninguna \npersona, natural o jurídica, nacional o \ninternacional, podrá vender, distribuir, alquilar, \nreproducir, transformar1, promocionar o realizar \nacción alguna, de la cual se lucre directa o \nindirectamente, con este material.\n1   La transformación es la modificación de la obra a través \nde la creación de adaptaciones, traducciones, compilaciones, \nactualizaciones, revisiones y, en general, cualquier \nmodificación que de la obra se pueda realizar, de modo que \nel producto resultante se constituya en una obra derivada \nprotegida por el derecho de autor, con la única diferencia \nrespecto de la original de que aquella requiere, para su \nrealización, de la autorización expresa del autor o propietario \npara adaptar, traducir, compilar, etcétera. En este caso, el \nIcfes prohíbe la transformación de esta publicación.\nEn todo caso, cuando se haga uso parcial o \ntotal de los contenidos de esta publicación \ndel Icfes, el usuario deberá hacer referencia \na los créditos institucionales, respetando los \nderechos de autoría y su correspondiente \nreferencia. Las obras del Icfes se podrán utilizar \ncon los fines aquí previstos, transcribiendo los \npasajes necesarios, citando siempre al Icfes \ncomo fuente de autor. Lo anterior siempre que \nlos pasajes no sean tantos y tan seguidos que, \nrazonadamente, puedan considerarse como \nuna reproducción simulada y sustancial que \nredunde en perjuicio del Icfes.\nAsimismo, los logotipos institucionales son \nmarcas registradas y de propiedad exclusiva \ndel Icfes. Por tanto, los terceros no podrán usar \nlas marcas de propiedad del Icfes ni signos \nidénticos o similares respecto de cualesquiera \nproductos o servicios prestados por esta \nentidad, cuando su uso pueda causar confusión. \nEn todo caso, queda prohibido sin previa \nautorización expresa del Icfes. La infracción de \nestos derechos se perseguirá civil y penalmente, \nde acuerdo con las leyes nacionales y tratados \ninternacionales aplicables.\nEl Icfes realizará cambios o revisiones periódicas \na los presentes términos de uso y los actualizará \nen esta publicación.\nEl Icfes adelantará las acciones legales \npertinentes por cualquier violación a estas \npolíticas y condiciones de uso.",
+        "enunciado": "Según los \"Términos y condiciones de uso para publicaciones y obras de propiedad del Icfes\", ¿cuál de las siguientes actividades está expresamente autorizada para el material del Icfes?",
+        "opciones": [
+          "A. Vender copias del material para financiar proyectos educativos.",
+          "B. Distribuir el material en eventos con fines de lucro.",
+          "C. Utilizar el material para fines académicos e investigativos.",
+          "D. Modificar la obra original para crear una adaptación sin autorización."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El texto establece claramente: \"Queda prohibido el uso o publicación total o parcial de este material con fines de lucro. Únicamente está autorizado su uso para fines académicos e investigativos.\" Las opciones A y B implican fines de lucro, y la opción D describe una 'transformación' que el Icfes prohíbe sin autorización expresa."
+      },
+      "metadatos": {
+        "competencia": "Comprensión de lectura, identificación de información explícita y diferenciación entre usos permitidos y prohibidos.",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Cuadernillo de preguntas\nMódulo Inglés\nCaracterísticas del \nmódulo Inglés\nEl examen Saber Pro se compone de módulos de \ncompetencias genéricas y específicas. Inglés es \nuno de los módulos de competencias genéricas \nque evalúan los conocimientos, habilidades y \ndestrezas que se consideran necesarias para \ndesempeñar cualquier profesión.\nEste módulo sigue la metodología establecida \npor el Marco Común Europeo de Referencia \npara las Lenguas (MCER) que ofrece una serie \nde niveles que permiten la clasificación de los \nevaluados, según su desempeño en el uso de \nla lengua inglesa, a saber: A1, A2, B1, B2, C1 \ny C2 (cabe aclarar aquí que la actualización del \nMCER en 2020 incluye el nivel Pre A1). Para el \ncaso de este módulo, los niveles se establecen \nsegún el uso de la lengua inglesa, en términos \nde gramática y vocabulario en un contexto \ncomunicativo.\nCompetencia evaluada\nEl módulo Inglés busca que el evaluado \ndemuestre sus habilidades comunicativas \nen lectura y uso de la lengua inglesa. Para \nello, todas y cada una de las siete partes que \ncomponen este módulo evalúan una habilidad \nespecífica relacionada.\nLas situaciones de evaluación y los textos se \nadaptan de acuerdo con el MCER y atienden a \nunos niveles de complejidad que permiten dar \ncuenta del nivel de comprensión lectora del \nevaluado.\nPara conocer la competencia para comunicarse \nefectivamente en inglés te invitamos a consultar \nla Guía de orientación y el Marco de referencia     \n   disponibles en el portal web.\nTipos de preguntas\nEste módulo se compone de preguntas \nde selección múltiple con única respuesta, \nconformadas por un enunciado (que puede \npresentar una situación, imagen, contexto, texto, \nentre otros); la formulación de una tarea de \nevaluación (aquello que se le pide al evaluado \nrealizar), y opciones de respuesta, de las \ncuales solo una es válida para responder la \ntarea planteada.",
+        "enunciado": "De acuerdo con la descripción del \"Módulo Inglés\" del examen Saber Pro, ¿cuál es la metodología principal que rige la clasificación de los evaluados en cuanto a su nivel de inglés?",
+        "opciones": [
+          "A. El Sistema Internacional de Unidades (SI).",
+          "B. El Marco Común Europeo de Referencia para las Lenguas (MCER).",
+          "C. La Escala de Evaluación de Habilidades Comunicativas (EEHC).",
+          "D. El Estándar Global de Competencia Lingüística (EGCL)."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El texto afirma: \"Este módulo sigue la metodología establecida por el Marco Común Europeo de Referencia para las Lenguas (MCER) que ofrece una serie de niveles que permiten la clasificación de los evaluados, según su desempeño en el uso de la lengua inglesa\"."
+      },
+      "metadatos": {
+        "competencia": "Comprensión de lectura, identificación de información explícita.",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "RESPONDE LAS PREGUNTAS 1 A 5 DE ACUERDO CON EL SIGUIENTE EJEMPLO\nLea las descripciones de la columna de la izquierda (1 - 5). ¿Cuál palabra de la columna de la derecha (A - G) concuerda con cada descripción?\nLa opción H se usa para el ejemplo. Sobran dos palabras más.\nEn las preguntas 1 - 5, marque la letra correcta A - G en su hoja de respuestas.\nFeelings",
+        "enunciado": "1. People often cry when they feel like this.",
+        "opciones": [
+          "A. afraid",
+          "B. angry",
+          "C. cold",
+          "D. happy",
+          "E. hungry",
+          "F. sad",
+          "G. thirsty"
+        ]
+      },
+      "solucion": {
+        "correcta": "F",
+        "justificacion_tecnica": "Llorar es una expresión común de tristeza. Por lo tanto, 'sad' (triste) es la emoción que mejor describe la situación."
+      },
+      "metadatos": {
+        "competencia": "Comprensión de lectura y vocabulario",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "RESPONDE LAS PREGUNTAS 1 A 5 DE ACUERDO CON EL SIGUIENTE EJEMPLO\nLea las descripciones de la columna de la izquierda (1 - 5). ¿Cuál palabra de la columna de la derecha (A - G) concuerda con cada descripción?\nLa opción H se usa para el ejemplo. Sobran dos palabras más.\nEn las preguntas 1 - 5, marque la letra correcta A - G en su hoja de respuestas.\nFeelings",
+        "enunciado": "2. If we feel like this, we want to eat something.",
+        "opciones": [
+          "A. afraid",
+          "B. angry",
+          "C. cold",
+          "D. happy",
+          "E. hungry",
+          "F. sad",
+          "G. thirsty"
+        ]
+      },
+      "solucion": {
+        "correcta": "E",
+        "justificacion_tecnica": "El deseo de comer algo es la definición de tener hambre. Por lo tanto, 'hungry' (hambriento) es la opción correcta."
+      },
+      "metadatos": {
+        "competencia": "Comprensión de lectura y vocabulario",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "RESPONDE LAS PREGUNTAS 1 A 5 DE ACUERDO CON EL SIGUIENTE EJEMPLO\nLea las descripciones de la columna de la izquierda (1 - 5). ¿Cuál palabra de la columna de la derecha (A - G) concuerda con cada descripción?\nLa opción H se usa para el ejemplo. Sobran dos palabras más.\nEn las preguntas 1 - 5, marque la letra correcta A - G en su hoja de respuestas.\nFeelings",
+        "enunciado": "3. When we hate something, we sometimes feel like this.",
+        "opciones": [
+          "A. afraid",
+          "B. angry",
+          "C. cold",
+          "D. happy",
+          "E. hungry",
+          "F. sad",
+          "G. thirsty"
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El odio es una emoción fuerte que a menudo se asocia con el enojo. Por lo tanto, 'angry' (enojado) es la respuesta más adecuada."
+      },
+      "metadatos": {
+        "competencia": "Comprensión de lectura y vocabulario",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "RESPONDE LAS PREGUNTAS 1 A 5 DE ACUERDO CON EL SIGUIENTE EJEMPLO\nLea las descripciones de la columna de la izquierda (1 - 5). ¿Cuál palabra de la columna de la derecha (A - G) concuerda con cada descripción?\nLa opción H se usa para el ejemplo. Sobran dos palabras más.\nEn las preguntas 1 - 5, marque la letra correcta A - G en su hoja de respuestas.\nFeelings",
+        "enunciado": "4. Some people usually feel like this when they need to drink something.",
+        "opciones": [
+          "A. afraid",
+          "B. angry",
+          "C. cold",
+          "D. happy",
+          "E. hungry",
+          "F. sad",
+          "G. thirsty"
+        ]
+      },
+      "solucion": {
+        "correcta": "G",
+        "justificacion_tecnica": "La necesidad de beber algo es la definición de tener sed. Por lo tanto, 'thirsty' (sediento) es la opción correcta."
+      },
+      "metadatos": {
+        "competencia": "Comprensión de lectura y vocabulario",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "RESPONDE LAS PREGUNTAS 1 A 5 DE ACUERDO CON EL SIGUIENTE EJEMPLO\nLea las descripciones de la columna de la izquierda (1 - 5). ¿Cuál palabra de la columna de la derecha (A - G) concuerda con cada descripción?\nLa opción H se usa para el ejemplo. Sobran dos palabras más.\nEn las preguntas 1 - 5, marque la letra correcta A - G en su hoja de respuestas.\nFeelings",
+        "enunciado": "5. Some people feel this way when they are scared of spiders.",
+        "opciones": [
+          "A. afraid",
+          "B. angry",
+          "C. cold",
+          "D. happy",
+          "E. hungry",
+          "F. sad",
+          "G. thirsty"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "Estar 'scared of' (asustado de) algo es sinónimo de tener miedo o estar 'afraid' (asustado). Por lo tanto, 'afraid' es la opción correcta."
+      },
+      "metadatos": {
+        "competencia": "Comprensión de lectura y vocabulario",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Complete las cinco conversaciones. En las preguntas 6 - 10, marque A, B o C en su hoja de respuestas.",
+        "enunciado": "Do you prefer cats or dogs?",
+        "opciones": [
+          "A. Both are nice.",
+          "B. It´s not OK.",
+          "C. All right."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La opción 'Both are nice' es la respuesta más adecuada a una pregunta sobre preferencias entre dos opciones, indicando que ambas son del agrado del hablante."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Complete las cinco conversaciones. En las preguntas 6 - 10, marque A, B o C en su hoja de respuestas.",
+        "enunciado": "I forgot to turn the lights off.",
+        "opciones": [
+          "A. How about this?",
+          "B. Are you sure?",
+          "C. Do it this way."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "Ante la afirmación de haber olvidado algo, la respuesta más natural es una pregunta de confirmación o sorpresa como 'Are you sure?'."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Complete las cinco conversaciones. En las preguntas 6 - 10, marque A, B o C en su hoja de respuestas.",
+        "enunciado": "I am afraid my sister is sick.",
+        "opciones": [
+          "A. Oh, I’m sorry.",
+          "B. Too late.",
+          "C. Can I go now?"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La expresión 'Oh, I’m sorry' es la respuesta empática y adecuada cuando alguien comparte una noticia desafortunada o triste."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Complete las cinco conversaciones. En las preguntas 6 - 10, marque A, B o C en su hoja de respuestas.",
+        "enunciado": "Let’s go to the park next weekend.",
+        "opciones": [
+          "A. So do I.",
+          "B. Hope it is.",
+          "C. Great idea."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La frase 'Great idea' es una respuesta común y positiva para aceptar o mostrar entusiasmo por una sugerencia o plan."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Complete las cinco conversaciones. En las preguntas 6 - 10, marque A, B o C en su hoja de respuestas.",
+        "enunciado": "Can I talk to you for a minute?",
+        "opciones": [
+          "A. Be careful.",
+          "B. Of course.",
+          "C. Take one."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La expresión 'Of course' es la respuesta apropiada para conceder permiso o aceptar una solicitud de conversación."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Lea el texto y seleccione la palabra correcta para cada espacio. GREEK AND ROMAN CULTURES The Greek culture, together with the Roman one, ________ fascinated humans for centuries. Sadly, many people today (11) __________ know the differences between Greeks and Romans. Some people think Romans are an extension of Greeks; others assume that the two are similar. In fact, the two are very different (12) __________ one another, and show opposite life values. (13) __________ Greeks and Romans were great architects. Greeks used to (14) __________ more about shape than function. They (15) __________ the most important thing was making beautiful buildings. (16) __________, Romans were perfect engineers. For (17) __________, street planning and use had the greatest importance. Greeks admired poets and philosophers, (18) __________ Romans admired their soldiers who were extremely brave and successful.",
+        "enunciado": "Sadly, many people today (11) __________ know the differences between Greeks and Romans.",
+        "opciones": [
+          "A. doesn’t",
+          "B. don’t",
+          "C. didn’t"
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El sujeto 'many people' es plural, por lo que requiere el auxiliar negativo 'don't' en presente simple para la acción 'know' que ocurre 'today'."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Lea el texto y seleccione la palabra correcta para cada espacio. GREEK AND ROMAN CULTURES The Greek culture, together with the Roman one, ________ fascinated humans for centuries. Sadly, many people today (11) __________ know the differences between Greeks and Romans. Some people think Romans are an extension of Greeks; others assume that the two are similar. In fact, the two are very different (12) __________ one another, and show opposite life values. (13) __________ Greeks and Romans were great architects. Greeks used to (14) __________ more about shape than function. They (15) __________ the most important thing was making beautiful buildings. (16) __________, Romans were perfect engineers. For (17) __________, street planning and use had the greatest importance. Greeks admired poets and philosophers, (18) __________ Romans admired their soldiers who were extremely brave and successful.",
+        "enunciado": "In fact, the two are very different (12) __________ one another, and show opposite life values.",
+        "opciones": [
+          "A. among",
+          "B. against",
+          "C. from"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La preposición correcta para expresar diferencia o distinción es 'from', formando la frase 'different from'."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Lea el texto y seleccione la palabra correcta para cada espacio. GREEK AND ROMAN CULTURES The Greek culture, together with the Roman one, ________ fascinated humans for centuries. Sadly, many people today (11) __________ know the differences between Greeks and Romans. Some people think Romans are an extension of Greeks; others assume that the two are similar. In fact, the two are very different (12) __________ one another, and show opposite life values. (13) __________ Greeks and Romans were great architects. Greeks used to (14) __________ more about shape than function. They (15) __________ the most important thing was making beautiful buildings. (16) __________, Romans were perfect engineers. For (17) __________, street planning and use had the greatest importance. Greeks admired poets and philosophers, (18) __________ Romans admired their soldiers who were extremely brave and successful.",
+        "enunciado": "(13) __________ Greeks and Romans were great architects.",
+        "opciones": [
+          "A. Either",
+          "B. Both",
+          "C. Each"
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La palabra 'Both' se utiliza para referirse a dos elementos (Greeks y Romans) que comparten una característica común, en este caso, ser grandes arquitectos."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Lea el texto y seleccione la palabra correcta para cada espacio. GREEK AND ROMAN CULTURES The Greek culture, together with the Roman one, ________ fascinated humans for centuries. Sadly, many people today (11) __________ know the differences between Greeks and Romans. Some people think Romans are an extension of Greeks; others assume that the two are similar. In fact, the two are very different (12) __________ one another, and show opposite life values. (13) __________ Greeks and Romans were great architects. Greeks used to (14) __________ more about shape than function. They (15) __________ the most important thing was making beautiful buildings. (16) __________, Romans were perfect engineers. For (17) __________, street planning and use had the greatest importance. Greeks admired poets and philosophers, (18) __________ Romans admired their soldiers who were extremely brave and successful.",
+        "enunciado": "Greeks used to (14) __________ more about shape than function.",
+        "opciones": [
+          "A. worry",
+          "B. worries",
+          "C. worrying"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La estructura 'used to' siempre va seguida del infinitivo sin 'to' (base form) del verbo."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Lea el texto y seleccione la palabra correcta para cada espacio. GREEK AND ROMAN CULTURES The Greek culture, together with the Roman one, ________ fascinated humans for centuries. Sadly, many people today (11) __________ know the differences between Greeks and Romans. Some people think Romans are an extension of Greeks; others assume that the two are similar. In fact, the two are very different (12) __________ one another, and show opposite life values. (13) __________ Greeks and Romans were great architects. Greeks used to (14) __________ more about shape than function. They (15) __________ the most important thing was making beautiful buildings. (16) __________, Romans were perfect engineers. For (17) __________, street planning and use had the greatest importance. Greeks admired poets and philosophers, (18) __________ Romans admired their soldiers who were extremely brave and successful.",
+        "enunciado": "They (15) __________ the most important thing was making beautiful buildings.",
+        "opciones": [
+          "A. believed",
+          "B. believes",
+          "C. believe"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "El contexto del texto es histórico ('used to'), por lo que el verbo debe estar en pasado simple, 'believed', para describir lo que los griegos pensaban."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Lea el texto y seleccione la palabra correcta para cada espacio. GREEK AND ROMAN CULTURES The Greek culture, together with the Roman one, ________ fascinated humans for centuries. Sadly, many people today (11) __________ know the differences between Greeks and Romans. Some people think Romans are an extension of Greeks; others assume that the two are similar. In fact, the two are very different (12) __________ one another, and show opposite life values. (13) __________ Greeks and Romans were great architects. Greeks used to (14) __________ more about shape than function. They (15) __________ the most important thing was making beautiful buildings. (16) __________, Romans were perfect engineers. For (17) __________, street planning and use had the greatest importance. Greeks admired poets and philosophers, (18) __________ Romans admired their soldiers who were extremely brave and successful.",
+        "enunciado": "(16) __________, Romans were perfect engineers.",
+        "opciones": [
+          "A. Almost",
+          "B. However",
+          "C. Because"
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El conector 'However' es el más adecuado para introducir una idea que contrasta con la afirmación anterior sobre los griegos (su enfoque en la forma) al presentar el enfoque de los romanos (ingeniería)."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Lea el texto y seleccione la palabra correcta para cada espacio. GREEK AND ROMAN CULTURES The Greek culture, together with the Roman one, ________ fascinated humans for centuries. Sadly, many people today (11) __________ know the differences between Greeks and Romans. Some people think Romans are an extension of Greeks; others assume that the two are similar. In fact, the two are very different (12) __________ one another, and show opposite life values. (13) __________ Greeks and Romans were great architects. Greeks used to (14) __________ more about shape than function. They (15) __________ the most important thing was making beautiful buildings. (16) __________, Romans were perfect engineers. For (17) __________, street planning and use had the greatest importance. Greeks admired poets and philosophers, (18) __________ Romans admired their soldiers who were extremely brave and successful.",
+        "enunciado": "For (17) __________, street planning and use had the greatest importance.",
+        "opciones": [
+          "A. you",
+          "B. her",
+          "C. them"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El pronombre objetivo 'them' se refiere a los 'Romans', que son el sujeto de la oración anterior y a quienes se atribuye la importancia del urbanismo."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Lea el texto y seleccione la palabra correcta para cada espacio. GREEK AND ROMAN CULTURES The Greek culture, together with the Roman one, ________ fascinated humans for centuries. Sadly, many people today (11) __________ know the differences between Greeks and Romans. Some people think Romans are an extension of Greeks; others assume that the two are similar. In fact, the two are very different (12) __________ one another, and show opposite life values. (13) __________ Greeks and Romans were great architects. Greeks used to (14) __________ more about shape than function. They (15) __________ the most important thing was making beautiful buildings. (16) __________, Romans were perfect engineers. For (17) __________, street planning and use had the greatest importance. Greeks admired poets and philosophers, (18) __________ Romans admired their soldiers who were extremely brave and successful.",
+        "enunciado": "Greeks admired poets and philosophers, (18) __________ Romans admired their soldiers who were extremely brave and successful.",
+        "opciones": [
+          "A. but",
+          "B. or",
+          "C. so"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La conjunción 'but' es la más apropiada para introducir una cláusula que presenta un contraste con la cláusula anterior (lo que admiraban los griegos vs. lo que admiraban los romanos)."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A SOCIAL EXPERIMENT IN ONEIDA, NEW YORK\nIn the nineteenth century there was a village called Oneida in New York State where a \"family\" of 300 members lived together in a large beautiful house where they shared everything.\nA man named John Humphrey Noyes, and a small group of people moved there in 1848. They wanted a place where they could live according to their particular beliefs in their efforts to create a more equal society.\nToday, this place is touristic and, like me, many visitors come because they had relatives among those 19th century dreamers. Others just want to see for themselves the building where this successful social group in American history lived. “I don’t know of anywhere else where you can live in a historical place,” said the director of the Oneida site. “It’s very unusual.”\nThe present owners share the building with guests who stay in large comfortably furnished bedrooms with private baths. There are eight guest rooms in the hotel area, and each guest pays $100 for a big bedroom, a simple breakfast and a private tour around the 10,300-square-meter building, which also contains 35 apartments.\nThe library and the building’s grounds are also open to guests, as well as several of the public rooms. The 170-year-old library, unchanged from the original construction, holds a rich collection of 19th century books and magazines, which learners used to study Latin, Greek, algebra and astronomy.\nThis place is open for everybody and it’s worth a visit.",
+        "enunciado": "John Humphrey Noyes travelled to New York State",
+        "opciones": [
+          "A. to visit his family.",
+          "B. to change his way of life.",
+          "C. to know more about his country."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El texto indica que John Humphrey Noyes y su grupo se mudaron a Oneida porque 'They wanted a place where they could live according to their particular beliefs in their efforts to create a more equal society', lo que implica un cambio en su estilo de vida para alinearse con sus convicciones."
+      },
+      "metadatos": {
+        "competencia": "Lectura crítica en inglés",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A SOCIAL EXPERIMENT IN ONEIDA, NEW YORK\nIn the nineteenth century there was a village called Oneida in New York State where a \"family\" of 300 members lived together in a large beautiful house where they shared everything.\nA man named John Humphrey Noyes, and a small group of people moved there in 1848. They wanted a place where they could live according to their particular beliefs in their efforts to create a more equal society.\nToday, this place is touristic and, like me, many visitors come because they had relatives among those 19th century dreamers. Others just want to see for themselves the building where this successful social group in American history lived. “I don’t know of anywhere else where you can live in a historical place,” said the director of the Oneida site. “It’s very unusual.”\nThe present owners share the building with guests who stay in large comfortably furnished bedrooms with private baths. There are eight guest rooms in the hotel area, and each guest pays $100 for a big bedroom, a simple breakfast and a private tour around the 10,300-square-meter building, which also contains 35 apartments.\nThe library and the building’s grounds are also open to guests, as well as several of the public rooms. The 170-year-old library, unchanged from the original construction, holds a rich collection of 19th century books and magazines, which learners used to study Latin, Greek, algebra and astronomy.\nThis place is open for everybody and it’s worth a visit.",
+        "enunciado": "Nowadays Oneida is",
+        "opciones": [
+          "A. a hotel.",
+          "B. a bath.",
+          "C. a school."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "El texto describe el lugar en la actualidad: 'The present owners share the building with guests who stay in large comfortably furnished bedrooms with private baths. There are eight guest rooms in the hotel area...', lo que claramente lo identifica como un hotel."
+      },
+      "metadatos": {
+        "competencia": "Lectura crítica en inglés",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A SOCIAL EXPERIMENT IN ONEIDA, NEW YORK\nIn the nineteenth century there was a village called Oneida in New York State where a \"family\" of 300 members lived together in a large beautiful house where they shared everything.\nA man named John Humphrey Noyes, and a small group of people moved there in 1848. They wanted a place where they could live according to their particular beliefs in their efforts to create a more equal society.\nToday, this place is touristic and, like me, many visitors come because they had relatives among those 19th century dreamers. Others just want to see for themselves the building where this successful social group in American history lived. “I don’t know of anywhere else where you can live in a historical place,” said the director of the Oneida site. “It’s very unusual.”\nThe present owners share the building with guests who stay in large comfortably furnished bedrooms with private baths. There are eight guest rooms in the hotel area, and each guest pays $100 for a big bedroom, a simple breakfast and a private tour around the 10,300-square-meter building, which also contains 35 apartments.\nThe library and the building’s grounds are also open to guests, as well as several of the public rooms. The 170-year-old library, unchanged from the original construction, holds a rich collection of 19th century books and magazines, which learners used to study Latin, Greek, algebra and astronomy.\nThis place is open for everybody and it’s worth a visit.",
+        "enunciado": "The writer visited the place because he",
+        "opciones": [
+          "A. had particular social beliefs.",
+          "B. had family who had lived there.",
+          "C. had interest in historical buildings."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El texto afirma: 'Today, this place is touristic and, like me, many visitors come because they had relatives among those 19th century dreamers.' La frase 'like me' indica que el escritor es uno de esos visitantes con parientes que vivieron allí."
+      },
+      "metadatos": {
+        "competencia": "Lectura crítica en inglés",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A SOCIAL EXPERIMENT IN ONEIDA, NEW YORK\nIn the nineteenth century there was a village called Oneida in New York State where a \"family\" of 300 members lived together in a large beautiful house where they shared everything.\nA man named John Humphrey Noyes, and a small group of people moved there in 1848. They wanted a place where they could live according to their particular beliefs in their efforts to create a more equal society.\nToday, this place is touristic and, like me, many visitors come because they had relatives among those 19th century dreamers. Others just want to see for themselves the building where this successful social group in American history lived. “I don’t know of anywhere else where you can live in a historical place,” said the director of the Oneida site. “It’s very unusual.”\nThe present owners share the building with guests who stay in large comfortably furnished bedrooms with private baths. There are eight guest rooms in the hotel area, and each guest pays $100 for a big bedroom, a simple breakfast and a private tour around the 10,300-square-meter building, which also contains 35 apartments.\nThe library and the building’s grounds are also open to guests, as well as several of the public rooms. The 170-year-old library, unchanged from the original construction, holds a rich collection of 19th century books and magazines, which learners used to study Latin, Greek, algebra and astronomy.\nThis place is open for everybody and it’s worth a visit.",
+        "enunciado": "If you want to see the building,",
+        "opciones": [
+          "A. you need to pay to have a guided visit.",
+          "B. you can join a small group of people.",
+          "C. you will have your own map included."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "El texto menciona que 'each guest pays $100 for a big bedroom, a simple breakfast and a private tour around the 10,300-square-meter building', lo que implica que para ver el edificio (a través de un tour) se debe pagar."
+      },
+      "metadatos": {
+        "competencia": "Lectura crítica en inglés",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A SOCIAL EXPERIMENT IN ONEIDA, NEW YORK\nIn the nineteenth century there was a village called Oneida in New York State where a \"family\" of 300 members lived together in a large beautiful house where they shared everything.\nA man named John Humphrey Noyes, and a small group of people moved there in 1848. They wanted a place where they could live according to their particular beliefs in their efforts to create a more equal society.\nToday, this place is touristic and, like me, many visitors come because they had relatives among those 19th century dreamers. Others just want to see for themselves the building where this successful social group in American history lived. “I don’t know of anywhere else where you can live in a historical place,” said the director of the Oneida site. “It’s very unusual.”\nThe present owners share the building with guests who stay in large comfortably furnished bedrooms with private baths. There are eight guest rooms in the hotel area, and each guest pays $100 for a big bedroom, a simple breakfast and a private tour around the 10,300-square-meter building, which also contains 35 apartments.\nThe library and the building’s grounds are also open to guests, as well as several of the public rooms. The 170-year-old library, unchanged from the original construction, holds a rich collection of 19th century books and magazines, which learners used to study Latin, Greek, algebra and astronomy.\nThis place is open for everybody and it’s worth a visit.",
+        "enunciado": "All visitors to the Oneida historical site",
+        "opciones": [
+          "A. have access to most parts of the house.",
+          "B. must go to the 19th century library.",
+          "C. are not allowed to see the 35 apartments."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "El texto indica que 'The library and the building’s grounds are also open to guests, as well as several of the public rooms', lo que sugiere que los visitantes tienen acceso a múltiples áreas de la casa, es decir, a la mayoría de las partes."
+      },
+      "metadatos": {
+        "competencia": "Lectura crítica en inglés",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A SOCIAL EXPERIMENT IN ONEIDA, NEW YORK\nIn the nineteenth century there was a village called Oneida in New York State where a \"family\" of 300 members lived together in a large beautiful house where they shared everything.\nA man named John Humphrey Noyes, and a small group of people moved there in 1848. They wanted a place where they could live according to their particular beliefs in their efforts to create a more equal society.\nToday, this place is touristic and, like me, many visitors come because they had relatives among those 19th century dreamers. Others just want to see for themselves the building where this successful social group in American history lived. “I don’t know of anywhere else where you can live in a historical place,” said the director of the Oneida site. “It’s very unusual.”\nThe present owners share the building with guests who stay in large comfortably furnished bedrooms with private baths. There are eight guest rooms in the hotel area, and each guest pays $100 for a big bedroom, a simple breakfast and a private tour around the 10,300-square-meter building, which also contains 35 apartments.\nThe library and the building’s grounds are also open to guests, as well as several of the public rooms. The 170-year-old library, unchanged from the original construction, holds a rich collection of 19th century books and magazines, which learners used to study Latin, Greek, algebra and astronomy.\nThis place is open for everybody and it’s worth a visit.",
+        "enunciado": "The old library",
+        "opciones": [
+          "A. has changed a little.",
+          "B. has remained the same.",
+          "C. has been damaged."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El texto afirma explícitamente: 'The 170-year-old library, unchanged from the original construction...', lo que significa que ha permanecido igual."
+      },
+      "metadatos": {
+        "competencia": "Lectura crítica en inglés",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A SOCIAL EXPERIMENT IN ONEIDA, NEW YORK\nIn the nineteenth century there was a village called Oneida in New York State where a \"family\" of 300 members lived together in a large beautiful house where they shared everything.\nA man named John Humphrey Noyes, and a small group of people moved there in 1848. They wanted a place where they could live according to their particular beliefs in their efforts to create a more equal society.\nToday, this place is touristic and, like me, many visitors come because they had relatives among those 19th century dreamers. Others just want to see for themselves the building where this successful social group in American history lived. “I don’t know of anywhere else where you can live in a historical place,” said the director of the Oneida site. “It’s very unusual.”\nThe present owners share the building with guests who stay in large comfortably furnished bedrooms with private baths. There are eight guest rooms in the hotel area, and each guest pays $100 for a big bedroom, a simple breakfast and a private tour around the 10,300-square-meter building, which also contains 35 apartments.\nThe library and the building’s grounds are also open to guests, as well as several of the public rooms. The 170-year-old library, unchanged from the original construction, holds a rich collection of 19th century books and magazines, which learners used to study Latin, Greek, algebra and astronomy.\nThis place is open for everybody and it’s worth a visit.",
+        "enunciado": "People at Oneida studied",
+        "opciones": [
+          "A. languages.",
+          "B. politics.",
+          "C. anatomy."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "El texto menciona que los estudiantes 'used to study Latin, Greek, algebra and astronomy'. Latin y Greek son idiomas, por lo tanto, estudiaban lenguas."
+      },
+      "metadatos": {
+        "competencia": "Lectura crítica en inglés",
+        "fuente": "27-septiembre-ingles-saber-pro-2024.pdf"
+      }
+    }
+  ]
+}

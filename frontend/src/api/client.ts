@@ -61,6 +61,8 @@ export const aiAPI = {
         axios.post(`${import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'}/sugerencias/datos-curiosos`, data),
     apoyoPregunta: (data: { programa: string; competencia: string; enunciado: string; texto_base?: string; opciones?: string[]; explicacion?: string }) =>
         axios.post(`${import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'}/sugerencias/apoyo-pregunta`, data),
+    evaluarEnsayo: (data: { tema: string; ensayo: string }) =>
+        axios.post(`${import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'}/sugerencias/evaluar-ensayo`, data),
     adminAnalisis: (data: { task: string; analytics_context: Record<string, unknown> }) =>
         axios.post(`${import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'}/sugerencias/admin-analisis`, data),
     exportExcel: (params: Record<string, string>) => {

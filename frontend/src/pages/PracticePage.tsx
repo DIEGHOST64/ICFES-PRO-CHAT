@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CheckCircle, XCircle, ChevronRight, RefreshCw, Trophy, BookOpen, ArrowLeft, Loader2, LayoutGrid } from 'lucide-react';
-import { BookOpenText, Function, PencilLine, Translate, Scales, SuitcaseSimple } from '@phosphor-icons/react';
+import { BookOpenText, Function, PencilLine, Translate, Scales, SuitcaseSimple, HandGrabbing } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { aiAPI, queriesAPI } from '../api/client';
@@ -142,6 +142,13 @@ const hasVisualCue = (q: Pregunta | undefined): boolean => {
 
 const englishTypeLabel = (value: string | undefined): string => {
     switch ((value || '').toLowerCase()) {
+        case 'part1': return 'Part 1: Señales';
+        case 'part2': return 'Part 2: Relación lexicológica';
+        case 'part3': return 'Part 3: Conversaciones';
+        case 'part4': return 'Part 4: Textos incompletos';
+        case 'part5': return 'Part 5: Comprensión literal';
+        case 'part6': return 'Part 6: Comprensión inferencial';
+        case 'part7': return 'Part 7: Textos incompletos B1';
         case 'reading': return 'Reading';
         case 'vocabulary': return 'Vocabulary';
         case 'grammar': return 'Grammar';
@@ -178,7 +185,7 @@ const difficultyLabel = (value: string): string => {
     }
 };
 
-const LATEX_REGEX = /(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g;
+const LATEX_REGEX = /(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$\n]+?\$(?!\$))/g;
 
 const renderTextWithLatex = (text: string): React.ReactNode => {
     const source = String(text || '');
@@ -188,7 +195,8 @@ const renderTextWithLatex = (text: string): React.ReactNode => {
         const isDollarBlock = part.startsWith('$$') && part.endsWith('$$');
         const isBracketBlock = part.startsWith('\\[') && part.endsWith('\\]');
         const isParenInline = part.startsWith('\\(') && part.endsWith('\\)');
-        const isLatex = isDollarBlock || isBracketBlock || isParenInline;
+        const isDollarInline = !isDollarBlock && part.startsWith('$') && part.endsWith('$') && part.length > 2;
+        const isLatex = isDollarBlock || isBracketBlock || isParenInline || isDollarInline;
 
         if (!isLatex) {
             return <React.Fragment key={`txt-${idx}`}>{part}</React.Fragment>;
@@ -204,6 +212,9 @@ const renderTextWithLatex = (text: string): React.ReactNode => {
             displayMode = true;
         } else if (isParenInline) {
             expr = part.slice(2, -2);
+            displayMode = false;
+        } else if (isDollarInline) {
+            expr = part.slice(1, -1);
             displayMode = false;
         }
 
@@ -255,6 +266,9 @@ export const PracticePage: React.FC = () => {
     const [adaptiveTarget, setAdaptiveTarget] = useState<'A2' | 'B1' | 'basico' | 'intermedio' | 'avanzado'>('intermedio');
     const [adaptiveAnswered, setAdaptiveAnswered] = useState(0);
     const [adaptiveCorrect, setAdaptiveCorrect] = useState(0);
+    const [ensayoText, setEnsayoText] = useState('');
+    const [evaluandoEnsayo, setEvaluandoEnsayo] = useState(false);
+    const [ensayoResult, setEnsayoResult] = useState<any>(null);
     const sessionQuestionCount = TRAINING_LENGTH_PRESETS[sessionLength].cantidad;
     const sessionLengthLabel = TRAINING_LENGTH_PRESETS[sessionLength].label;
     const particleConfigs = useMemo(() => (
@@ -402,7 +416,8 @@ export const PracticePage: React.FC = () => {
     };
 
     const q = preguntas[current];
-    const tieneOpciones = (q?.opciones?.length ?? 0) > 0;
+    const isEscrita = (q?.competencia || '').toLowerCase().includes('escrita');
+    const tieneOpciones = !isEscrita && (q?.opciones?.length ?? 0) > 0;
     const qSupport = q ? supportByQuestion[q.id] : undefined;
     // Número de preguntas con opciones (para el marcador)
     const totalConOpciones = preguntas.filter(p => p.opciones.length > 0).length;
@@ -459,11 +474,41 @@ export const PracticePage: React.FC = () => {
     const handleNext = () => {
         if (current + 1 >= preguntas.length) { setDone(true); return; }
         setSelected(null); setRevealed(false); setCurrent(c => c + 1);
+        setEnsayoText(''); setEnsayoResult(null);
     };
 
     const handleContinueFragment = () => {
         // Avanza sin modificar el score (fragmento de lectura)
         handleNext();
+    };
+
+    const handleCalificarEnsayo = async () => {
+        if (!ensayoText.trim() || ensayoText.trim().split(/\s+/).length < 20) {
+            alert('Tu ensayo debe tener al menos 20 palabras para que el juez lo lea.');
+            return;
+        }
+        setEvaluandoEnsayo(true);
+        setEnsayoResult(null);
+        try {
+            const tema = q?.contexto || q?.enunciado || 'Dilema de reflexión ICFES';
+            const res = await aiAPI.evaluarEnsayo({ tema, ensayo: ensayoText });
+            setEnsayoResult(res.data);
+            setRevealed(true);
+            setScore(prev => prev + 1);
+            
+            queriesAPI.save({
+                programa: student!.programa,
+                pregunta: 'SIMULACRO_ESCRITURA',
+                competencia: q?.competencia || 'Comunicación Escrita',
+                acierto: true
+            }).catch(() => {});
+            
+        } catch (err) {
+            console.error(err);
+            alert("Hubo un fallo contactando al motor evaluador.");
+        } finally {
+            setEvaluandoEnsayo(false);
+        }
     };
 
     const startPracticeSession = () => {
@@ -1067,38 +1112,130 @@ export const PracticePage: React.FC = () => {
                                 )}
                             </div>
 
-                            {/* Texto base / pasaje lector */}
-                            {q.texto_base && (
+                            {/* Diseño Visual: Señales / Avisos (Part 1) */}
+                            {q.tipo_ingles === 'part1' && q.texto_base && (
                                 <div style={{
-                                    background: 'var(--surface-3)',
-                                    border: '1px solid var(--border)',
-                                    borderLeft: '4px solid var(--primary)',
-                                    borderRadius: 'var(--radius-md)',
-                                    padding: 'var(--space-md)',
-                                    marginBottom: 'var(--space-md)',
+                                    margin: '24px auto 32px auto', border: '6px solid var(--text)', background: '#fff',
+                                    padding: '28px', textAlign: 'center', width: 'fit-content', maxWidth: '100%', 
+                                    boxShadow: '4px 4px 0 var(--text-muted)'
                                 }}>
-                                    <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                                        📄 Texto de referencia
-                                    </p>
-                                    <div style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--text-muted)', fontStyle: 'italic', whiteSpace: 'pre-wrap' }}>
-                                        {renderTextWithLatex(q.texto_base)}
-                                    </div>
-                                    {qSupport?.mostrar_traduccion && qSupport?.texto_base_es && (
-                                        <div style={{ marginTop: '10px', borderTop: '1px dashed var(--border)', paddingTop: '10px' }}>
-                                            <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--accent)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                                Traduccion al espanol
-                                            </p>
-                                            <div style={{ fontSize: '14px', lineHeight: '1.7', color: 'var(--text)', whiteSpace: 'pre-wrap' }}>
-                                                {renderTextWithLatex(qSupport.texto_base_es)}
-                                            </div>
-                                        </div>
-                                    )}
+                                    <h2 style={{ fontFamily: 'monospace', textTransform: 'uppercase', color: 'var(--text)', margin: 0, fontSize: '26px', fontWeight: 900, letterSpacing: '1px' }}>
+                                        {q.texto_base}
+                                    </h2>
                                 </div>
                             )}
 
-                            <div style={{ fontSize: '16px', lineHeight: '1.65', fontWeight: 500, whiteSpace: 'pre-wrap' }}>
-                                {renderTextWithLatex(q.enunciado)}
-                            </div>
+                            {/* Texto base estandar (excluyendo part1, part3 que no usa base, y part4/part7 que usan Cloze abajo) */}
+                            {q.texto_base && !['part1', 'part3', 'part4', 'part7'].includes(q.tipo_ingles || '') && (() => {
+                                // Safety net: limpiar marcadores [__N__] de Part 5/6 lectura
+                                const cleanedBase = (q.tipo_ingles === 'part5' || q.tipo_ingles === 'part6')
+                                    ? q.texto_base.replace(/\[_+\d*_+\]/g, '').replace(/\s{2,}/g, ' ').trim()
+                                    : q.texto_base;
+                                const isInferential = q.tipo_ingles === 'part6';
+                                return (
+                                    <div style={{
+                                        background: 'var(--surface-3)',
+                                        border: '1px solid var(--border)',
+                                        borderLeft: `4px solid ${isInferential ? 'var(--accent)' : 'var(--primary)'}`,
+                                        borderRadius: 'var(--radius-md)',
+                                        padding: 'var(--space-md)',
+                                        marginBottom: 'var(--space-md)',
+                                    }}>
+                                        <p style={{ fontSize: '11px', fontWeight: 700, color: isInferential ? 'var(--accent)' : 'var(--primary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                                            {isInferential ? '🔍 Texto de análisis' : '📄 Texto de referencia'}
+                                        </p>
+                                        <div style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--text-muted)', fontStyle: 'italic', whiteSpace: 'pre-wrap' }}>
+                                            {renderTextWithLatex(cleanedBase)}
+                                        </div>
+                                        {qSupport?.mostrar_traduccion && qSupport?.texto_base_es && (
+                                            <div style={{ marginTop: '10px', borderTop: '1px dashed var(--border)', paddingTop: '10px' }}>
+                                                <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--accent)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                                    Traduccion al espanol
+                                                </p>
+                                                <div style={{ fontSize: '14px', lineHeight: '1.7', color: 'var(--text)', whiteSpace: 'pre-wrap' }}>
+                                                    {renderTextWithLatex(qSupport.texto_base_es)}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })()}
+
+                            {/* Enunciado standard o dialog style */}
+                            {q.tipo_ingles === 'part3' && q.enunciado ? (
+                                <div style={{ background: 'var(--surface-2)', borderLeft: '4px solid var(--accent)', padding: '16px', fontFamily: 'monospace', fontSize: '15px', whiteSpace: 'pre-wrap', marginBottom: '16px', borderRadius: '4px' }}>
+                                    <p style={{ fontSize: '10px', fontWeight: 700, color: 'var(--accent)', marginBottom: '8px', textTransform: 'uppercase' }}>🗣️ Conversación Corta</p>
+                                    {q.enunciado}
+                                </div>
+                            ) : (
+                                <div style={{ fontSize: '16px', lineHeight: '1.65', fontWeight: 500, whiteSpace: 'pre-wrap', marginBottom: '16px' }}>
+                                    {renderTextWithLatex(q.enunciado)}
+                                </div>
+                            )}
+
+                            {/* Pasaje Cloze — UN solo hueco [___] (Part 4 y Part 7) */}
+                            {['part4', 'part7'].includes(q.tipo_ingles || '') && q.texto_base && (() => {
+                                // Separar texto en: parte antes del hueco | [___] | parte después del hueco
+                                const parts = q.texto_base.split('[___]');
+                                const hasBlank = parts.length >= 2;
+                                const showAnswer = revealed && selected;
+                                const isCorrect = selected === q.respuesta_correcta;
+                                const answerText = selected ? selected.replace(/^[A-H]\.\s*/i, '') : '';
+
+                                return (
+                                    <div style={{
+                                        background: 'var(--surface-2)',
+                                        border: '1px solid var(--border)',
+                                        borderLeft: `4px solid ${q.tipo_ingles === 'part7' ? '#6366f1' : 'var(--primary)'}`,
+                                        borderRadius: 'var(--radius-lg)',
+                                        padding: 'var(--space-xl)',
+                                        marginBottom: 'var(--space-lg)',
+                                    }}>
+                                        <p style={{ fontSize: '11px', fontWeight: 700, color: q.tipo_ingles === 'part7' ? '#6366f1' : 'var(--primary)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            ✏️ Complete the text
+                                            {q.tipo_ingles === 'part7' && <span style={{ background: '#6366f1', color: '#fff', fontSize: '10px', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>B1</span>}
+                                        </p>
+                                        <div style={{ fontSize: '15px', lineHeight: '2.0', color: 'var(--text)' }}>
+                                            {hasBlank ? (
+                                                <>
+                                                    <span>{renderTextWithLatex(parts[0])}</span>
+                                                    <span style={{
+                                                        display: 'inline-flex',
+                                                        minWidth: showAnswer ? 'auto' : '120px',
+                                                        height: '32px',
+                                                        margin: '0 6px',
+                                                        padding: '0 14px',
+                                                        border: showAnswer
+                                                            ? `2px solid ${isCorrect ? 'var(--accent)' : 'var(--danger)'}`
+                                                            : '2px dashed var(--primary)',
+                                                        borderRadius: '20px',
+                                                        background: showAnswer
+                                                            ? (isCorrect ? 'rgba(16,185,129,0.12)' : 'rgba(239,68,68,0.08)')
+                                                            : 'rgba(63,98,120,0.06)',
+                                                        color: showAnswer ? 'var(--text)' : 'var(--primary)',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontWeight: 700,
+                                                        fontSize: '14px',
+                                                        verticalAlign: 'bottom',
+                                                        transition: 'all 0.3s ease',
+                                                        boxShadow: showAnswer ? '0 2px 8px rgba(0,0,0,0.08)' : 'inset 0 1px 3px rgba(0,0,0,0.05)',
+                                                    }}>
+                                                        {showAnswer ? answerText : '________'}
+                                                    </span>
+                                                    <span>{renderTextWithLatex(parts.slice(1).join('[___]'))}</span>
+                                                </>
+                                            ) : (
+                                                <span>{renderTextWithLatex(q.texto_base)}</span>
+                                            )}
+                                        </div>
+                                        <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '14px', display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                            <HandGrabbing size={14} weight="duotone" />
+                                            Selecciona la opción correcta para completar el espacio en blanco.
+                                        </p>
+                                    </div>
+                                );
+                            })()}
 
                             {qSupport?.mostrar_traduccion && qSupport?.enunciado_es && (
                                 <div style={{ marginTop: '10px', borderLeft: '3px solid var(--accent)', paddingLeft: '10px' }}>
@@ -1139,17 +1276,18 @@ export const PracticePage: React.FC = () => {
                         {/* Opciones — solo si la pregunta es estructurada */}
                         {tieneOpciones && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)', marginBottom: 'var(--space-lg)' }}>
-                                {q.opciones.map((op, i) => (
-                                    <button key={i} onClick={() => handleSelect(op)} data-motion="row"
-                                        className="card animate-fade-up"
-                                        style={{
-                                            textAlign: 'left', cursor: revealed ? 'default' : 'pointer',
-                                            padding: 'var(--space-md)', transition: 'var(--t-base)',
-                                            display: 'flex', alignItems: 'center', gap: 'var(--space-sm)',
-                                            animationDelay: `${i * 60}ms`,
-                                            border: '1px solid var(--border)',
-                                            ...getOptionStyle(op),
-                                        }}>
+                                {q.opciones.map((op, i) => {
+                                    return (
+                                        <button key={i} onClick={() => handleSelect(op)} data-motion="row"
+                                            className="card animate-fade-up"
+                                            style={{
+                                                textAlign: 'left', cursor: revealed ? 'default' : 'pointer',
+                                                padding: 'var(--space-md)', transition: 'all 0.2s ease',
+                                                display: 'flex', alignItems: 'center', gap: 'var(--space-sm)',
+                                                animationDelay: `${i * 60}ms`,
+                                                border: '1px solid var(--border)',
+                                                ...getOptionStyle(op),
+                                            }}>
                                         <span style={{
                                             width: '28px', height: '28px', borderRadius: 'var(--radius-full)',
                                             border: '1.5px solid var(--border)', display: 'flex', alignItems: 'center',
@@ -1168,23 +1306,91 @@ export const PracticePage: React.FC = () => {
                                         {revealed && op === q.respuesta_correcta && <CheckCircle size={16} style={{ marginLeft: 'auto', color: 'var(--accent)' }} />}
                                         {revealed && op === selected && op !== q.respuesta_correcta && <XCircle size={16} style={{ marginLeft: 'auto', color: 'var(--danger)' }} />}
                                     </button>
-                                ))}
+                                    );
+                                })}
                             </div>
                         )}
 
-                        {/* Modo lectura — fragmento PDF sin opciones */}
+                        {/* Modo sin opciones (Lectura o Ensayo) */}
                         {!tieneOpciones && (
                             <div data-motion="panel" className="card animate-fade-up" style={{ marginBottom: 'var(--space-lg)', borderColor: 'var(--primary)', opacity: 0.95, boxShadow: 'var(--shadow-md)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginBottom: '10px' }}>
-                                    <BookOpen size={16} color="var(--primary)" />
-                                    <strong style={{ fontSize: '13px', color: 'var(--primary)' }}>Fragmento del cuadernillo oficial ICFES</strong>
-                                </div>
-                                <p style={{ fontSize: '13px', lineHeight: '1.65', color: 'var(--text-muted)', marginBottom: 'var(--space-md)' }}>
-                                    Lee el fragmento y reflexiona sobre las ideas principales antes de continuar.
-                                </p>
-                                <button className="btn btn-primary" onClick={handleContinueFragment}>
-                                    {current + 1 >= preguntas.length ? <><Trophy size={15} /> Ver resultados</> : <>Continuar <ChevronRight size={15} /></>}
-                                </button>
+                                {(q.competencia || '').toLowerCase().includes('escrita') ? (
+                                    <>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginBottom: '10px' }}>
+                                            <PencilLine size={18} color="var(--primary)" weight="duotone" />
+                                            <strong style={{ fontSize: '14px', color: 'var(--primary)' }}>Lienzo de Redacción (Comunicación Escrita)</strong>
+                                        </div>
+                                        <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-muted)', marginBottom: '15px' }}>
+                                            Lee el dilema planteado arriba y escribe tu ensayo. La IA calificará tu ortografía, fluidez y poder de persuasión.
+                                        </p>
+                                        <textarea
+                                            value={ensayoText}
+                                            onChange={e => setEnsayoText(e.target.value)}
+                                            placeholder="Por ejemplo: En mi opinión, la problemática plantea que..."
+                                            disabled={evaluandoEnsayo || revealed}
+                                            style={{
+                                                width: '100%', minHeight: '220px', padding: '15px', borderRadius: '12px',
+                                                border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', fontSize: '14px',
+                                                resize: 'vertical', outline: 'none', background: revealed ? 'var(--surface-2)' : 'var(--surface)'
+                                            }}
+                                        />
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
+                                            <span style={{ fontSize: '12px', color: 'var(--text-hint)' }}>
+                                                {ensayoText.trim().split(/\s+/).filter(x => x).length} palabras (mínimo 20 recomendado)
+                                            </span>
+                                            {!revealed ? (
+                                                <button className="btn btn-primary" onClick={handleCalificarEnsayo} disabled={evaluandoEnsayo}>
+                                                    {evaluandoEnsayo ? <><Loader2 size={15} className="animate-spin" /> Evaluando...</> : <>Entregar Ensayo</>}
+                                                </button>
+                                            ) : (
+                                                <button className="btn btn-primary" onClick={handleNext}>
+                                                    {current + 1 >= preguntas.length ? <><Trophy size={15} /> Ver resultados totales</> : <>Siguiente Módulo <ChevronRight size={15} /></>}
+                                                </button>
+                                            )}
+                                        </div>
+
+                                        {ensayoResult && (
+                                            <div data-motion="panel" className="animate-fade-up" style={{ marginTop: '20px', padding: '16px', borderRadius: '12px', background: 'rgba(59, 130, 246, 0.05)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                                    <h4 style={{ margin: 0, fontSize: '15px', color: 'var(--primary)', fontWeight: 700 }}>Veredicto del Juez IA</h4>
+                                                    <span className="badge badge-primary" style={{ fontSize: '14px' }}>
+                                                        {ensayoResult.puntaje} / 300 pts ({ensayoResult.nivel})
+                                                    </span>
+                                                </div>
+                                                <p style={{ margin: '0 0 15px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text)' }}>
+                                                    {ensayoResult.feedback_general}
+                                                </p>
+                                                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '15px' }}>
+                                                    <div>
+                                                        <strong style={{ fontSize: '12px', color: 'var(--accent)', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>✔️ Fuertes</strong>
+                                                        <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
+                                                            {ensayoResult.fortalezas?.map((f: string, i: number) => <li key={i}>{f}</li>)}
+                                                        </ul>
+                                                    </div>
+                                                    <div>
+                                                        <strong style={{ fontSize: '12px', color: 'var(--danger)', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>🎯 A mejorar</strong>
+                                                        <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
+                                                            {ensayoResult.oportunidades?.map((o: string, i: number) => <li key={i}>{o}</li>)}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginBottom: '10px' }}>
+                                            <BookOpen size={16} color="var(--primary)" />
+                                            <strong style={{ fontSize: '13px', color: 'var(--primary)' }}>Fragmento del cuadernillo oficial ICFES</strong>
+                                        </div>
+                                        <p style={{ fontSize: '13px', lineHeight: '1.65', color: 'var(--text-muted)', marginBottom: 'var(--space-md)' }}>
+                                            Lee el fragmento y reflexiona sobre las ideas principales antes de continuar.
+                                        </p>
+                                        <button className="btn btn-primary" onClick={handleContinueFragment}>
+                                            {current + 1 >= preguntas.length ? <><Trophy size={15} /> Ver resultados</> : <>Continuar <ChevronRight size={15} /></>}
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         )}
 

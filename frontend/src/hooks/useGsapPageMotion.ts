@@ -14,6 +14,7 @@ export const useGsapPageMotion = (
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
+      gsap.config({ nullTargetWarn: false });
       const q = gsap.utils.selector(root);
       const headline = q('[data-motion="headline"]');
       const panel = q('[data-motion="panel"]');

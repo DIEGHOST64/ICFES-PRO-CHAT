@@ -1,0 +1,446 @@
+{
+  "origen": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf",
+  "total_preguntas": 22,
+  "preguntas": [
+    {
+      "contenido": {
+        "contexto": "MÓDULO DE RAZONAMIENTO CUANTITATIVO\nLa tabla muestra el total de sismos registrados en el planeta durante la primera década del siglo XXI y la distribución de aquellos con magnitud mayor a 5,0.\n(*) Incluye datos del número de sismos con magnitud inferior a 5,0.\n\nTabla de Sismos (2001-2010):\nAño   | Magnitud 5,0-5,9 | Magnitud 6,0-6,9 | Magnitud 7,0-7,9 | Magnitud 8,0-8,9 | Total por año (*)\n------|------------------|------------------|------------------|------------------|------------------\n2001  | 1.224            | 121              | 15               | 1                | 3.362\n2002  | 1.201            | 127              | 13               | 0                | 3.343\n2003  | 1.203            | 140              | 14               | 1                | 3.361\n2004  | 1.514            | 141              | 14               | 1                | 3.674\n2005  | 1.693            | 140              | 10               | 1                | 3.849\n2006  | 1.712            | 142              | 9                | 2                | 3.871\n2007  | 2.074            | 121              | 15               | 1                | 3.362\n2008  | 1.768            | 168              | 12               | 0                | 3.956\n2009  | 1.832            | 151              | 21               | 1                | 4.014\n2010  | 1.944            | 151              | 21               | 1                | 4.127\nTotal por magnitud | 16.165           | 1.459            | 143              | 12               | 36.919",
+        "enunciado": "Un sismólogo afirma que en cualquier año era más probable que hubiese sismos de baja que de alta magnitud. Según el registro histórico, la relación que justifica la opinión del sismólogo es:",
+        "opciones": [
+          "A. A mayor magnitud, mayor cantidad de sismos.",
+          "B. A mayor magnitud, menor cantidad de sismos.",
+          "C. A mayor cantidad de sismos, menor magnitud de estos.",
+          "D. A mayor cantidad de sismos, mayor magnitud de estos."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La tabla muestra claramente que a medida que la magnitud de los sismos aumenta (de 5,0-5,9 a 8,0-8,9), la cantidad total de sismos registrados disminuye drásticamente (de 16.165 a 12). Esto significa que los sismos de baja magnitud son mucho más frecuentes y, por lo tanto, más probables, lo que justifica la afirmación del sismólogo."
+      },
+      "metadatos": {
+        "competencia": "Argumentación",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "MÓDULO DE RAZONAMIENTO CUANTITATIVO\nLa tabla muestra el total de sismos registrados en el planeta durante la primera década del siglo XXI y la distribución de aquellos con magnitud mayor a 5,0.\n(*) Incluye datos del número de sismos con magnitud inferior a 5,0.\n\nTabla de Sismos (2001-2010):\nAño   | Magnitud 5,0-5,9 | Magnitud 6,0-6,9 | Magnitud 7,0-7,9 | Magnitud 8,0-8,9 | Total por año (*)\n------|------------------|------------------|------------------|------------------|------------------\n2001  | 1.224            | 121              | 15               | 1                | 3.362\n2002  | 1.201            | 127              | 13               | 0                | 3.343\n2003  | 1.203            | 140              | 14               | 1                | 3.361\n2004  | 1.514            | 141              | 14               | 1                | 3.674\n2005  | 1.693            | 140              | 10               | 1                | 3.849\n2006  | 1.712            | 142              | 9                | 2                | 3.871\n2007  | 2.074            | 121              | 15               | 1                | 3.362\n2008  | 1.768            | 168              | 12               | 0                | 3.956\n2009  | 1.832            | 151              | 21               | 1                | 4.014\n2010  | 1.944            | 151              | 21               | 1                | 4.127\nTotal por magnitud | 16.165           | 1.459            | 143              | 12               | 36.919",
+        "enunciado": "A partir de los datos, una persona predice que en el 2011 se presentarán exactamente 173 sismos de magnitud igual o superior a 6,0 grados. Que suceda lo que esta persona predice es",
+        "opciones": [
+          "A. imposible, pues el número de sismos, de cualquier magnitud, ha ido disminuyendo desde 2007.",
+          "B. poco probable, porque, de acuerdo con la tendencia, el número de sismos en el 2011 será mayor que 173.",
+          "C. incierto, pues a partir del número de sismos de cualquier magnitud presentado en el pasado no se puede predecir el número de sismos futuros.",
+          "D. seguro, pues la tendencia de los dos años anteriores a 2011 indica que se presentarán 151 sismos de magnitud entre 6,0 y 6,9; 21 de magnitud entre 7,0 y 7,9, y 1 de magnitud superior a 8,0."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "Los fenómenos naturales como los sismos son inherentemente impredecibles en cuanto a la ocurrencia exacta de eventos futuros. Aunque se pueden observar tendencias históricas (como los 173 sismos de magnitud >= 6.0 en 2009 y 2010), estas no garantizan que un número específico de sismos se repita en un año determinado. Por lo tanto, cualquier predicción exacta es incierta."
+      },
+      "metadatos": {
+        "competencia": "Argumentación",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "MÓDULO DE RAZONAMIENTO CUANTITATIVO\nLa tabla muestra el total de sismos registrados en el planeta durante la primera década del siglo XXI y la distribución de aquellos con magnitud mayor a 5,0.\n(*) Incluye datos del número de sismos con magnitud inferior a 5,0.\n\nTabla de Sismos (2001-2010):\nAño   | Magnitud 5,0-5,9 | Magnitud 6,0-6,9 | Magnitud 7,0-7,9 | Magnitud 8,0-8,9 | Total por año (*)\n------|------------------|------------------|------------------|------------------|------------------\n2001  | 1.224            | 121              | 15               | 1                | 3.362\n2002  | 1.201            | 127              | 13               | 0                | 3.343\n2003  | 1.203            | 140              | 14               | 1                | 3.361\n2004  | 1.514            | 141              | 14               | 1                | 3.674\n2005  | 1.693            | 140              | 10               | 1                | 3.849\n2006  | 1.712            | 142              | 9                | 2                | 3.871\n2007  | 2.074            | 121              | 15               | 1                | 3.362\n2008  | 1.768            | 168              | 12               | 0                | 3.956\n2009  | 1.832            | 151              | 21               | 1                | 4.014\n2010  | 1.944            | 151              | 21               | 1                | 4.127\nTotal por magnitud | 16.165           | 1.459            | 143              | 12               | 36.919",
+        "enunciado": "¿Cuál de los siguientes cocientes permite estimar la cantidad de sismos mensuales?",
+        "opciones": [
+          "A. Total de sismos sobre meses del año.",
+          "B. Total de sismos por año sobre meses del año.",
+          "C. Total de sismos por año sobre días del año.",
+          "D. Total de sismos sobre su magnitud."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "Para estimar la cantidad de sismos mensuales, se debe tomar el total de sismos registrados en un año específico ('Total de sismos por año') y dividirlo por el número de meses que tiene un año (12, 'meses del año')."
+      },
+      "metadatos": {
+        "competencia": "Formulación y ejecución",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "MÓDULO DE RAZONAMIENTO CUANTITATIVO\nLa tabla muestra el total de sismos registrados en el planeta durante la primera década del siglo XXI y la distribución de aquellos con magnitud mayor a 5,0.\n(*) Incluye datos del número de sismos con magnitud inferior a 5,0.\n\nTabla de Sismos (2001-2010):\nAño   | Magnitud 5,0-5,9 | Magnitud 6,0-6,9 | Magnitud 7,0-7,9 | Magnitud 8,0-8,9 | Total por año (*)\n------|------------------|------------------|------------------|------------------|------------------\n2001  | 1.224            | 121              | 15               | 1                | 3.362\n2002  | 1.201            | 127              | 13               | 0                | 3.343\n2003  | 1.203            | 140              | 14               | 1                | 3.361\n2004  | 1.514            | 141              | 14               | 1                | 3.674\n2005  | 1.693            | 140              | 10               | 1                | 3.849\n2006  | 1.712            | 142              | 9                | 2                | 3.871\n2007  | 2.074            | 121              | 15               | 1                | 3.362\n2008  | 1.768            | 168              | 12               | 0                | 3.956\n2009  | 1.832            | 151              | 21               | 1                | 4.014\n2010  | 1.944            | 151              | 21               | 1                | 4.127\nTotal por magnitud | 16.165           | 1.459            | 143              | 12               | 36.919",
+        "enunciado": "El promedio anual de sismos en la primera década del siglo XXI fue 3.783. Los años con el número de sismos más cercano y más lejano al promedio son",
+        "opciones": [
+          "A. 2007 y 2010, respectivamente.",
+          "B. 2006 y 2005, respectivamente.",
+          "C. 2005 y 2002, respectivamente.",
+          "D. 2002 y 2008, respectivamente."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "Calculando la diferencia absoluta entre el total de sismos de cada año y el promedio (3.783):\n- 2005: |3.849 - 3.783| = 66 (el más cercano)\n- 2002: |3.343 - 3.783| = 440 (el más lejano)\nPor lo tanto, los años más cercano y más lejano al promedio son 2005 y 2002, respectivamente."
+      },
+      "metadatos": {
+        "competencia": "Formulación y ejecución",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "MÓDULO DE RAZONAMIENTO CUANTITATIVO\nLa tabla muestra el total de sismos registrados en el planeta durante la primera década del siglo XXI y la distribución de aquellos con magnitud mayor a 5,0.\n(*) Incluye datos del número de sismos con magnitud inferior a 5,0.\n\nTabla de Sismos (2001-2010):\nAño   | Magnitud 5,0-5,9 | Magnitud 6,0-6,9 | Magnitud 7,0-7,9 | Magnitud 8,0-8,9 | Total por año (*)\n------|------------------|------------------|------------------|------------------|------------------\n2001  | 1.224            | 121              | 15               | 1                | 3.362\n2002  | 1.201            | 127              | 13               | 0                | 3.343\n2003  | 1.203            | 140              | 14               | 1                | 3.361\n2004  | 1.514            | 141              | 14               | 1                | 3.674\n2005  | 1.693            | 140              | 10               | 1                | 3.849\n2006  | 1.712            | 142              | 9                | 2                | 3.871\n2007  | 2.074            | 121              | 15               | 1                | 3.362\n2008  | 1.768            | 168              | 12               | 0                | 3.956\n2009  | 1.832            | 151              | 21               | 1                | 4.014\n2010  | 1.944            | 151              | 21               | 1                | 4.127\nTotal por magnitud | 16.165           | 1.459            | 143              | 12               | 36.919",
+        "enunciado": "En la primera década del siglo XXI, la proporción de sismos de magnitud entre 8,0 y 8,9 es de, aproximadamente,",
+        "opciones": [
+          "A. 1 de cada 3.000 sismos.",
+          "B. 1 de cada 12 sismos.",
+          "C. 12 de cada 18.000 sismos.",
+          "D. 12 de cada 4.000 sismos."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "El total de sismos de magnitud entre 8,0 y 8,9 es 12. El total general de sismos registrados en la década es 36.919. La proporción es 12 / 36.919 ≈ 0,000325. Comparando con las opciones, 1 / 3.000 ≈ 0,000333, que es la aproximación más cercana."
+      },
+      "metadatos": {
+        "competencia": "Formulación y ejecución",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Patricia está muy contenta, pues afirma que, de la forma en que su tía repartió el dinero de sus bienes, ella obtendrá más dinero que si la herencia se dividiera en partes iguales entre los familiares vivos de la tía según el esquema.",
+        "enunciado": "La afirmación de Patricia es",
+        "opciones": [
+          "A. incorrecta, pues de cualquiera de las dos formas los herederos reciben $32.000.000.",
+          "B. correcta, pues según el testamento la herencia se distribuye entre 6 personas; de la otra forma se debe repartir entre 8.",
+          "C. incorrecta, pues Patricia recibirá 10% de la herencia, que es menos que el 12,5% que recibiría con la otra distribución.",
+          "D. correcta, pues el dinero se divide solo entre ella y su hermano."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La afirmación de Patricia es que obtendrá más dinero. Si, como sugiere la opción C, Patricia recibe el 10% de la herencia por testamento y el 12,5% si se dividiera en partes iguales (lo que implicaría 8 herederos, 100%/8 = 12,5%), entonces el 10% es menor que el 12,5%. Por lo tanto, su afirmación de que recibirá más dinero es incorrecta. Esta opción proporciona una comparación cuantitativa directa que valida la incorrección de su afirmación."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Patricia está muy contenta, pues afirma que, de la forma en que su tía repartió el dinero de sus bienes, ella obtendrá más dinero que si la herencia se dividiera en partes iguales entre los familiares vivos de la tía según el esquema.",
+        "enunciado": "¿Qué parte de la herencia le corresponde a Juan?",
+        "opciones": [
+          "A. La quinta parte.",
+          "B. La mitad.",
+          "C. La octava parte.",
+          "D. La tercera parte."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El texto proporcionado no incluye el 'esquema' de reparto de la herencia ni menciona explícitamente a Juan. Sin embargo, la pregunta 6, relacionada con el mismo contexto, menciona en una de sus opciones (C) que la herencia se dividiría en partes iguales entre 8 familiares (12,5% = 1/8). Asumiendo que Juan es uno de estos familiares en el escenario de división igualitaria, le correspondería 'La octava parte' de la herencia. Esta es la deducción más plausible basada en la información indirecta disponible en el bloque de texto."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Un instructor de pilates tiene un estudio con los equipos necesarios para que una persona reciba entrenamiento personalizado. La tabla 1 muestra la cantidad de sesiones por semana, el total en el mes y el costo mensual que una persona tendría que pagar por el entrenamiento. La tabla 2 muestra, en gris, los momentos del día que ya tiene clase con alguna persona, cada semana.\n\nTabla 1:\nNo. de sesiones por semana | No. de clases al mes | Costo mensual ($)\n2 | 8 | 280.000\n3 | 12 | 384.000\n4 | 16 | 480.000\n\nTabla 2:\nL M Mc J V S\n8 a.m. a 9 a.m.\n9 a.m. a 10 a.m.\n10 a.m. a 11 a.m.\n11 a.m. a 12 m\n12 m. a 1 p.m.\n1 p.m. a 2 p.m.\n4 p.m. a 5 p.m.\n5 p.m. a 6 p.m.\n6 p.m. a 7 p.m.",
+        "enunciado": "Camilo quiere inscribirse a las clases de pilates ofrecidas por el instructor y escoger el total de sesiones mensual en la que el costo por sesión sea de menor precio. Camilo elige tomar 2 sesiones semanales, con esto, ¿logra Camilo cumplir su propósito de que el costo por sesión sea el de menor precio?",
+        "opciones": [
+          "A. No, pues el costo por sesión de menor precio lo obtiene si toma 4 sesiones por semana.",
+          "B. Sí, pues tomar 2 sesiones por semana tiene el menor costo mensual de todas las opciones.",
+          "C. No, pues se paga un menor precio por sesión si toma 3 sesiones por semana.",
+          "D. Sí, pues tomar menos sesiones garantiza pagar menos por cada una de ellas."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "Para determinar el costo por sesión, se divide el costo mensual entre el número de clases al mes:\n- 2 sesiones/semana (8 clases/mes): $280.000 / 8 = $35.000 por sesión.\n- 3 sesiones/semana (12 clases/mes): $384.000 / 12 = $32.000 por sesión.\n- 4 sesiones/semana (16 clases/mes): $480.000 / 16 = $30.000 por sesión.\nEl costo por sesión más bajo es $30.000, que se obtiene al tomar 4 sesiones por semana. Camilo eligió 2 sesiones semanales ($35.000 por sesión), por lo tanto, no logró su propósito de obtener el menor precio por sesión."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Un instructor de pilates tiene un estudio con los equipos necesarios para que una persona reciba entrenamiento personalizado. La tabla 1 muestra la cantidad de sesiones por semana, el total en el mes y el costo mensual que una persona tendría que pagar por el entrenamiento. La tabla 2 muestra, en gris, los momentos del día que ya tiene clase con alguna persona, cada semana.\n\nTabla 1:\nNo. de sesiones por semana | No. de clases al mes | Costo mensual ($)\n2 | 8 | 280.000\n3 | 12 | 384.000\n4 | 16 | 480.000\n\nTabla 2:\nL M Mc J V S\n8 a.m. a 9 a.m.\n9 a.m. a 10 a.m.\n10 a.m. a 11 a.m.\n11 a.m. a 12 m\n12 m. a 1 p.m.\n1 p.m. a 2 p.m.\n4 p.m. a 5 p.m.\n5 p.m. a 6 p.m.\n6 p.m. a 7 p.m.",
+        "enunciado": "¿Cuál de las siguientes afirmaciones es incorrecta?",
+        "opciones": [
+          "A. Hay más horas disponibles de 8 a.m. a 1 p.m., que de 1 p.m. a 7 p.m.",
+          "B. Todos los días hay 5 horas disponibles.",
+          "C. Hay más horas disponibles de jueves a sábado, que de lunes a miércoles.",
+          "D. El sábado de 12 m. a 7 p.m. no hay clases asignadas."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La información visual de la Tabla 2 (los momentos del día 'en gris' que ya tienen clase) no está presente en el texto proporcionado, lo que impide una verificación directa de las afirmaciones. Sin embargo, basándose en la estructura de preguntas ICFES donde se pide identificar la afirmación incorrecta, la opción B ('Todos los días hay 5 horas disponibles') es la más probable. Esto implica que, si la tabla completa estuviera disponible, el número de horas disponibles por día no sería consistentemente 5, haciendo esta afirmación falsa y, por lo tanto, la respuesta correcta a la pregunta de cuál es incorrecta."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "La gráfica muestra la inversión que hizo un país, en temas de seguridad vial, durante 7 años.\n\nInversión en seguridad (Millones de euros):\n1996: 135,10\n1997: 166,36\n1998: 195,77\n1999: 194,39\n2000: 109,68\n2001: 108,96\n2002: 110,95\n\nTomado de http://elmundo.es/elmundo/2003/graficos/jun/s1/datos_renfe.html. Junio de 2003.",
+        "enunciado": "Durante el período 1996 – 2002, los años en los que se hizo mayor inversión en seguridad vial fueron",
+        "opciones": [
+          "A. 1997, 1998, 1999 y 2000.",
+          "B. 2000, 2001 y 2002.",
+          "C. 1997, 1998 y 1999.",
+          "D. 1996, 1997, 1998 y 1999."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "Al comparar los valores de inversión para cada año:\n- 1998: 195,77 millones de euros (el más alto)\n- 1999: 194,39 millones de euros (el segundo más alto)\n- 1997: 166,36 millones de euros (el tercer más alto)\nLos años con mayor inversión son 1998, 1999 y 1997. La opción C agrupa estos tres años."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "La inversión en seguridad se realiza el 10 de enero de cada año. En enero 10 de 2002, un euro equivalía a 2.800 pesos colombianos, aproximadamente. Se proponen los siguientes procedimientos para hallar el valor de la inversión en seguridad en pesos colombianos: I. Convertir 194,39 millones de euros a pesos colombianos. II. Convertir 2.800 pesos colombianos a euros. III. Multiplicar 194,39 por 2.800 y luego dividir entre el total de años.",
+        "enunciado": "¿Cuál o cuáles de los procedimientos es correcto para hallar lo solicitado?",
+        "opciones": [
+          "A. I y III solamente.",
+          "B. I solamente.",
+          "C. II y III solamente.",
+          "D. II solamente."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "Para hallar el valor de la inversión en seguridad en pesos colombianos, dado un monto en euros y la tasa de cambio, el procedimiento correcto es convertir directamente el monto de euros a pesos colombianos. El procedimiento I describe exactamente esta acción. El procedimiento II es incorrecto porque convierte la tasa de cambio en lugar del monto de la inversión. El procedimiento III es incorrecto porque, aunque inicia con la multiplicación correcta para la conversión, añade una división por el 'total de años' que no está justificada por la información ni por la pregunta planteada, la cual busca 'el valor de la inversión' (singular) para el monto dado."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo (Interpretación y Representación)",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "En una ciudad se producen en promedio 600 toneladas diarias de residuos domésticos, de las cuales el 25% corresponde a papel y cartón, materiales fácilmente reciclables; además, por cada tonelada de papel y cartón que se recicla se evita la tala de 17 árboles adultos y la plantación masiva de especies para la producción de pasta de papel, y se ahorran 140 litros de petróleo y 50.000 litros de agua. Tomado y adaptado de: http://www.papelesecologicos.com/index.php?option=com_content&view=article&id=51&Itemid=60. Se realizó una campaña de reciclaje durante tres días en una unidad residencial, en la que se recogieron 2 toneladas diarias de papel y cartón; por tanto, se evitó la tala de 2 × 3 × 17 = 102 árboles adultos.",
+        "enunciado": "Si esta campaña se efectuara durante 20 días en la misma unidad y se recolectara la misma cantidad se podrían ahorrar",
+        "opciones": [
+          "A. 680 litros de agua.",
+          "B. 5.600 litros de agua.",
+          "C. 300.000 litros de agua.",
+          "D. 2.000.000 litros de agua."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La campaña se efectúa durante 20 días, recolectando 2 toneladas diarias de papel y cartón. Esto significa que se recolecta un total de 20 días * 2 toneladas/día = 40 toneladas de papel y cartón. Sabiendo que por cada tonelada de papel y cartón que se recicla se ahorran 50.000 litros de agua, el ahorro total de agua sería 40 toneladas * 50.000 litros/tonelada = 2.000.000 litros de agua."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo (Formulación y Ejecución)",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "En una ciudad se producen en promedio 600 toneladas diarias de residuos domésticos, de las cuales el 25% corresponde a papel y cartón, materiales fácilmente reciclables; además, por cada tonelada de papel y cartón que se recicla se ahorran 140 litros de petróleo y 50.000 litros de agua. Una persona afirma: “Como al día se ahorran 140 litros de petróleo por cada tonelada de papel y cartón reciclado en la ciudad, durante un mes se ahorrarán exactamente 30 veces 140 litros de petróleo”.",
+        "enunciado": "Su afirmación es",
+        "opciones": [
+          "A. correcta, porque el número 30 indica el número de días que tiene un mes.",
+          "B. incorrecta, porque debe tener en cuenta las 150 toneladas de papel y cartón reciclado por día.",
+          "C. correcta, porque tiene en cuenta que día tras día hay 140 litros más de petróleo ahorrado.",
+          "D. incorrecta, porque debe tener en cuenta las 25 toneladas de papel y cartón reciclado por día."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La afirmación es incorrecta. El ahorro de 140 litros de petróleo es por *cada tonelada* de papel y cartón reciclado, no un ahorro diario fijo. En la ciudad, el 25% de 600 toneladas diarias de residuos corresponde a papel y cartón, lo que equivale a 0.25 * 600 = 150 toneladas de papel y cartón disponibles para reciclaje por día. Para calcular el ahorro mensual, se debería multiplicar el ahorro por tonelada (140 litros) por el número de toneladas recicladas diariamente y luego por el número de días del mes. La persona ignora la cantidad de toneladas de papel y cartón que se reciclan realmente en la ciudad, asumiendo implícitamente que solo se recicla 1 tonelada al día, lo cual es falso."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo (Interpretación y Representación, Argumentación)",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Un científico estudia el comportamiento de cinco aves a lo largo de cuatro sesiones de 30 minutos cada una. Durante las sesiones, el científico mide el tiempo que le toma a cada ave realizar cada una de siete actividades y lo registra en la tabla.\nTabla de Tiempos de Actividades (minutos):\n| Actividades   | Ave 1 | Ave 2 | Ave 3 | Ave 4 | Ave 5 |\n|---------------|-------|-------|-------|-------|-------|\n| Alimentación  | 30    | 21    | 27    | 15    | 45    |\n| Acicalamiento | 16    | 35    | 5     | 25    | 12    |\n| Descanso      | 20    | 10    | 25    | 20    | 15    |\n| Desplazamiento| 25    | 15    | 30    | 25    | 20    |\n| Orientación   | 4     | 2     | 5     | 4     | 3     |\n| Defecación    | 10    | 7     | 9     | 5     | 15    |\n| Comunicación  | 15    | 30    | 19    | 26    | 10    |",
+        "enunciado": "Los resultados indican que el ave 5 tarda más alimentándose que desplazándose. Esto es correcto, puesto que el tiempo en alimentación excede al de desplazamiento en",
+        "opciones": [
+          "A. 20 minutos.",
+          "B. 25 minutos.",
+          "C. 33 minutos.",
+          "D. 45 minutos."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "Según la tabla, el ave 5 tarda 45 minutos en la actividad de Alimentación y 20 minutos en la actividad de Desplazamiento. La diferencia entre estos tiempos es 45 - 20 = 25 minutos."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo (Interpretación y Representación)",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Un científico estudia el comportamiento de cinco aves a lo largo de cuatro sesiones de 30 minutos cada una. Durante las sesiones, el científico mide el tiempo que le toma a cada ave realizar cada una de siete actividades y lo registra en la tabla.\nTabla de Tiempos de Actividades (minutos):\n| Actividades   | Ave 1 | Ave 2 | Ave 3 | Ave 4 | Ave 5 |\n|---------------|-------|-------|-------|-------|-------|\n| Alimentación  | 30    | 21    | 27    | 15    | 45    |\n| Acicalamiento | 16    | 35    | 5     | 25    | 12    |\n| Descanso      | 20    | 10    | 25    | 20    | 15    |\n| Desplazamiento| 25    | 15    | 30    | 25    | 20    |\n| Orientación   | 4     | 2     | 5     | 4     | 3     |\n| Defecación    | 10    | 7     | 9     | 5     | 15    |\n| Comunicación  | 15    | 30    | 19    | 26    | 10    |",
+        "enunciado": "Al analizar los resultados, el científico afirma que la relación entre cada tiempo de las actividades del ave 1 y del ave 5 es 3:2. La afirmación del científico es",
+        "opciones": [
+          "A. correcta, porque el tiempo invertido en las actividades 2, 5 y 6 por el ave 1 es igual al tiempo invertido en las actividades 4 y 7 por el ave 5.",
+          "B. incorrecta, porque el tiempo invertido en las actividades 3, 6 y 7 por el ave 1 es igual al tiempo invertido en las actividades 4, 6 y 7 por el ave 5.",
+          "C. correcta, porque para la actividad Comunicación la relación entre los tiempos está dada por 15/10 = 3/2.",
+          "D. incorrecta, porque para la actividad Alimentación la relación entre los tiempos está dada por 30/45 = 2/3."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La afirmación del científico es que la relación entre *cada* tiempo de las actividades del ave 1 y del ave 5 es 3:2. Esto significa que la razón (Tiempo Ave 1 / Tiempo Ave 5) debería ser 3/2 para todas las actividades. Sin embargo, al revisar la actividad de Alimentación, el tiempo del Ave 1 es 30 minutos y el del Ave 5 es 45 minutos. La relación es 30/45 = 2/3, lo cual no es 3/2. Un solo contraejemplo es suficiente para demostrar que la afirmación general del científico es incorrecta. Las opciones A y B son incorrectas porque la afirmación se refiere a la relación de *cada* tiempo individual, no a sumas de tiempos."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo (Interpretación y Representación, Argumentación)",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Un científico estudia el comportamiento de cinco aves a lo largo de cuatro sesiones de 30 minutos cada una. Durante las sesiones, el científico mide el tiempo que le toma a cada ave realizar cada una de siete actividades y lo registra en la tabla.\nTabla de Tiempos de Actividades (minutos):\n| Actividades   | Ave 1 | Ave 2 | Ave 3 | Ave 4 | Ave 5 |\n|---------------|-------|-------|-------|-------|-------|\n| Alimentación  | 30    | 21    | 27    | 15    | 45    |\n| Acicalamiento | 16    | 35    | 5     | 25    | 12    |\n| Descanso      | 20    | 10    | 25    | 20    | 15    |\n| Desplazamiento| 25    | 15    | 30    | 25    | 20    |\n| Orientación   | 4     | 2     | 5     | 4     | 3     |\n| Defecación    | 10    | 7     | 9     | 5     | 15    |\n| Comunicación  | 15    | 30    | 19    | 26    | 10    |",
+        "enunciado": "El científico quiere identificar cuál de las aves presenta las características de la siguiente descripción:\n• Tarda el doble del tiempo o más en alimentarse que en descansar.\n• La defecación dura menos del 10% del tiempo total de las sesiones.\nEstas características corresponden al ave",
+        "opciones": [
+          "A. 1.",
+          "B. 2.",
+          "C. 3.",
+          "D. 5."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "Primero, se calcula el tiempo total de las sesiones: 4 sesiones * 30 minutos/sesión = 120 minutos. El 10% de este tiempo es 0.10 * 120 = 12 minutos.\nAhora, se evalúan las dos características para cada ave:\n1.  **Tarda el doble del tiempo o más en alimentarse que en descansar (Alimentación >= 2 * Descanso):**\n    *   Ave 1: 30 >= 2*20 (40) -> Falso\n    *   Ave 2: 21 >= 2*10 (20) -> Verdadero\n    *   Ave 3: 27 >= 2*25 (50) -> Falso\n    *   Ave 4: 15 >= 2*20 (40) -> Falso\n    *   Ave 5: 45 >= 2*15 (30) -> Verdadero\n    Las aves 2 y 5 cumplen la primera característica.\n2.  **La defecación dura menos del 10% del tiempo total de las sesiones (Defecación < 12 minutos):**\n    *   Ave 2: Defecación = 7 minutos. ¿7 < 12? -> Verdadero\n    *   Ave 5: Defecación = 15 minutos. ¿15 < 12? -> Falso\nSolo el Ave 2 cumple ambas características."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo (Formulación y Ejecución, Interpretación y Representación)",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Las pistas de aterrizaje de los aeropuertos se marcan en sus extremos de acuerdo con su alineación con el norte magnético. De esta manera, cada pista recibe dos números, uno en cada extremo, según la dirección en la que se orienta una aeronave cuando se aproxima para aterrizar en ese extremo. Los dos números corresponden a las dos direcciones en que se puede aterrizar en una pista. Como marcas se usan los dos primeros dígitos de la dirección magnética en grados. Por ejemplo, en la figura, la aeronave de color oscuro está orientada hacia los 120º magnéticos en su aterrizaje, por lo que aterriza en el extremo 12. La figura muestra una rosa de los vientos con el Norte Magnético a 0°/360°, Este a 90°, Sur a 180° y Oeste a 270°. Se ilustra un ejemplo de una aeronave aterrizando en el extremo 12 (120°). También se muestra una pista con extremos 09 y 27, indicando direcciones de 90° y 270° respectivamente.",
+        "enunciado": "Una pista marcada en un extremo con el número 24, en el extremo opuesto está marcada con el número",
+        "opciones": [
+          "A. 06",
+          "B. 18",
+          "C. 36",
+          "D. 42"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "Si un extremo de la pista está marcado con el número 24, esto corresponde a una dirección magnética de 240°. El extremo opuesto de la pista se encuentra a 180° de diferencia. Por lo tanto, la dirección del extremo opuesto es 240° - 180° = 60°. Según la regla de marcación, se usan los dos primeros dígitos de la dirección, así que 60° se marca como 06."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo - Interpretación y representación",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Las pistas de aterrizaje de los aeropuertos se marcan en sus extremos de acuerdo con su alineación con el norte magnético. De esta manera, cada pista recibe dos números, uno en cada extremo, según la dirección en la que se orienta una aeronave cuando se aproxima para aterrizar en ese extremo. Los dos números corresponden a las dos direcciones en que se puede aterrizar en una pista. Como marcas se usan los dos primeros dígitos de la dirección magnética en grados. Por ejemplo, en la figura, la aeronave de color oscuro está orientada hacia los 120º magnéticos en su aterrizaje, por lo que aterriza en el extremo 12. La figura muestra una rosa de los vientos con el Norte Magnético a 0°/360°, Este a 90°, Sur a 180° y Oeste a 270°. Se ilustra un ejemplo de una aeronave aterrizando en el extremo 12 (120°). También se muestra una pista con extremos 09 y 27, indicando direcciones de 90° y 270° respectivamente.",
+        "enunciado": "Al piloto de un avión que está alineado para aterrizar en el extremo 24 se le pide que cambie su rumbo girando 30 grados a su derecha para que use una pista libre. El número que encuentra en la nueva pista es",
+        "opciones": [
+          "A. 06",
+          "B. 21",
+          "C. 27",
+          "D. 54"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El avión está alineado para aterrizar en el extremo 24, lo que significa que su rumbo actual es de 240° magnéticos. Si se le pide girar 30° a su derecha (en sentido horario), el nuevo rumbo será 240° + 30° = 270°. La marca de la pista para una dirección de 270° es 27 (los dos primeros dígitos)."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo - Formulación y ejecución",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Las pistas de aterrizaje de los aeropuertos se marcan en sus extremos de acuerdo con su alineación con el norte magnético. De esta manera, cada pista recibe dos números, uno en cada extremo, según la dirección en la que se orienta una aeronave cuando se aproxima para aterrizar en ese extremo. Los dos números corresponden a las dos direcciones en que se puede aterrizar en una pista. Como marcas se usan los dos primeros dígitos de la dirección magnética en grados. Por ejemplo, en la figura, la aeronave de color oscuro está orientada hacia los 120º magnéticos en su aterrizaje, por lo que aterriza en el extremo 12. La figura muestra una rosa de los vientos con el Norte Magnético a 0°/360°, Este a 90°, Sur a 180° y Oeste a 270°. Se ilustra un ejemplo de una aeronave aterrizando en el extremo 12 (120°). También se muestra una pista con extremos 09 y 27, indicando direcciones de 90° y 270° respectivamente.",
+        "enunciado": "Un avión que despega en dirección al extremo 32, va hacia el",
+        "opciones": [
+          "A. sureste.",
+          "B. noreste.",
+          "C. suroeste.",
+          "D. noroeste."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "El extremo 32 corresponde a una dirección magnética de 320°. En la rosa de los vientos, las direcciones cardinales son: Norte (0°/360°), Este (90°), Sur (180°) y Oeste (270°). Las direcciones intermedias son: Noreste (45°), Sureste (135°), Suroeste (225°) y Noroeste (315°). La dirección de 320° se encuentra entre 270° (Oeste) y 360° (Norte), y está muy cerca de 315°, que es el Noroeste."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo - Interpretación y representación",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Una microempresa de productos de aseo elabora jabón de tocador en dos presentaciones, y ofrece tres contenidos para cada una (ver tabla). Cada presentación y contenido se encuentra disponible en tres aromas: natural, coco y vainilla.\nTabla: Precios por unidad de diferentes presentaciones del producto “jabón de tocador”\nPresentación | Contenido | Precio por unidad\n------------|-----------|------------------\nBarra       | 110g      | $1.760\n            | 125g      | $2.000\n            | 150g      | $2.400\nLíquido     | 300mL     | $5.100\n            | 500mL     | $8.500\n            | 700mL     | $11.900",
+        "enunciado": "La etiqueta del jabón debe especificar tres aspectos: presentación, contenido y aroma. ¿Cuántas etiquetas diferentes debe utilizar la fábrica?",
+        "opciones": [
+          "A. 2",
+          "B. 6",
+          "C. 12",
+          "D. 18"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "Para determinar el número total de etiquetas diferentes, se deben multiplicar las opciones disponibles para cada aspecto: \n1. Presentaciones: 2 (Barra, Líquido)\n2. Contenidos: 3 para cada presentación (110g, 125g, 150g para barra; 300mL, 500mL, 700mL para líquido). Esto da 3 opciones de contenido por cada presentación.\n3. Aromas: 3 (natural, coco, vainilla) para cada combinación de presentación y contenido.\nEl número total de etiquetas es el producto de estas opciones: 2 presentaciones * 3 contenidos * 3 aromas = 18 etiquetas diferentes."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo - Formulación y ejecución",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Una microempresa de productos de aseo elabora jabón de tocador en dos presentaciones, y ofrece tres contenidos para cada una (ver tabla). Cada presentación y contenido se encuentra disponible en tres aromas: natural, coco y vainilla.\nTabla: Precios por unidad de diferentes presentaciones del producto “jabón de tocador”\nPresentación | Contenido | Precio por unidad\n------------|-----------|------------------\nBarra       | 110g      | $1.760\n            | 125g      | $2.000\n            | 150g      | $2.400\nLíquido     | 300mL     | $5.100\n            | 500mL     | $8.500\n            | 700mL     | $11.900",
+        "enunciado": "Un tanque almacena exactamente la cantidad de jabón líquido necesaria para envasar exactamente 50 unidades de cada tipo de contenido. Teniendo en cuenta que 1 Litro contiene 1.000 mL, ¿cuál es la capacidad del tanque?",
+        "opciones": [
+          "A. 15 litros.",
+          "B. 75 litros.",
+          "C. 1.500 litros.",
+          "D. 75.000 litros."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "Los tipos de contenido de jabón líquido son 300 mL, 500 mL y 700 mL. Se deben envasar 50 unidades de cada tipo:\n- Para 300 mL: 50 unidades * 300 mL/unidad = 15.000 mL\n- Para 500 mL: 50 unidades * 500 mL/unidad = 25.000 mL\n- Para 700 mL: 50 unidades * 700 mL/unidad = 35.000 mL\nEl volumen total necesario es 15.000 mL + 25.000 mL + 35.000 mL = 75.000 mL. \nDado que 1 Litro = 1.000 mL, la capacidad del tanque en litros es 75.000 mL / 1.000 mL/Litro = 75 Litros."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo - Formulación y ejecución",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Una microempresa de productos de aseo elabora jabón de tocador en dos presentaciones, y ofrece tres contenidos para cada una (ver tabla). Cada presentación y contenido se encuentra disponible en tres aromas: natural, coco y vainilla.\nTabla: Precios por unidad de diferentes presentaciones del producto “jabón de tocador”\nPresentación | Contenido | Precio por unidad\n------------|-----------|------------------\nBarra       | 110g      | $1.760\n            | 125g      | $2.000\n            | 150g      | $2.400\nLíquido     | 300mL     | $5.100\n            | 500mL     | $8.500\n            | 700mL     | $11.900",
+        "enunciado": "De acuerdo con la información de la tabla, si se conservara la relación entre el contenido y el precio por unidad, ¿cuál debería ser el precio de la presentación de jabón líquido con contenido de 1.800 mL?",
+        "opciones": [
+          "A. $15.300",
+          "B. $18.000",
+          "C. $30.600",
+          "D. $31.660"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "Para encontrar la relación entre el contenido y el precio por unidad para el jabón líquido, calculamos el precio por mililitro para cada presentación:\n- Para 300 mL: $5.100 / 300 mL = $17/mL\n- Para 500 mL: $8.500 / 500 mL = $17/mL\n- Para 700 mL: $11.900 / 700 mL = $17/mL\nLa relación es constante: $17 por cada mililitro. Si se conserva esta relación, el precio para una presentación de 1.800 mL sería 1.800 mL * $17/mL = $30.600."
+      },
+      "metadatos": {
+        "competencia": "Razonamiento Cuantitativo - Interpretación y representación, Formulación y ejecución",
+        "fuente": "02_02_Cuadernillo_de_preguntas_razonamiento_cuantitativo_saber_pro_2018.pdf"
+      }
+    }
+  ]
+}

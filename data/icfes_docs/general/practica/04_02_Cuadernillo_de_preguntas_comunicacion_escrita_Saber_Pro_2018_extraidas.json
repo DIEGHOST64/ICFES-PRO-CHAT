@@ -1,0 +1,66 @@
+{
+  "origen": "04_02_Cuadernillo_de_preguntas_comunicacion_escrita_Saber_Pro_2018.pdf",
+  "total_preguntas": 3,
+  "preguntas": [
+    {
+      "contenido": {
+        "contexto": "TÉRMINOS Y CONDICIONES DE USO PARA PUBLICACIONES \nY OBRAS DE PROPIEDAD DEL ICFES\nEl Instituto Colombiano para la Evaluación de la Educación (Icfes) pone a la disposición de la \ncomunidad educativa y del público en general, DE FORMA GRATUITA Y LIBRE DE CUALQUIER \nCARGO, un conjunto de publicaciones a través de su portal www.icfes.gov.co. Estos materiales y \ndocumentos están normados por la presente política, y están protegidos por derechos de propiedad \nintelectual y derechos de autor a favor del Icfes. Si tiene conocimiento de alguna utilización contraria a \nlo establecido en estas condiciones de uso, por favor infórmenos al correo prensaicfes@icfes.gov.co.\nQueda prohibido el uso o publicación total o parcial de este material con fines de lucro. Únicamente \nestá autorizado su uso para fines académicos e investigativos. Ninguna persona, natural \no jurídica, nacional o internacional, podrá vender, distribuir, alquilar, reproducir, transformar*, \npromocionar o realizar acción alguna de la cual se lucre directa o indirectamente con este material. \nEsta publicación cuenta con el registro ISSN (International Standard Book Number, o Número \nNormalizado Internacional para Libros) que facilita la identificación no solo de cada título, sino de \nla autoría, de la edición, del editor y del país en donde se edita.\nEn todo caso, cuando se haga uso parcial o total de los contenidos de esta publicación del Icfes, \nel usuario deberá consignar o hacer referencia a los créditos institucionales del Icfes respetando los \nderechos de cita; es decir, se podrán utilizar con los fines aquí previstos transcribiendo los pasajes \nnecesarios, citando siempre la fuente de autor; lo anterior siempre que estos no sean tantos y \nseguidos que razonadamente puedan considerarse una reproducción simulada y sustancial, que \nredunde en perjuicio del Icfes. \nAsimismo, los logotipos institucionales son marcas registradas y de propiedad exclusiva del Icfes. Por \ntanto, los terceros no podrán usar las marcas de propiedad del Icfes con signos idénticos o similares \nrespecto a cualesquiera productos o servicios prestados por esta entidad, cuando su uso pueda \ncausar confusión. En todo caso, queda prohibido su uso sin previa autorización expresa del Icfes. La \n infracción de estos derechos se perseguirá civil y, en su caso, penalmente, de acuerdo con las leyes \nnacionales y tratados internacionales aplicables.\nEl Icfes realizará cambios o revisiones periódicas a los presentes términos de uso, y los actualizará \nen esta publicación. \nEl Icfes adelantará las acciones legales pertinentes por cualquier violación a estas \npolíticas y condiciones de uso.\n* \t La transformación es la modificación de la obra a través de la creación de adaptaciones, traducciones, compilaciones, actualizaciones, \nrevisiones, y, en general, cualquier modificación que de la obra se pueda realizar, generando que la nueva obra resultante se \nconstituya en una obra derivada protegida por el derecho de autor, con la única diferencia respecto a las obras originales que \naquellas requieren para su realización de la autorización expresa del autor o propietario para adaptar, traducir, compilar, etcétera. En \neste caso, el Icfes prohíbe la transformación de esta publicación.",
+        "enunciado": "De acuerdo con los \"Términos y condiciones de uso\" del ICFES, ¿cuál de las siguientes acciones está explícitamente permitida para el material publicado por la entidad?",
+        "opciones": [
+          "A. Vender el material de forma parcial o total para obtener un beneficio económico.",
+          "B. Reproducir pasajes del material para fines académicos e investigativos, citando la fuente.",
+          "C. Transformar la obra original para crear una adaptación sin previa autorización del ICFES.",
+          "D. Utilizar los logotipos institucionales del ICFES para promocionar servicios de terceros."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El texto establece claramente: 'Únicamente está autorizado su uso para fines académicos e investigativos.' y 'se podrán utilizar con los fines aquí previstos transcribiendo los pasajes necesarios, citando siempre la fuente de autor'. Las opciones A, C y D describen usos prohibidos o que requieren autorización expresa, según se detalla en el documento."
+      },
+      "metadatos": {
+        "competencia": "Lectura crítica y comprensión de textos normativos.",
+        "fuente": "04_02_Cuadernillo_de_preguntas_comunicacion_escrita_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A continuación se presenta una situación problemática y una pregunta. Para responder esta pregunta, escriba un texto argumentativo con introducción, desarrollo y conclusión en el que justifique su posición respecto a la problemática presentada. Se evaluará la redacción del texto, el desarrollo de los argumentos y la claridad de su escritura. Recuerde que cuenta con 10 minutos para organizar sus ideas y 30 minutos para redactar su texto.\nActualmente es permitido que los menores de 14 años de edad puedan realizarse procedimientos estéticos. Esta decisión ha generado controversia. Por un lado, aquellos que están a favor aducen que no permitirlo iría en contra de derechos fundamentales como el libre desarrollo de la personalidad. Por otro lado, sus detractores opinan que a los 14 años los menores aún no han completado su desarrollo emocional y que, por tanto, no tienen la capacidad para tomar este tipo de decisiones.",
+        "enunciado": "Según la información presentada, ¿cuál es el principal punto de controversia respecto a la realización de procedimientos estéticos en menores de 14 años?",
+        "opciones": [
+          "A. La seguridad y los riesgos médicos asociados a los procedimientos estéticos en menores.",
+          "B. La capacidad económica de las familias para costear estos procedimientos para sus hijos.",
+          "C. El conflicto entre el derecho al libre desarrollo de la personalidad de los menores y su supuesta falta de madurez emocional para tomar decisiones trascendentales.",
+          "D. La influencia de los medios de comunicación y la presión social en la decisión de los menores de someterse a cirugías estéticas."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La opción C resume fielmente los dos argumentos opuestos presentados en el texto: por un lado, el derecho al libre desarrollo de la personalidad (argumento a favor) y, por otro, la falta de madurez emocional y capacidad de decisión de los menores de 14 años (argumento en contra). Las demás opciones no son el foco principal de la controversia tal como se describe en el texto."
+      },
+      "metadatos": {
+        "competencia": "Comprensión de textos argumentativos",
+        "fuente": "04_02_Cuadernillo_de_preguntas_comunicacion_escrita_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Con el propósito de disminuir las emisiones de gases contaminantes, varios gobiernos de Centroamérica han aprobado una ley que promueve el uso de vehículos eléctricos mediante la eliminación de los impuestos de circulación para este tipo de vehículos.",
+        "enunciado": "De acuerdo con la situación problemática y las instrucciones para el módulo de comunicación escrita, la pregunta '¿Está de acuerdo con que en Colombia se eliminen los impuestos de circulación para los vehículos eléctricos?' requiere que el estudiante:",
+        "opciones": [
+          "A. Describa las características técnicas y los beneficios ambientales de los vehículos eléctricos.",
+          "B. Compare las políticas de incentivos para vehículos eléctricos en Colombia con las implementadas en Centroamérica.",
+          "C. Desarrolle un texto argumentativo que justifique su postura personal (a favor o en contra) sobre la eliminación de impuestos para vehículos eléctricos en Colombia.",
+          "D. Analice el impacto económico de la eliminación de impuestos en la recaudación fiscal del país."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "Las instrucciones del cuadernillo indican explícitamente: 'Para responder esta pregunta, escriba un texto argumentativo con introducción, desarrollo y conclusión en el que justifique su posición respecto a la problemática presentada.' La opción C es la única que describe con precisión esta tarea académica, que implica tomar una postura y sustentarla con argumentos."
+      },
+      "metadatos": {
+        "competencia": "Comunicación Escrita: Argumentación",
+        "fuente": "04_02_Cuadernillo_de_preguntas_comunicacion_escrita_Saber_Pro_2018.pdf"
+      }
+    }
+  ]
+}

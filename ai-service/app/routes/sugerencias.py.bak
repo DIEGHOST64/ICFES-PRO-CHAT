@@ -10,7 +10,7 @@ import asyncio
 import re
 import threading
 import time
-from fastapi import APIRouter, Query as QueryParam, BackgroundTasks
+from fastapi import APIRouter, Query as QueryParam
 from pydantic import BaseModel
 
 from app.services.chroma_client import ChromaService
@@ -1868,14 +1868,8 @@ def _merge_seed_with_generated(
     for p in (seed or []) + (generated or []):
         if len(selected) >= cantidad:
             break
-        is_escrita_item = "escrita" in (p.competencia or "").lower()
-        is_ingles_item = "ingl" in (p.competencia or "").lower()
-        if is_escrita_item:
-            if len(p.opciones) > 0: continue
-        elif is_ingles_item:
-            if len(p.opciones) < 3: continue
-        else:
-            if len(p.opciones) < 4: continue
+        if len(p.opciones) < 4:
+            continue
 
         fp = _scoped_fp(p)
         en = _scoped_enunciado(p)
@@ -1984,100 +1978,61 @@ def _get_curated_bank_questions(
     return bank[:cantidad]
 
 
-
-def _almacenar_preguntas_db(collection, preguntas: list[Pregunta], modulo: str):
-    import time
-    if not preguntas:
-        return
-    docs = []
-    metas = []
-    ids = []
-    timestamp = int(time.time() * 1000)
-    for i, p in enumerate(preguntas):
-        docs.append(p.json())
-        metas.append({
-            "modulo": modulo,
-            "tipo": "pregunta_generada",
-            "competencia": p.competencia or "",
-            "programa": p.programa or "",
-            "tipo_ingles": p.tipo_ingles or "",
-            "nivel_cefr": p.nivel_cefr or "",
-            "nivel_dificultad": p.nivel_dificultad or ""
-        })
-        ids.append(f"gen_ai_{timestamp}_{i}")
-    try:
-        collection.add(documents=docs, metadatas=metas, ids=ids)
-        print(f"[{modulo}] ALMACENADAS {len(preguntas)} preguntas en ChromaDB (tipo: pregunta_generada)")
-    except Exception as e:
-        print(f"[!] Error guardando preguntas AI en ChromaDB: {e}")
-
-def _get_ai_bank_questions(collection, modulo: str, competencia: str | None, entrenamiento_general: bool, cantidad: int, is_english: bool) -> list[Pregunta]:
-    docs_q, metas_q, ids_q = _get_docs_for_modulo(
-        collection,
-        modulo,
-        "pregunta_generada",
-        None if entrenamiento_general else competencia,
-    )
-    if not docs_q:
-        return []
-
-    import random
-    import json
-    triples = list(zip(docs_q, metas_q, ids_q))
-    random.shuffle(triples)
-
-    bank = []
-    for doc, meta, doc_id in triples:
-        try:
-            parsed = json.loads(doc)
-            pregunta = Pregunta(**parsed)
-            is_escrita = "escrita" in (pregunta.competencia or "").lower()
-            is_ingles = "ingl" in (pregunta.competencia or "").lower()
-            if is_escrita:
-                if len(pregunta.opciones) > 0:
-                    continue
-            elif is_ingles:
-                if len(pregunta.opciones) < 3:
-                    continue
-                if not pregunta.respuesta_correcta:
-                    continue
-            else:
-                if len(pregunta.opciones) < 4:
-                    continue
-                if not pregunta.respuesta_correcta:
-                    continue
-            bank.append(pregunta)
-        except Exception:
-            continue
-
-    bank = _dedupe_preguntas_by_enunciado(bank, by_competencia=entrenamiento_general)
-    if not bank:
-        return []
-
-    if entrenamiento_general:
-        return _select_general_mix_from_bank(bank, cantidad)
-
-    if is_english:
-        from app.routes.sugerencias import _balance_english_levels, _balance_english_questions
-        bank = _balance_english_levels([p.dict() for p in bank], cantidad, None)
-        bank = _balance_english_questions(bank, cantidad)
-        return [Pregunta(**b) for b in bank][:cantidad]
-
-    return bank[:cantidad]
-
-async def _background_question_miner(
-    programa: str, competencia: str | None, nivel_objetivo: str | None,
-    dificultad_objetivo: str | None, cantidad: int, entrenamiento_general: bool,
-    modulo: str, is_english: bool, comp_meta: str, cache_key: str
+@router.get("", response_model=list[Pregunta])
+async def sugerencias(
+    programa: str = QueryParam("General", description="Programa académico del estudiante"),
+    competencia: str | None = QueryParam(None, description="Competencia (opcional)"),
+    nivel_objetivo: str | None = QueryParam(None, description="Nivel objetivo para Inglés: A2 o B1"),
+    dificultad_objetivo: str | None = QueryParam(None, description="Dificultad objetivo para competencias generales: basico/intermedio/avanzado"),
+    cantidad: int = QueryParam(15, ge=5, le=30, description="Número de preguntas del entrenamiento"),
 ):
-    print(f"[*] INICIANDO background miner para {modulo} - {comp_meta} (Meta: {cantidad} preguntas)...")
-    cantidad_bg = max(cantidad, 45) # Oversample
-    # Evito reescribir variables abajo.
-    cantidad = cantidad_bg
+    """
+    Genera preguntas de práctica estructuradas usando Gemini sobre fragmentos del cuadernillo ICFES.
+    1. Recupera fragmentos de ChromaDB según módulo/competencia
+    2. Llama a Gemini para generar N preguntas de selección múltiple reales
+    3. Devuelve lista de Pregunta con opciones, respuesta correcta y explicación
+    """
     collection = ChromaService.get_collection()
     if collection.count() == 0:
-        return
-    preguntas_seed = [] # Reemplaza el seed q faltaba
+        return []
+
+    competencia_clean = (competencia or "").strip()
+    entrenamiento_general = competencia is None or competencia_clean == "" or competencia_clean.lower() in ("todas", "todos", "general")
+    cantidad = max(5, min(cantidad, 30))
+    if "escrita" in competencia_clean.lower():
+        cantidad = 1
+
+    cache_key = _build_sugerencias_cache_key(
+        programa=programa,
+        competencia=competencia,
+        nivel_objetivo=nivel_objetivo,
+        dificultad_objetivo=dificultad_objetivo,
+        cantidad=cantidad,
+    )
+    cached = _get_cached_sugerencias(cache_key, cantidad)
+    if cached is not None:
+        return cached
+
+    modulo = get_modulo(programa, None if entrenamiento_general else competencia)
+    is_english = _is_english_competencia(competencia)
+
+    preguntas_curadas = _get_curated_bank_questions(
+        collection=collection,
+        modulo=modulo,
+        programa=programa,
+        competencia=competencia,
+        entrenamiento_general=entrenamiento_general,
+        cantidad=cantidad,
+    )
+    if len(preguntas_curadas) >= cantidad:
+        preguntas_curadas = preguntas_curadas[:cantidad]
+        _set_cached_sugerencias(cache_key, preguntas_curadas)
+        return preguntas_curadas
+
+    preguntas_seed = preguntas_curadas[:cantidad] if preguntas_curadas else []
+
+    # Recuperar fragmentos de contexto priorizando separación por competencia y usando
+    # tanto cuadernillos de práctica como de ejemplos explicados.
     docs_pr, metas_pr, ids_pr = _get_docs_for_modulo(
         collection,
         modulo,
@@ -2097,7 +2052,8 @@ async def _background_question_miner(
     if not docs and "escrita" not in (competencia or "").lower():
         if preguntas_seed:
             _set_cached_sugerencias(cache_key, preguntas_seed)
-        return
+            return preguntas_seed
+        return []
 
     loop = asyncio.get_event_loop()
     raw: list[dict] = []
@@ -2354,18 +2310,11 @@ async def _background_question_miner(
             item_is_english = _is_english_competencia(item_comp)
 
             opciones = _coerce_options(item.get("opciones", []))
-            is_escr = "escrita" in (item_comp or "General").lower()
-            is_ingl = "ingl" in (item_comp or "General").lower()
-            if is_escr:
-                if len(opciones) > 0: continue
-            elif is_ingl:
-                if len(opciones) < 3: continue
-                opciones = [_clean_option_text(opciones[j], j) for j in range(len(opciones))]
-                if any(_is_placeholder_option(opt) for opt in opciones): continue
-            else:
-                if len(opciones) < 4: continue
-                opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
-                if any(_is_placeholder_option(opt) for opt in opciones): continue
+            if len(opciones) < 4:
+                continue
+            opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
+            if any(_is_placeholder_option(opt) for opt in opciones):
+                continue
 
             # Respetar cloze con min_words bajo en segunda pasada
             item_tipo_ingles = _normalize_english_type(str(item.get("tipo_ingles", "")))
@@ -2375,12 +2324,9 @@ async def _background_question_miner(
                 texto_base = _normalize_text_base_quality(raw_tb, min_words=10)
                 if not texto_base:
                     texto_base = raw_tb.strip()  # Preservar original para cloze
-            elif item_tipo_ingles in ("part1", "part2", "part3"):
-                texto_base = raw_tb.strip() # Parts 1, 2, 3 have very short or empty text_base!
             else:
                 texto_base = _normalize_text_base_quality(raw_tb)
-
-            if not texto_base and item_tipo_ingles != "part3": # Part 3 is expected to be empty
+            if not texto_base:
                 continue
             if _is_non_academic_text(texto_base):
                 continue
@@ -2396,11 +2342,10 @@ async def _background_question_miner(
                 continue
 
             respuesta_correcta = _repair_text_encoding(str(item.get("respuesta_correcta", ""))).strip()
-            is_escrita_flag = "escrita" in (str(item_comp or "General")).lower()
-            if not is_escrita_flag and respuesta_correcta not in opciones:
+            if respuesta_correcta not in opciones:
                 normalized_correct = re.sub(r"^[A-Da-d]\.\s*", "", respuesta_correcta).strip().lower()
                 matched = next((opt for opt in opciones if normalized_correct and normalized_correct in re.sub(r"^[A-Da-d]\.\s*", "", opt).strip().lower()), None)
-                respuesta_correcta = matched or (opciones[0] if opciones else "")
+                respuesta_correcta = matched or opciones[0]
 
             if not _is_semantically_aligned(texto_base, enunciado, respuesta_correcta, item_is_english):
                 continue
@@ -2488,18 +2433,11 @@ async def _background_question_miner(
                     continue
 
                 opciones = _coerce_options(item.get("opciones", []))
-                is_escr = "escrita" in (item_comp or "General").lower()
-                is_ingl = "ingl" in (item_comp or "General").lower()
-                if is_escr:
-                    if len(opciones) > 0: continue
-                elif is_ingl:
-                    if len(opciones) < 3: continue
-                    opciones = [_clean_option_text(opciones[j], j) for j in range(len(opciones))]
-                    if any(_is_placeholder_option(opt) for opt in opciones): continue
-                else:
-                    if len(opciones) < 4: continue
-                    opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
-                    if any(_is_placeholder_option(opt) for opt in opciones): continue
+                if len(opciones) < 4:
+                    continue
+                opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
+                if any(_is_placeholder_option(opt) for opt in opciones):
+                    continue
 
                 respuesta_correcta = _repair_text_encoding(str(item.get("respuesta_correcta", ""))).strip()
                 if respuesta_correcta not in opciones:
@@ -2585,18 +2523,11 @@ async def _background_question_miner(
                         continue
 
                     opciones = _coerce_options(item.get("opciones", []))
-                    is_escr = "escrita" in (comp_name or "General").lower()
-                    is_ingl = "ingl" in (comp_name or "General").lower()
-                    if is_escr:
-                        if len(opciones) > 0: continue
-                    elif is_ingl:
-                        if len(opciones) < 3: continue
-                        opciones = [_clean_option_text(opciones[j], j) for j in range(len(opciones))]
-                        if any(_is_placeholder_option(opt) for opt in opciones): continue
-                    else:
-                        if len(opciones) < 4: continue
-                        opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
-                        if any(_is_placeholder_option(opt) for opt in opciones): continue
+                    if len(opciones) < 4:
+                        continue
+                    opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
+                    if any(_is_placeholder_option(opt) for opt in opciones):
+                        continue
 
                     respuesta_correcta = _repair_text_encoding(str(item.get("respuesta_correcta", ""))).strip()
                     if respuesta_correcta not in opciones:
@@ -2681,18 +2612,11 @@ async def _background_question_miner(
                     continue
 
                 opciones = _coerce_options(item.get("opciones", []))
-                is_escr = "escrita" in (item_comp or "General").lower()
-                is_ingl = "ingl" in (item_comp or "General").lower()
-                if is_escr:
-                    if len(opciones) > 0: continue
-                elif is_ingl:
-                    if len(opciones) < 3: continue
-                    opciones = [_clean_option_text(opciones[j], j) for j in range(len(opciones))]
-                    if any(_is_placeholder_option(opt) for opt in opciones): continue
-                else:
-                    if len(opciones) < 4: continue
-                    opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
-                    if any(_is_placeholder_option(opt) for opt in opciones): continue
+                if len(opciones) < 4:
+                    continue
+                opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
+                if any(_is_placeholder_option(opt) for opt in opciones):
+                    continue
 
                 respuesta_correcta = _repair_text_encoding(str(item.get("respuesta_correcta", ""))).strip()
                 if respuesta_correcta not in opciones:
@@ -2742,13 +2666,8 @@ async def _background_question_miner(
 
     preguntas = _ensure_preguntas_count(preguntas, cantidad, modulo)
     _set_cached_sugerencias(cache_key, preguntas)
-    
-    # Store questions properly in ChromaDB so pre_generar_banco.py and future access works.
-    try:
-        _almacenar_preguntas_db(collection, preguntas, modulo)
-        print(f"[{modulo}] EXITO: {len(preguntas)} preguntas almacenadas en DB.", flush=True)
-    except Exception as e:
-        print(f"[ERROR] Guardando en DB: {e}", flush=True)
+    return preguntas
+
 
 @router.post("/datos-curiosos")
 async def datos_curiosos(payload: DatosCuriososRequest):
@@ -2779,121 +2698,6 @@ async def admin_analisis(payload: AdminAnalyticsRequest):
         "meta": analysis.get("analysis_meta", {}),
     }
 
-
-    if combined:
-        _almacenar_preguntas_db(collection, combined, modulo)
-    elif 'preguntas' in locals() and preguntas:
-        _almacenar_preguntas_db(collection, preguntas, modulo)
-
-
-@router.get("", response_model=list[Pregunta])
-async def sugerencias(
-    background_tasks: BackgroundTasks,
-    programa: str = QueryParam("General", description="Programa académico del estudiante"),
-    competencia: str | None = QueryParam(None, description="Competencia (opcional)"),
-    nivel_objetivo: str | None = QueryParam(None, description="Nivel objetivo para Inglés: A2 o B1"),
-    dificultad_objetivo: str | None = QueryParam(None, description="Dificultad objetivo para competencias generales: basico/intermedio/avanzado"),
-    cantidad: int = QueryParam(15, ge=5, le=30, description="Número de preguntas del entrenamiento"),
-):
-    collection = ChromaService.get_collection()
-    if collection.count() == 0:
-        return []
-
-    competencia_clean = (competencia or "").strip()
-    entrenamiento_general = competencia is None or competencia_clean == "" or competencia_clean.lower() in ("todas", "todos", "general")
-    cantidad = max(5, min(cantidad, 30))
-    if "escrita" in competencia_clean.lower():
-        cantidad = 1
-
-    cache_key = _build_sugerencias_cache_key(
-        programa=programa,
-        competencia=competencia,
-        nivel_objetivo=nivel_objetivo,
-        dificultad_objetivo=dificultad_objetivo,
-        cantidad=cantidad,
-    )
-    cached = _get_cached_sugerencias(cache_key, cantidad)
-    if cached is not None:
-        background_tasks.add_task(
-            _background_question_miner,
-            programa, competencia, nivel_objetivo, dificultad_objetivo, cantidad,
-            entrenamiento_general, get_modulo(programa, None if entrenamiento_general else competencia),
-            _is_english_competencia(competencia), competencia or "General", cache_key
-        )
-        return cached
-
-    modulo = get_modulo(programa, None if entrenamiento_general else competencia)
-    is_english = _is_english_competencia(competencia)
-
-    ai_bank = _get_ai_bank_questions(collection, modulo, competencia, entrenamiento_general, cantidad, is_english)
-    
-    if len(ai_bank) >= cantidad:
-        ai_bank = ai_bank[:cantidad]
-        _set_cached_sugerencias(cache_key, ai_bank)
-        background_tasks.add_task(
-            _background_question_miner,
-            programa, competencia, nivel_objetivo, dificultad_objetivo, cantidad,
-            entrenamiento_general, modulo, is_english, competencia or "General", cache_key
-        )
-        return ai_bank
-
-    preguntas_curadas = _get_curated_bank_questions(collection, modulo, programa, competencia, entrenamiento_general, cantidad)
-    combined = _merge_seed_with_generated(ai_bank, preguntas_curadas, cantidad, entrenamiento_general)
-    
-    if len(combined) >= cantidad:
-        _set_cached_sugerencias(cache_key, combined)
-        background_tasks.add_task(
-            _background_question_miner,
-            programa, competencia, nivel_objetivo, dificultad_objetivo, cantidad,
-            entrenamiento_general, modulo, is_english, competencia or "General", cache_key
-        )
-        return combined
-
-    docs_pr, _, _ = _get_docs_for_modulo(collection, modulo, "practica", None if entrenamiento_general else competencia)
-    if docs_pr:
-        fallback_pool = _build_deterministic_fallback_questions(docs_pr, cantidad, competencia or "General", is_english, dificultad_objetivo)
-        fallback_preguntas = []
-        for item in fallback_pool:
-            try:
-                texto_base = str(item.get("texto_base",""))
-                respuesta_correcta = str(item.get("respuesta_correcta",""))
-                opciones = item.get("opciones",[])
-
-                if _is_too_literal(texto_base, respuesta_correcta):
-                    continue
-
-                if is_english:
-                    if _is_predominantly_spanish(texto_base):
-                        continue
-                    if sum(1 for o in opciones if _is_predominantly_spanish(o)) > 0:
-                        continue
-
-                import time
-                fallback_preguntas.append(Pregunta(
-                    id=f"fb_{int(time.time())}_{len(fallback_preguntas)}",
-                    texto_base=str(item.get("texto_base","")),
-                    enunciado=str(item.get("enunciado","")),
-                    opciones=item.get("opciones",[]),
-                    respuesta_correcta=str(item.get("respuesta_correcta","")),
-                    explicacion=str(item.get("explicacion","")),
-                    competencia=str(item.get("competencia", competencia or "General")),
-                    programa=programa,
-                    tipo_ingles=str(item.get("tipo_ingles","")) if is_english else None,
-                    nivel_cefr=str(item.get("nivel_cefr","")) if is_english else None,
-                    nivel_dificultad=str(item.get("nivel_dificultad","")) if not is_english else None
-                ))
-            except Exception: pass
-        combined = _merge_seed_with_generated(combined, fallback_preguntas, cantidad, entrenamiento_general)
-    
-    if combined:
-        _set_cached_sugerencias(cache_key, combined)
-    
-    background_tasks.add_task(
-        _background_question_miner,
-        programa, competencia, nivel_objetivo, dificultad_objetivo, cantidad,
-        entrenamiento_general, modulo, is_english, competencia or "General", cache_key
-    )
-    return combined
 
 @router.post("/apoyo-pregunta")
 async def apoyo_pregunta(payload: ApoyoPreguntaRequest):

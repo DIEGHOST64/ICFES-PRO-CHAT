@@ -1,0 +1,1006 @@
+{
+  "origen": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf",
+  "total_preguntas": 50,
+  "preguntas": [
+    {
+      "contenido": {
+        "contexto": "Un grupo de activistas que defiende los derechos de los animales busca evitar que un centro de investigación siga utilizando cerdos para sus experimentos, pues los tratamientos incluyen procedimientos que se consideran maltrato y que en algunos casos terminan en la muerte de los animales. Por su parte, los investigadores defienden su uso, pues estos animales proveen la mejor plataforma para desarrollar sus medicinas sin poner en riesgo vidas humanas. Además, mencionan que el laboratorio no viola ninguna de las normas existentes sobre investigación con animales y que su labor permite proteger la vida de las personas.",
+        "enunciado": "Las divergencias de intereses entre científicos y activistas radican en que",
+        "opciones": [
+          "A. los activistas quieren oponerse al desarrollo económico, mientras que los científicos quieren mejorar la vida de todos.",
+          "B. los activistas quieren cuestionar la efectividad de la ciencia, mientras que los científicos quieren evadir el control a su trabajo.",
+          "C. los científicos quieren utilizar a los animales como instrumentos de investigación, mientras que los activistas quieren que todos desarrollen sentimientos de apego hacia los animales.",
+          "D. los científicos quieren priorizar la vida humana, mientras que los activistas quieren proteger lo que consideran un derecho de los animales a su propia vida."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La opción D describe con precisión la raíz del conflicto: los científicos priorizan la vida humana y el avance médico, mientras que los activistas defienden el derecho de los animales a no ser maltratados o sacrificados, lo que constituye una divergencia fundamental en sus valores e intereses."
+      },
+      "metadatos": {
+        "competencia": "Análisis de dilemas éticos y conflictos de intereses",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Después de una fuerte temporada de lluvias, el Gobierno nacional despliega ayudas para atender a la población afectada. No obstante, los daños materiales y de afectación a la vida y a la salud de las personas son muy grandes. Se hace un llamado a la ciudadanía para que aporte dinero y materiales y así poder brindar una mejor respuesta a la emergencia. Tras este llamado, la respuesta de la ciudadanía es casi nula.",
+        "enunciado": "Teniendo en cuenta lo planteado en la Constitución política colombiana, esta respuesta de la ciudadanía refleja",
+        "opciones": [
+          "A. la incapacidad del Gobierno nacional para atender la emergencia.",
+          "B. la deficiencia en la infraestructura nacional para la prevención de desastres.",
+          "C. la inobservancia del principio de solidaridad por parte de los ciudadanos.",
+          "D. la libertad de los ciudadanos para decidir el uso de sus recursos propios."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La Constitución Política de Colombia establece el principio de solidaridad como un deber de los ciudadanos en situaciones que afectan a la comunidad. La falta de respuesta ante un llamado de ayuda en una emergencia refleja la inobservancia de este principio fundamental."
+      },
+      "metadatos": {
+        "competencia": "Conocimiento y aplicación de principios constitucionales",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Durante las épocas de lluvias, en muchas zonas rurales de Colombia se inundan escuelas y se interrumpen los caminos para llegar a estas.",
+        "enunciado": "¿Cuál de las siguientes soluciones vulnera el derecho a la educación?",
+        "opciones": [
+          "A. Organizar esquemas de transporte para que los estudiantes vayan a clases en escuelas no afectadas por las inundaciones.",
+          "B. Ajustar el calendario para incluir los sábados como día escolar y que no haya clases en las épocas de inundación.",
+          "C. Dar una parte de las clases a través de tutores a domicilio para reducir los días en que los niños tienen que asistir presencialmente al colegio.",
+          "D. Trasladar a los niños a escuelas no inundadas dos veces por semana y reducir el número de horas de clases."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "Reducir el número de horas de clase implica una disminución en la cantidad y calidad de la educación recibida por los estudiantes, lo cual vulnera directamente su derecho fundamental a una educación completa y adecuada, a diferencia de las otras opciones que buscan mantener o adaptar la prestación del servicio educativo."
+      },
+      "metadatos": {
+        "competencia": "Identificación de vulneraciones de derechos fundamentales",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Algunas personas critican a los policías de tránsito y los culpan de grandes congestiones de vehículos en las ciudades, porque observan que cuando hay una gran congestión es frecuente que haya un policía guiando el tránsito.",
+        "enunciado": "¿Cuál de los siguientes es un argumento válido para contradecir la postura expuesta?",
+        "opciones": [
+          "A. Los policias no deben ser cuestionados, ya que representan a una institución que está hecha para ayudar.",
+          "B. El hecho de que los policías estén donde hay grandes congestiones de vehículos no quiere decir que ellos sean quienes los originan.",
+          "C. Los policías hacen adecuadamente su labor, pero no son suficientes para evitar todas las congestiones de vehículos que se presentan.",
+          "D. El hecho de que haya grandes congestiones vehiculares no significa que los policías no estén capacitados adecuadamente."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La crítica se basa en una falacia de causalidad, confundiendo correlación con causa. La presencia de policías en las congestiones es una respuesta a estas para intentar gestionarlas, no su origen. La opción B contradice directamente esta inferencia errónea."
+      },
+      "metadatos": {
+        "competencia": "Pensamiento crítico y reconocimiento de falacias lógicas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Un Gobierno ofreció reducir impuestos a las empresas privadas que generen nuevos empleos. El gerente de una reconocida empresa que anualmente paga importantes sumas de dinero en impuestos, dijo: 'Para acogerse al beneficio, mi empresa puede abrir 100 nuevas plazas para operarios, siempre y cuando quienes se postulen hayan nacido en municipios de tierra fría, porque los habitantes de tierra caliente no trabajan igual. Estoy seguro de que la junta directiva de la empresa estará de acuerdo conmigo'.",
+        "enunciado": "¿Cuál de los siguientes es una consecuencia de lo dicho por el gerente?",
+        "opciones": [
+          "A. Los miembros de la junta directiva de la empresa respaldarían el pronunciamiento porque implica seleccionar a los mejores trabajadores.",
+          "B. Los empresarios del país respaldarían el pronunciamiento porque significaría un aumento de empleo en los municipios de tierra fría.",
+          "C. Representantes del Gobierno se opondrían a la pretensión de la empresa de aprovechar la política para reducir sus impuestos.",
+          "D. Representantes de los trabajadores se opondrían porque se basa en un prejuicio personal en contra de los empleados de tierra caliente."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La afirmación del gerente se basa en un prejuicio discriminatorio contra los habitantes de 'tierra caliente'. Una consecuencia directa y esperada de una declaración de este tipo sería la oposición de los representantes de los trabajadores, quienes defenderían los derechos laborales y la no discriminación en el acceso al empleo."
+      },
+      "metadatos": {
+        "competencia": "Análisis de discriminación y derechos laborales",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Un estudio reveló que el 30 % de las mujeres en Colombia son víctimas de violencia física. A partir de este estudio varias organizaciones feministas solicitaron el endurecimiento de las penas para las personas que ejercían violencia contra las mujeres. Ante esta petición un funcionario del Gobierno señaló que el estudio no era confiable, porque no consideraba los distintos contextos de estas agresiones y que era muy importante tener en cuenta la justificación de los hechos.",
+        "enunciado": "Según la información presentada, la afirmación del funcionario podría tener como consecuencia que:",
+        "opciones": [
+          "A. se cuestione la idoneidad de los investigadores que realizaron el estudio.",
+          "B. se entienda la necesidad de contar con estrategias efectivas para prevenir la violencia contra las mujeres.",
+          "C. se reconozca la gravedad de los actos de violencia en contra de las mujeres.",
+          "D. se minimice la responsabilidad de los victimarios en los casos de violencia en contra de las mujeres."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "Al señalar que es 'muy importante tener en cuenta la justificación de los hechos' y los 'distintos contextos' de las agresiones, el funcionario introduce elementos que buscan atenuar la gravedad de la violencia y, por ende, la responsabilidad de quienes la ejercen, lo que podría llevar a minimizar la culpabilidad de los victimarios."
+      },
+      "metadatos": {
+        "competencia": "Análisis de discursos y comprensión de la violencia de género",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Ante los crecientes robos a residencias en algunos sectores de estratos altos de una ciudad, el alcalde está considerando autorizar el cierre de grandes sectores residenciales que agrupen varios barrios de la ciudad, para que sean vigilados por seguridad privada y para que solo se permita la entrada a los residentes o a personas autorizadas por estos.",
+        "enunciado": "A la hora de evaluar la propuesta, ¿qué intereses podrían entrar en conflicto?",
+        "opciones": [
+          "A. Los de las empresas de seguridad privada que buscan expandir su negocio y los de los residentes de los barrios cerrados quienes tendrían que soportar controles de seguridad a diario.",
+          "B. Los de los residentes que buscan su seguridad, y los de los demás habitantes de la ciudad que dejarían de tener acceso a las vías y otros espacios públicos de los sectores encerrados.",
+          "C. Los de los residentes que buscan su beneficio particular y los intereses del gobierno local que debe encargarse del bienestar de la comunidad.",
+          "D. Los de las empresas de seguridad privada que serían contratadas para cuidar los sectores encerrados, y los de la Policía encargada de la seguridad en la ciudad."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La propuesta del alcalde implica cerrar espacios públicos (vías y otros) para el uso exclusivo de los residentes de los sectores cerrados. Esto genera un conflicto directo entre el interés de seguridad de los residentes de esos sectores y el derecho de acceso y uso de los espacios públicos por parte de los demás habitantes de la ciudad."
+      },
+      "metadatos": {
+        "competencia": "Competencias Ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A raíz de la autocensura de varios medios europeos acerca de temas de religión, en 2005 un periódico danés le pidió a varios caricaturistas expresar sus impresiones y sentimientos sobre el Islam. Como resultado, el periódico publicó doce caricaturas sobre Mahoma, los cuales despertaron la rabia de muchos musulmanes que protestaron por este hecho.",
+        "enunciado": "En esta situación, ¿qué aspectos están en conflicto?",
+        "opciones": [
+          "A. La libertad de expresión a través de los medios y el uso de caricaturas para tratar temas religiosos.",
+          "B. Las democracias de los países europeos industrializados y las teocracias de algunos países de Oriente.",
+          "C. La libertad de expresión de los caricaturistas y las creencias religiosas de un grupo de personas.",
+          "D. Las religiones occidentales como el Cristianismo y el Judaísmo, y las religiones orientales como el Islam."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El conflicto central descrito es entre el derecho de los caricaturistas a expresar sus ideas (libertad de expresión) y la ofensa que estas expresiones causaron a las creencias religiosas de un grupo de personas (los musulmanes). La opción C captura directamente esta tensión."
+      },
+      "metadatos": {
+        "competencia": "Competencias Ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El Gobierno ha anunciado que otorgará beneficios a las empresas que contraten a personas que hayan dejado de consumir sustancias psicoactivas y se hayan rehabilitado. Una empresa decide acogerse a este beneficio y, tras un proceso de selección, contrata a varias personas rehabilitadas. En un conversatorio con los empleados, uno de los directivos dice lo siguiente: “Esta empresa tiene gran compromiso social. Aunque es muy difícil que los nuevos puedan tener un nivel de desempeño alto en la compañía, dadas sus adicciones anteriores, nosotros cumplimos con darles el beneficio de la duda\".",
+        "enunciado": "¿Cuál podría ser un efecto de lo que dijo este directivo?",
+        "opciones": [
+          "A. Que los nuevos trabajadores sientan el respaldo de la compañía.",
+          "B. Que los demás trabajadores duden de las capacidades laborales de los nuevos.",
+          "C. Que los nuevos trabajadores les colaboren en sus labores a los demás.",
+          "D. Que los demás trabajadores desconfíen de las habilidades sociales de los nuevos."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La afirmación del directivo, al expresar que 'es muy difícil que los nuevos puedan tener un nivel de desempeño alto', introduce una duda explícita sobre las capacidades laborales de los trabajadores rehabilitados. Esto, al ser dicho públicamente, puede influir en la percepción de los demás empleados, llevándolos a dudar también de dichas capacidades."
+      },
+      "metadatos": {
+        "competencia": "Competencias Ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Para solucionar los problemas de basura de la capital del departamento, se decidió construir un relleno sanitario en un lote de otro municipio cercano, al cual se le compensaría económicamente por prestar este servicio a la capital. Según el gobierno departamental, la escogencia del lote se hizo conjuntamente con las autoridades ambientales y con la alcaldía del municipio. El proyecto del relleno sanitario cuenta con todas las licencias ambientales requeridas y su construcción es necesaria para la salubridad de la capital. En una consulta popular, los habitantes del municipio cercano votaron 96 % en contra de la construcción del relleno, porque consideran que este es una amenaza para la salud de la población y el ecosistema, y disminuiría el valor de la tierra circundante.",
+        "enunciado": "En esta situación, ¿cuáles de los siguientes aspectos están en conflicto?",
+        "opciones": [
+          "A. El medio ambiente en la capital y la voluntad del gobierno departamental.",
+          "B. La economía del municipio y las políticas medioambientales de la capital.",
+          "C. La salubridad de la capital y la voluntad de los habitantes del municipio.",
+          "D. Las políticas económicas de la alcaldía del municipio y la salubridad de la capital."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El conflicto principal radica en la necesidad de la capital de garantizar su salubridad mediante un relleno sanitario, y la oposición de los habitantes del municipio cercano, quienes, a través de una consulta popular, expresan su voluntad en contra del proyecto debido a preocupaciones por su salud, el ecosistema y el valor de sus tierras."
+      },
+      "metadatos": {
+        "competencia": "Competencias Ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El problema del tráfico de drogas ilícitas ha generado que gobernantes, académicos y miembros de la sociedad civil de países productores debatan sobre el asunto con el fin de encontrar soluciones. Algunos proponen que, para defender el bien común, se deben legalizar las drogas.",
+        "enunciado": "¿Cuál de los siguientes es el argumento que está a favor de la propuesta de legalización?",
+        "opciones": [
+          "A. Una gran parte de la violencia mundial está asociada al tráfico y consumo de drogas, por tanto, su comercialización debe tener estrictos controles.",
+          "B. En los países productores no existe ninguna responsabilidad en el tráfico de drogas; la responsabilidad debe recaer sobre los controles de los países consumidores.",
+          "C. Una gran parte quienes consumen drogas son personas enfermas que necesitan que el Estado garantice ambientes sanos para que puedan superar su adicción.",
+          "D. En los países productores, la prohibición ha generado problemas sociales más graves que aquellos efectos económicos que se querían evitar con esta medida."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "Un argumento central a favor de la legalización de las drogas es que la prohibición ha tenido consecuencias negativas (problemas sociales más graves, violencia, corrupción) que superan los beneficios esperados. La legalización, bajo esta perspectiva, buscaría mitigar estos problemas derivados del mercado ilegal, contribuyendo al bien común."
+      },
+      "metadatos": {
+        "competencia": "Competencias Ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Durante siglos, los practicantes judíos y musulmanes les han practicado la circuncisión a sus hijos. En Alemania, un juez tomó la decisión de prohibir la circuncisión a niños menores de 14 años de edad. A esa edad, cada niño decidirá por sí mismo si se la realiza. Las grandes comunidades de judíos y musulmanes piensan que este es un ataque en contra de sus creencias e invitan a seguir practicando circuncisiones a temprana edad. El asunto ha generado polémica, pues se considera un nuevo ataque a las costumbres y herencia judía y musulmana, pueblos que siguen siendo discriminados por su cultura a pesar de sus grandes aportes económicos a los países europeos.",
+        "enunciado": "En la descripción de esta situación, se le da mayor énfasis a",
+        "opciones": [
+          "A. las consecuencias económicas de la discriminación a un pueblo con grandes capitales.",
+          "B. los efectos de la decisión del juez en las relaciones internacionales alemanas.",
+          "C. las creencias religiosas y tradiciones que respaldan la práctica de la circuncisión.",
+          "D. los derechos de los menores de edad y la responsabilidad de sus padres de respetarlos."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La descripción del texto se centra en cómo las comunidades judías y musulmanas perciben la decisión del juez: como un 'ataque en contra de sus creencias' y a sus 'costumbres y herencia'. Aunque la decisión del juez se relaciona con los derechos de los menores, el énfasis del relato está en la reacción de las comunidades y la importancia de sus tradiciones religiosas."
+      },
+      "metadatos": {
+        "competencia": "Competencias Ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Una paciente debe someterse a cirugía. El médico tratante conoce las prohibiciones que por su religión tiene la paciente en cuanto a las trasfusiones de sangre y le advierte que podría haber hemorragia durante la intervención quirúrgica. El médico diligencia los formularios de rutina y la paciente firma el \"consentimiento informado\" para recibir transfusiones si las llegara a necesitar. Días después de la cirugía presenta una fuerte hemorragia, por lo que se hacen necesarias las trasfusiones. Los padres de la paciente le dicen a los médicos que para ellos es más importante la salud de su hija que la religión. Sin embargo, la paciente le dice al cirujano que cambió de opinión y que no autoriza la transfusión.",
+        "enunciado": "Al tomar esta decisión final, ¿qué dimensión está privilegiando la paciente?",
+        "opciones": [
+          "A. sus creencias religiosas y el estilo de vida que ellas exigen.",
+          "B. las consecuencias en su salud y estado físico en un futuro tras la cirugía.",
+          "C. las recomendaciones médicas y evidencia científica que respalda las transfusiones.",
+          "D. sus relaciones familiares y el concepto que tienen sus padres."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La paciente, a pesar de haber firmado un consentimiento previo y de la opinión de sus padres y la necesidad médica, decide no autorizar la transfusión, lo que indica que está priorizando sus creencias religiosas sobre su salud física."
+      },
+      "metadatos": {
+        "competencia": "Competencias ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Recientemente se propuso un proyecto de ley ordinaria que condena el satanismo, porque es contrario a las creencias religiosas de la mayoría de la población colombiana.",
+        "enunciado": "¿Por qué este proyecto no podría aprobarse?",
+        "opciones": [
+          "A. Porque contradice lo dicho en la Constitución, la cual protege todas las creencias religiosas y no solo las de la mayoría.",
+          "B. Porque contradice los derechos de los legisladores que pertenezcan a una religión minoritaria, quienes tendrían que renunciar al Congreso.",
+          "C. Porque contradice las normas internacionales, las cuales establecen que las creencias religiosas son del dominio de las iglesias y no de los estados.",
+          "D. Porque contradice las leyes actuales, las cuales establecen que la religión es un asunto privado que no interesa al Estado."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La Constitución Política de Colombia garantiza la libertad de cultos y protege todas las creencias religiosas, sin importar si son mayoritarias o minoritarias. Un proyecto de ley que condene una religión específica violaría este principio fundamental."
+      },
+      "metadatos": {
+        "competencia": "Competencias ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Un municipio turístico colombiano está altamente afectado por el manejo incontrolado de las basuras. La administración municipal decide trabajar en una solución que contempla varias dimensiones. En lo político se implementan acuerdos y ordenanzas en cuanto al mejoramiento del medio ambiente; en lo social se brinda capacitación a los habitantes del lugar en el manejo de residuos y se comienza a reciclar; en lo económico se asignan recursos del presupuesto municipal a la adecuación de los edificios públicos para facilitar el reciclaje y la separación de las basuras.",
+        "enunciado": "¿Cuál de las siguientes opciones muestra un aspecto que NO se contempló en la solución propuesta?",
+        "opciones": [
+          "A. El poco compromiso de la administración con la conservación del medio ambiente.",
+          "B. El desconocimiento del manejo de residuos sólidos por parte de la población.",
+          "C. La inversión de dineros públicos para llevar a cabo las obras de infraestructura necesarias.",
+          "D. La existencia de turistas poco comprometidos con el manejo de las basuras en el lugar."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La solución propuesta aborda aspectos políticos (acuerdos), sociales (capacitación a habitantes) y económicos (recursos municipales para infraestructura). Sin embargo, no menciona ninguna medida o consideración para los turistas, quienes, en un municipio turístico, son una fuente significativa de residuos y su compromiso es crucial."
+      },
+      "metadatos": {
+        "competencia": "Competencias ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Suponga que en el país se discute la conveniencia de reformar la Constitución para permitir la pena de muerte.",
+        "enunciado": "De acuerdo con la Constitución política de Colombia, ¿podrían los ciudadanos acudir a un mecanismo de participación directa para pronunciarse sobre este tema?",
+        "opciones": [
+          "A. No, los asuntos penales son competencia exclusiva de la Rama Judicial.",
+          "B. No, la decisión debe ser tomada por el presidente vía decreto.",
+          "C. Sí, a través de un referendo constitucional.",
+          "D. Sí, a través de un plebiscito convocado por el presidente."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "En Colombia, las reformas a la Constitución pueden ser sometidas a la aprobación del pueblo mediante un referendo constitucional, que es un mecanismo de participación directa para que los ciudadanos se pronuncien sobre un acto reformatorio de la Constitución."
+      },
+      "metadatos": {
+        "competencia": "Competencias ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Los autores de un tiroteo fueron identificados como tres personas que dedicaban largas horas de sus días a jugar videojuegos de acción y violencia. Como consecuencia de esto, se prohibió la comercialización de todo videojuego de carácter violento como medida de prevención para este tipo de atentados.",
+        "enunciado": "Sobre la justificación de esta propuesta, se puede afirmar que realiza",
+        "opciones": [
+          "A. una demostración de la relación casual entre el uso de videojuegos y comportamientos violentos, lo cual permite saber cómo fortalecer la seguridad.",
+          "B. un argumento acerca de la comercialización de los juegos de video como problema de fondo, pues si están disponibles los jóvenes siempre los jugarán.",
+          "C. un juicio hacia los jóvenes que juegan cualquier tipo de videojuego, acusándolos de ser muy poco empáticos y de tener actitudes violentas con las personas que los rodean.",
+          "D. una generalización sobre la coincidencia del uso de videojuegos violentos y un comportamiento violento, pues aplica en este caso en particular, pero nada garantiza que siempre sea así."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La propuesta toma un caso particular (tres individuos) y generaliza una relación causal entre los videojuegos violentos y los comportamientos violentos, sin que este único caso sea suficiente para establecer una causalidad universal o una garantía de que siempre será así."
+      },
+      "metadatos": {
+        "competencia": "Competencias ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Entre el 2007 y 2008, la Corte Constitucional extendió a parejas homosexuales los beneficios del régimen contributivo de salud y del derecho a la pensión de sobrevivientes.",
+        "enunciado": "¿Cuál de los siguientes argumentos respalda esta decisión de la Corte?",
+        "opciones": [
+          "A. Se requiere garantizar la igualdad de derechos para todos los ciudadanos.",
+          "B. Es necesaria la protección de los derechos de los ciudadanos pensionados.",
+          "C. Se requieren proteger los derechos derivados del matrimonio entre hombres y mujeres.",
+          "D. Es necesario que las instituciones garanticen la preservación de los valores tradicionales."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La extensión de beneficios a parejas homosexuales, que antes eran exclusivos de parejas heterosexuales, es una medida que busca asegurar el principio de igualdad de derechos para todos los ciudadanos, sin discriminación por orientación sexual."
+      },
+      "metadatos": {
+        "competencia": "Competencias ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El Fondo Monetario Internacional (FMI) enfatizó que en América Latina se evidencian altas tasas de participación laboral y resaltó la necesidad de una mayor innovación tecnológica como principal reto para el desarrollo económico. En respuesta a estas afirmaciones, una analista económica sostuvo que “el verdadero problema en esta región es que el 50 % de las mujeres en edad de trabajar, en promedio más educadas que los hombres, se dedican a la economía del cuidado, es decir, a la atención del hogar, sin ningún tipo de salario o reconocimiento económico ni social”.",
+        "enunciado": "En relación con lo anterior, se podría afirmar que el argumento de la analista económica es válido para",
+        "opciones": [
+          "A. respaldar el concepto del FMI, pues ella muestra que se subutiliza el potencial que las mujeres tienen para hacer de la región un área más tecnificada.",
+          "B. refutar el análisis del FMI, pues ella demuestra que la desigualdad de género es el principal obstáculo para el desarrollo económico y no la falta de tecnología.",
+          "C. rechazar el diagnóstico de FMI, pues demuestra que para el caso de América Latina la innovación tecnológica no tiene ningún efecto en el desarrollo económico.",
+          "D. apoyar la explicación de FMI, pues ambos muestran que la población femenina de América Latina ha aumentado su participación en el mercado laboral."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "Mientras el FMI se enfoca en la innovación tecnológica, la analista económica presenta un 'verdadero problema' alternativo: la desigualdad de género y la subutilización del potencial femenino en la economía del cuidado. Esto implica que ella está refutando la principal causa de subdesarrollo propuesta por el FMI, sugiriendo que la desigualdad de género es un obstáculo más fundamental."
+      },
+      "metadatos": {
+        "competencia": "Competencias ciudadanas",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Colombia, por ser un Estado social de derecho constitucional, se caracteriza por su división y control recíproco entre los poderes públicos.",
+        "enunciado": "¿Cuál de las siguientes decisiones sería una acción en contra del principio de equilibrio de poderes y por qué?",
+        "opciones": [
+          "A. Que el presidente anunciara el cierre del Congreso, porque sería injerencia del Poder Ejecutivo en el Legislativo.",
+          "B. Que el presidente decidiera las principales políticas de seguridad en el país, porque esto es potestad del poder Legislativo.",
+          "C. Que la Corte Constitucional revisara si los decretos presidenciales cumplen con la Constitución, porque esto no hace parte de las funciones del Poder Judicial.",
+          "D. Que el Congreso de la República discutiera y aprobara leyes sobre el sistema educativo del país, pues esto no hace parte de las funciones del Poder Legislativo."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La Constitución Política de Colombia establece la división de poderes (Ejecutivo, Legislativo y Judicial) con controles recíprocos. El cierre del Congreso por parte del presidente es una clara extralimitación de las funciones del Poder Ejecutivo y una injerencia directa en el Poder Legislativo, rompiendo el equilibrio y la autonomía de los poderes públicos."
+      },
+      "metadatos": {
+        "competencia": "Conocimientos (Estructura del Estado, separación de poderes)",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "“El Estado y la Iglesia deben estar separados”.",
+        "enunciado": "¿Cuál de los siguientes enunciados es coherente con la afirmación anterior?",
+        "opciones": [
+          "A. El único matrimonio válido frente al Estado es el matrimonio por la Iglesia católica.",
+          "B. El diezmo será descontado automáticamente del salario de los empleados públicos.",
+          "C. Los estudiantes de colegios públicos no están obligados a asistir a clase de religión.",
+          "D. La fe de bautismo es el único documento que equivale al registro civil de los ciudadanos."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La separación entre el Estado y la Iglesia implica que el Estado es laico y no puede imponer prácticas religiosas ni favorecer una religión sobre otra. En un Estado laico, la educación pública debe ser neutral en materia religiosa, garantizando la libertad de conciencia y culto de los estudiantes, por lo que la asistencia a clases de religión no puede ser obligatoria."
+      },
+      "metadatos": {
+        "competencia": "Conocimientos (Laicidad del Estado, libertad de cultos)",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Una comunidad indígena ha preservado su cultura durante los últimos siglos. En donde viven no hay escuelas, carreteras ni presencia de personas ajenas a la comunidad. Un grupo de sacerdotes católicos decide fundar una escuela en la zona para educar a los niños indígenas. Un grupo de antropólogos se opone y les pide que no intervengan en esa comunidad.",
+        "enunciado": "En este caso se presenta un conflicto, porque",
+        "opciones": [
+          "A. los antropólogos quieren que los niños indígenas no reciban ningún tipo de educación, mientras que los sacerdotes quieren enseñarles la religión católica.",
+          "B. los sacerdotes quieren priorizar el derecho a la educación de los niños indígenas, mientras que los antropólogos privilegian el derecho a la libertad de culto.",
+          "C. los antropólogos van en contra del derecho a la libertad de culto, mientras que los sacerdotes buscan que a los niños se les respete ese derecho.",
+          "D. los sacerdotes buscan formar a los niños indígenas dentro de la educación católica, mientras que los antropólogos buscan proteger su cultura ancestral."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "El conflicto central radica en la tensión entre la intención de los sacerdotes de llevar una educación que, por su naturaleza, incluirá elementos de la cultura y religión católica, y el objetivo de los antropólogos de preservar la autonomía y la integridad de la cultura ancestral indígena, evitando influencias externas que puedan alterarla."
+      },
+      "metadatos": {
+        "competencia": "Multiperspectivismo (Análisis de conflictos desde diferentes puntos de vista), Pensamiento sistémico (Identificación de causas y consecuencias de la intervención cultural)",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "En vista de las dificultades para ofrecer educación de calidad a todos los pobladores de un municipio, el secretario de Educación local decretó que el número mínimo de estudiantes en el salón de clases debía pasar de 35 a 50 estudiantes. Según su opinión, la solución “es una situación gana-gana en la que más niños entran en el colegio y los colegios reciben más dinero al aumentar la cantidad de estudiantes atendidos.",
+        "enunciado": "¿Cuál de los siguientes elementos se prioriza en la solución del secretario de Educación?",
+        "opciones": [
+          "A. El bienestar de los estudiantes de las instituciones educativas del departamento.",
+          "B. Las cifras de cobertura que presentan las instituciones educativas y el departamento.",
+          "C. El impacto social de la educación en las comunidades de este departamento.",
+          "D. La calidad de la educación ofrecida por las instituciones educativas del departamento."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La justificación del secretario se enfoca en 'más niños entran en el colegio' y 'los colegios reciben más dinero', lo cual indica una prioridad en aumentar el número de estudiantes atendidos (cobertura) y la eficiencia financiera, más que en la calidad de la educación o el bienestar individual de los estudiantes, que probablemente se verían afectados negativamente por el aumento del tamaño de los salones."
+      },
+      "metadatos": {
+        "competencia": "Pensamiento sistémico (Análisis de políticas públicas y sus prioridades), Argumentación (Identificación de la lógica subyacente en una decisión)",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "",
+        "enunciado": "¿Cuál de los siguientes es el organismo encargado de elegir al contralor General de la República?",
+        "opciones": [
+          "A. La Presidencia de la República.",
+          "B. La Corte Constitucional.",
+          "C. El Congreso de la República.",
+          "D. La Procuraduría General de la Nación."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "Según la Constitución Política de Colombia (Artículo 267), el Contralor General de la República es elegido por el Congreso en pleno para un período institucional de cuatro años, de una terna enviada por el Consejo de Estado."
+      },
+      "metadatos": {
+        "competencia": "Conocimientos (Estructura del Estado colombiano, organismos de control)",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Una colombiana es devota del islam y todos los días cubre su cabeza con una pañoleta. En una entrevista, después de aprobar con éxito una convocatoria para un cargo en la alcaldía de su ciudad, el funcionario entrevistador le advierte que no puede tomar el trabajo si no acepta llevar la cabeza descubierta en las horas laborales.",
+        "enunciado": "¿Tiene razón el funcionario al hacerle a la mujer esta solicitud?",
+        "opciones": [
+          "A. Sí, porque Colombia es un país católico.",
+          "B. Sí, porque el Estado colombiano es laico.",
+          "C. No, porque le está vulnerando el derecho a la privacidad.",
+          "D. No, porque le está vulnerando el derecho a la igualdad."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La solicitud del funcionario vulnera el derecho a la igualdad y a la libertad religiosa de la mujer. El Estado colombiano es laico y debe garantizar la libertad de culto y la no discriminación por motivos religiosos. La expresión de la fe a través de la vestimenta, como el uso de una pañoleta, no interfiere con las funciones laborales ni con el orden público, por lo que prohibirla constituye un acto discriminatorio."
+      },
+      "metadatos": {
+        "competencia": "Conocimientos (Derechos fundamentales, laicidad del Estado), Argumentación (Aplicación de principios constitucionales a situaciones concretas)",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 1, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Reconoce la existencia de diferentes perspectivas en situaciones en donde interactúan diferentes partes'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción D es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Reconoce la existencia de diferentes perspectivas en situaciones en donde interactúan diferentes partes.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 2, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Conoce los derechos y deberes que la Constitución consagra'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción C es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Conoce los derechos y deberes que la Constitución consagra.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 3, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Conoce los derechos y deberes que la Constitución consagra'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción D es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Conoce los derechos y deberes que la Constitución consagra.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 4, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza y evalúa la pertinencia y solidez de enunciados-discursos'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción B es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza y evalúa la pertinencia y solidez de enunciados-discursos.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 5, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza y evalúa la pertinencia y solidez de enunciados-discursos'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción D es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza y evalúa la pertinencia y solidez de enunciados-discursos.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 6, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza y evalúa la pertinencia y solidez de enunciados-discursos'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción D es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza y evalúa la pertinencia y solidez de enunciados-discursos.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 7, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza las diferentes perspectivas presentes en situaciones en donde interactúan diferentes partes'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción B es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza las diferentes perspectivas presentes en situaciones en donde interactúan diferentes partes.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 8, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción C es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 9, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza y evalúa la pertinencia y solidez de enunciados-discursos'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción B es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza y evalúa la pertinencia y solidez de enunciados-discursos.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 10, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción C es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 11, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza y evalúa la pertinencia y solidez de enunciados-discursos'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción D es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza y evalúa la pertinencia y solidez de enunciados-discursos.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 12, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción C es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 13, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Comprende qué es la Constitución Política de Colombia y sus principios fundamentales'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción A es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Comprende qué es la Constitución Política de Colombia y sus principios fundamentales.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 14, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción D es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 15, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Conoce la organización del Estado de acuerdo con la Constitución'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción C es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Conoce la organización del Estado de acuerdo con la Constitución.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 16, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción A es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 17, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza y evalúa la pertinencia y solidez de enunciados-discursos'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción D es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza y evalúa la pertinencia y solidez de enunciados-discursos.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 18, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza y evalúa la pertinencia y solidez de enunciados-discursos'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción A es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza y evalúa la pertinencia y solidez de enunciados-discursos.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 19, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza y evalúa la pertinencia y solidez de enunciados-discursos'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción B es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza y evalúa la pertinencia y solidez de enunciados-discursos.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 20, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Reconoce la existencia de diferentes perspectivas en situaciones en donde interactúan diferentes partes'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción D es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Reconoce la existencia de diferentes perspectivas en situaciones en donde interactúan diferentes partes.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 21, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Comprende qué es la Constitución Política de Colombia y sus principios fundamentales'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción A es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Comprende qué es la Constitución Política de Colombia y sus principios fundamentales.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 22, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Analiza y evalúa la pertinencia y solidez de enunciados-discursos'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción C es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Analiza y evalúa la pertinencia y solidez de enunciados-discursos.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 23, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción A es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 24, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Conoce la organización del Estado de acuerdo con la Constitución'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción C es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Conoce la organización del Estado de acuerdo con la Constitución.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto proporcionado es una tabla de claves de respuesta y no incluye el contexto de la pregunta.",
+        "enunciado": "La pregunta número 25, cuyo enunciado no fue proporcionado en el texto escaneado, evalúa la siguiente competencia: 'Conoce los derechos y deberes que la Constitución consagra'.",
+        "opciones": [
+          "A. Opción A (contenido no proporcionado)",
+          "B. Opción B (contenido no proporcionado)",
+          "C. Opción C (contenido no proporcionado)",
+          "D. Opción D (contenido no proporcionado)"
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La clave de respuesta oficial indica que la opción D es la correcta para esta pregunta. El contenido específico de la pregunta y sus opciones no fueron proporcionados en el texto escaneado."
+      },
+      "metadatos": {
+        "competencia": "Conoce los derechos y deberes que la Constitución consagra.",
+        "fuente": "03_02_Cuadernillo_de_preguntas_competencias_ciudadanas_Saber_Pro_2018.pdf"
+      }
+    }
+  ]
+}

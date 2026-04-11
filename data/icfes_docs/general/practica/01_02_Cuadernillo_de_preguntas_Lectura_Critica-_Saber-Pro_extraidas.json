@@ -1,0 +1,566 @@
+{
+  "origen": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf",
+  "total_preguntas": 28,
+  "preguntas": [
+    {
+      "contenido": {
+        "contexto": "TÉRMINOS Y CONDICIONES DE USO PARA PUBLICACIONES \nY OBRAS DE PROPIEDAD DEL ICFES\nEl Instituto Colombiano para la Evaluación de la Educación (Icfes) pone a la disposición de la \ncomunidad educativa y del público en general, DE FORMA GRATUITA Y LIBRE DE CUALQUIER \nCARGO, un conjunto de publicaciones a través de su portal www.icfes.gov.co. Estos materiales y \ndocumentos están normados por la presente política, y están protegidos por derechos de propiedad \nintelectual y derechos de autor a favor del Icfes. Si tiene conocimiento de alguna utilización contraria a \nlo establecido en estas condiciones de uso, por favor infórmenos al correo prensaicfes@icfes.gov.co.\nQueda prohibido el uso o publicación total o parcial de este material con fines de lucro. Únicamente \nestá autorizado su uso para fines académicos e investigativos. Ninguna persona, natural \no jurídica, nacional o internacional, podrá vender, distribuir, alquilar, reproducir, transformar*,\npromocionar o realizar acción alguna de la cual se lucre directa o indirectamente con este material.\nEsta publicación cuenta con el registro ISSN (International Standard Book Number, o Número\nNormalizado Internacional para Libros) que facilita la identificación no solo de cada título, sino de\nla autoría, de la edición, del editor y del país en donde se edita.\nEn todo caso, cuando se haga uso parcial o total de los contenidos de esta publicación del Icfes, \nel usuario deberá consignar o hacer referencia a los créditos institucionales del Icfes respetando los \nderechos de cita; es decir, se podrán utilizar con los fines aquí previstos transcribiendo los pasajes \nnecesarios, citando siempre la fuente de autor; lo anterior siempre que estos no sean tantos y \nseguidos que razonadamente puedan considerarse una reproducción simulada y sustancial, que \nredunde en perjuicio del Icfes. \nAsimismo, los logotipos institucionales son marcas registradas y de propiedad exclusiva del Icfes. Por \ntanto, los terceros no podrán usar las marcas de propiedad del Icfes con signos idénticos o similares \nrespecto a cualesquiera productos o servicios prestados por esta entidad, cuando su uso pueda \ncausar confusión. En todo caso, queda prohibido su uso sin previa autorización expresa del Icfes. La \ninfracción de estos derechos se perseguirá civil y, en su caso, penalmente, de acuerdo con las leyes \nnacionales y tratados internacionales aplicables.\nEl Icfes realizará cambios o revisiones periódicas a los presentes términos de uso, y los actualizará \nen esta publicación. \nEl Icfes adelantará las acciones legales pertinentes por cualquier violación a estas \npolíticas y condiciones de uso.\n* \t La transformación es la modificación de la obra a través de la creación de adaptaciones, traducciones, compilaciones, actualizaciones, \nrevisiones, y, en general, cualquier modificación que de la obra se pueda realizar, generando que la nueva obra resultante se\nconstituya en una obra derivada protegida por el derecho de autor, con la única diferencia respecto a las obras originales que\naquellas requieren para su realización de la autorización expresa del autor o propietario para adaptar, traducir, compilar, etcétera. En\neste caso, el Icfes prohíbe la transformación de esta publicación.",
+        "enunciado": "De acuerdo con los 'Términos y Condiciones de Uso para Publicaciones y Obras de Propiedad del ICFES', ¿cuál de las siguientes acciones está *explícitamente prohibida* sin la autorización expresa del ICFES?",
+        "opciones": [
+          "A. Utilizar fragmentos del material para una investigación académica, citando la fuente.",
+          "B. Informar al ICFES sobre cualquier uso indebido del material.",
+          "C. Realizar una adaptación o traducción del material para su distribución gratuita.",
+          "D. Consultar el material de forma gratuita a través del portal www.icfes.gov.co."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El texto establece claramente: 'Ninguna persona... podrá... transformar*, promocionar o realizar acción alguna de la cual se lucre directa o indirectamente con este material.' La nota al pie marcada con el asterisco (*) define 'transformación' como 'la creación de adaptaciones, traducciones, compilaciones, actualizaciones, revisiones'. Además, especifica: 'En este caso, el Icfes prohíbe la transformación de esta publicación.' Por lo tanto, realizar una adaptación o traducción está prohibido, independientemente de si es para distribución gratuita o con fines de lucro. Las otras opciones (A, B, D) describen acciones permitidas o incluso fomentadas por el ICFES."
+      },
+      "metadatos": {
+        "competencia": "Identificar y entender los contenidos explícitos de un texto.",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "La medicina popular colombiana conserva una amplia serie de conocimientos empíricos sobre gran diversidad de recursos botánicos, que han sido esenciales para el cuidado de la salud. Pero, con la oficialización de la medicina a finales del siglo XIX, la creación de las primeras escuelas de medicina y de farmacia y la creación de una legislación que buscaba regular estas disciplinas, muchos de estos conocimientos fueron rechazados al igual que sus prácticas médicas. Paradójicamente, mientras la medicina oficial negaba los conocimientos populares, se servía de ellos para desarrollar muchos de los avances farmacéuticos de los que se vale la medicina oficial para sus tratamientos. Por otro lado, según la Organización Mundial de la Salud, la atención primaria en salud por parte de la medicina oficial cubre apenas a un 20 % de la población en los países en vías de desarrollo, mientras que el 80 % tiene que recurrir a otras prácticas médicas populares y lo hace en gran parte por la poca garantía de acceso y de aseguramiento de la población pobre. Lo anterior sigue generando inconformidad en quienes practican la medicina oficial pues consideran que la medicina popular no representa un conocimiento válido porque no se fundamenta en pruebas científicas y no está regulada. Sin embargo, ambas medicinas pueden llegar a ser complementarias si se estudian de manera juiciosa y se determinan cuáles de las prácticas y de los recursos botánicos usados por la medicina popular son perjudiciales y cuáles brindan alternativas de salud a las poblaciones necesitadas. De esta manera, también se promueve la inclusión, el reconocimiento y el respeto por la diversidad cultural y por los conocimientos populares. Tomado y adaptado de: Prieto Gaona, Oriana. (2011). Proyecto de investigación sobre medicina popular.",
+        "enunciado": "Según el texto, para que la atención primaria en salud, por parte de la medicina oficial, pueda atender a más del 20 % de la población, sería necesario principalmente",
+        "opciones": [
+          "A. promover sistemas de financiación adecuados y equitativos que canalicen los recursos necesarios para lograr una atención de mejor calidad y con mayor cobertura.",
+          "B. prever el envejecimiento demográfico de la población, las estructuras familiares cambiantes, y el de los mercados de trabajo informales.",
+          "C. respetar el derecho a los servicios de salud, el respeto a las diferencias culturales y a los principios de igualdad y de no discriminación.",
+          "D. crear un sistema de información, con un enfoque de Derechos Humanos, que permita evaluar los avances en salud."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "El texto indica que el 80% de la población recurre a la medicina popular 'en gran parte por la poca garantía de acceso y de aseguramiento de la población pobre'. La opción A aborda directamente la necesidad de 'financiación adecuados y equitativos' y 'mayor cobertura', lo cual resolvería los problemas de acceso y aseguramiento para la población vulnerable."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "La medicina popular colombiana conserva una amplia serie de conocimientos empíricos sobre gran diversidad de recursos botánicos, que han sido esenciales para el cuidado de la salud. Pero, con la oficialización de la medicina a finales del siglo XIX, la creación de las primeras escuelas de medicina y de farmacia y la creación de una legislación que buscaba regular estas disciplinas, muchos de estos conocimientos fueron rechazados al igual que sus prácticas médicas. Paradójicamente, mientras la medicina oficial negaba los conocimientos populares, se servía de ellos para desarrollar muchos de los avances farmacéuticos de los que se vale la medicina oficial para sus tratamientos. Por otro lado, según la Organización Mundial de la Salud, la atención primaria en salud por parte de la medicina oficial cubre apenas a un 20 % de la población en los países en vías de desarrollo, mientras que el 80 % tiene que recurrir a otras prácticas médicas populares y lo hace en gran parte por la poca garantía de acceso y de aseguramiento de la población pobre. Lo anterior sigue generando inconformidad en quienes practican la medicina oficial pues consideran que la medicina popular no representa un conocimiento válido porque no se fundamenta en pruebas científicas y no está regulada. Sin embargo, ambas medicinas pueden llegar a ser complementarias si se estudian de manera juiciosa y se determinan cuáles de las prácticas y de los recursos botánicos usados por la medicina popular son perjudiciales y cuáles brindan alternativas de salud a las poblaciones necesitadas. De esta manera, también se promueve la inclusión, el reconocimiento y el respeto por la diversidad cultural y por los conocimientos populares. Tomado y adaptado de: Prieto Gaona, Oriana. (2011). Proyecto de investigación sobre medicina popular.",
+        "enunciado": "La promoción de estudios académicos para determinar cuáles de las prácticas usadas por la medicina popular son perjudiciales y cuáles brindan alternativas de salud implica que",
+        "opciones": [
+          "A. se prolongue la inconformidad de quienes practican la medicina oficial.",
+          "B. se inicien procesos de regulación oficiales sobre este tipo de prácticas.",
+          "C. se derogue la ley de que la medicina científica es la única oficial.",
+          "D. se extienda la brecha entre la medicina química y la medicina botánica."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El texto sugiere que las medicinas pueden ser complementarias 'si se estudian de manera juiciosa y se determinan cuáles de las prácticas y de los recursos botánicos usados por la medicina popular son perjudiciales y cuáles brindan alternativas de salud'. Este proceso de evaluación científica es un paso natural hacia la formalización y regulación de las prácticas beneficiosas, abordando la preocupación de que la medicina popular 'no está regulada'."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "DEFENSA DE LA FIESTA BRAVA\nJorge Nacif\nLa fiesta de los toros es uno de los espectáculos más antiguos de la humanidad, sus primeros antecedentes datan de la antigua Grecia. Desde entonces, este juego tuvo muchos detractores. Los que están en contra de la fiesta, argumentan que se “tortura” al toro con las banderillas, y claro, que la res es muerta en el ruedo. \nSin embargo, creo que los opositores no entienden en lo más mínimo lo que es el toreo. La tauromaquia es, ante todo, un arte pues posee dos características fundamentales: la estética y la técnica, aunque el arte es un concepto subjetivo, casi siempre cumple con estos dos elementos. Pero el arte del toreo tiene algo más: el peligro. Decía David Silveti que el don más generoso de un artista es poner en juego la vida misma.\nPara los que no sepan, los puyazos que dan los picadores tienen un objetivo claro. La carne del toro se come y como esta se contamina por la adrenalina, el puyazo sirve para descongestionar al toro, mientras sangra, se va purificando. Por otra parte, la muerte del toro debe ser entendida como algo natural, toda vida termina en la muerte, la única certeza que tenemos siempre. \nFinalmente se habla de los derechos de los animales, bueno, esto se oye bien pero es una falacia, el término de derecho es un concepto meramente humano. Lo importante en una sociedad es garantizar los derechos de los hombres. \nOlé...\nAdaptado de: Nacif, Jorge. “Defensa de la fiesta brava”. Disponible en: http://de10.com.mx/detalle416.html",
+        "enunciado": "En el segundo párrafo, se desvirtúa a los opositores de la tauromaquia",
+        "opciones": [
+          "A. citando la opinión de una fuente reconocida como David Silveti.",
+          "B. denunciando su falta de comprensión del arte del toreo.",
+          "C. alabando la forma en que se tortura al animal en el ruedo.",
+          "D. señalando el carácter natural de la muerte del toro."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El segundo párrafo comienza con la afirmación: 'Sin embargo, creo que los opositores no entienden en lo más mínimo lo que es el toreo.' Esta declaración descalifica directamente a los opositores al atribuirles una falta de entendimiento sobre la esencia de la tauromaquia como arte."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "DEFENSA DE LA FIESTA BRAVA\nJorge Nacif\nLa fiesta de los toros es uno de los espectáculos más antiguos de la humanidad, sus primeros antecedentes datan de la antigua Grecia. Desde entonces, este juego tuvo muchos detractores. Los que están en contra de la fiesta, argumentan que se “tortura” al toro con las banderillas, y claro, que la res es muerta en el ruedo. \nSin embargo, creo que los opositores no entienden en lo más mínimo lo que es el toreo. La tauromaquia es, ante todo, un arte pues posee dos características fundamentales: la estética y la técnica, aunque el arte es un concepto subjetivo, casi siempre cumple con estos dos elementos. Pero el arte del toreo tiene algo más: el peligro. Decía David Silveti que el don más generoso de un artista es poner en juego la vida misma.\nPara los que no sepan, los puyazos que dan los picadores tienen un objetivo claro. La carne del toro se come y como esta se contamina por la adrenalina, el puyazo sirve para descongestionar al toro, mientras sangra, se va purificando. Por otra parte, la muerte del toro debe ser entendida como algo natural, toda vida termina en la muerte, la única certeza que tenemos siempre. \nFinalmente se habla de los derechos de los animales, bueno, esto se oye bien pero es una falacia, el término de derecho es un concepto meramente humano. Lo importante en una sociedad es garantizar los derechos de los hombres. \nOlé...\nAdaptado de: Nacif, Jorge. “Defensa de la fiesta brava”. Disponible en: http://de10.com.mx/detalle416.html",
+        "enunciado": "Entre las razones dadas por Jorge Nacif para sustentar su tesis, resulta una falacia",
+        "opciones": [
+          "A. decir que es un arte, pues para otras personas la tauromaquia puede no tener absolutamente nada de artístico.",
+          "B. citar a David Silveti, pues él es un reconocido torero que evidentemente tendrá la misma opinión del autor respecto a la tauromaquia.",
+          "C. recurrir a un referente histórico para expresar que, aunque desde los inicios de la tauromaquia ha habido detractores, nunca han logrado impedirla.",
+          "D. indicar que el toro, como todos los seres, debe morir, porque establece una analogía entre un hecho natural y la muerte provocada."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "El autor afirma que 'la muerte del toro debe ser entendida como algo natural, toda vida termina en la muerte, la única certeza que tenemos siempre.' Esta es una falacia de falsa analogía, ya que compara la muerte natural e inevitable con la muerte provocada y deliberada del toro en el ruedo, ignorando las diferencias fundamentales entre ambos eventos para justificar la tauromaquia."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "LA DOCTRINA TRUMAN \nEn su discurso de posesión como presidente de Estados Unidos el 20 de enero de 1949, Harry \nTruman anunció al mundo entero su concepto de “trato justo”. Un componente esencial del concepto \nera su llamado a Estados Unidos y al mundo para resolver los problemas de las “áreas \nsubdesarrolladas” del globo:\nLa doctrina Truman inició una nueva era en la comprensión y el manejo de los asuntos mundiales, en \nparticular de aquellos que se referían a los países económicamente menos avanzados. El propósito \nera bastante ambicioso: crear las condiciones necesarias para reproducir en todo el mundo los rasgos \ncaracterísticos de las sociedades avanzadas de la época: altos niveles de industrialización y \nurbanización, tecnificación de la agricultura, rápido crecimiento de la producción material y los niveles \nde vida, y adopción generalizada de la educación y los valores culturales modernos. En concepto de \nTruman, el capital, la ciencia y la tecnología eran los principales componentes que harían posible tal \nrevolución masiva. Solo así el sueño americano de paz y abundancia podría extenderse a todos los \npueblos del planeta.\nLa invención del Tercer Mundo. Construcción y deconstrucción del desarrollo (Introducción). Arturo Escobar\n Más de la mitad de la población del mundo vive en condiciones cercanas a la miseria. Su \nalimentación es inadecuada, es víctima de la enfermedad. Su vida económica es primitiva y \nestá estancada. Su pobreza constituye un obstáculo y una amenaza tanto para ellos como para \nlas áreas más prósperas. Por primera vez en la historia, la humanidad posee el conocimiento y \nla capacidad para aliviar el sufrimiento de estas gentes… Creo que deberíamos poner a \ndisposición de los amantes de la paz los beneficios de nuestro acervo de conocimiento técnico \npara ayudarlos a lograr sus aspiraciones de una vida mejor… Lo que tenemos en mente es un \nprograma de desarrollo basado en los conceptos del trato justo y democrático… Producir más \nes la clave para la paz y la prosperidad. Y la clave para producir más es una aplicación mayor \ny más vigorosa del conocimiento técnico y científico moderno (Truman, 1964).",
+        "enunciado": "Para alcanzar los propósitos de la doctrina, Harry Truman proponía como estrategia",
+        "opciones": [
+          "A. elevar los niveles de industrialización y urbanización.",
+          "B. tratar equitativamente a todas las naciones y a todos los pueblos del planeta.",
+          "C. producir más fortaleciendo la alianza entre capital, ciencia y tecnología.",
+          "D. mitigar las condiciones de pobreza, hambre y miseria en todas las áreas del globo."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El texto indica que 'En concepto de Truman, el capital, la ciencia y la tecnología eran los principales componentes que harían posible tal revolución masiva' y que 'Producir más es la clave para la paz y la prosperidad. Y la clave para producir más es una aplicación mayor y más vigorosa del conocimiento técnico y científico moderno'. La opción C sintetiza esta estrategia."
+      },
+      "metadatos": {
+        "competencia": "Interpretación y comprensión de textos argumentativos.",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "LA DOCTRINA TRUMAN \nEn su discurso de posesión como presidente de Estados Unidos el 20 de enero de 1949, Harry \nTruman anunció al mundo entero su concepto de “trato justo”. Un componente esencial del concepto \nera su llamado a Estados Unidos y al mundo para resolver los problemas de las “áreas \nsubdesarrolladas” del globo:\nLa doctrina Truman inició una nueva era en la comprensión y el manejo de los asuntos mundiales, en \nparticular de aquellos que se referían a los países económicamente menos avanzados. El propósito \nera bastante ambicioso: crear las condiciones necesarias para reproducir en todo el mundo los rasgos \ncaracterísticos de las sociedades avanzadas de la época: altos niveles de industrialización y \nurbanización, tecnificación de la agricultura, rápido crecimiento de la producción material y los niveles \nde vida, y adopción generalizada de la educación y los valores culturales modernos. En concepto de \nTruman, el capital, la ciencia y la tecnología eran los principales componentes que harían posible tal \nrevolución masiva. Solo así el sueño americano de paz y abundancia podría extenderse a todos los \npueblos del planeta.\nLa invención del Tercer Mundo. Construcción y deconstrucción del desarrollo (Introducción). Arturo Escobar\n Más de la mitad de la población del mundo vive en condiciones cercanas a la miseria. Su \nalimentación es inadecuada, es víctima de la enfermedad. Su vida económica es primitiva y \nestá estancada. Su pobreza constituye un obstáculo y una amenaza tanto para ellos como para \nlas áreas más prósperas. Por primera vez en la historia, la humanidad posee el conocimiento y \nla capacidad para aliviar el sufrimiento de estas gentes… Creo que deberíamos poner a \ndisposición de los amantes de la paz los beneficios de nuestro acervo de conocimiento técnico \npara ayudarlos a lograr sus aspiraciones de una vida mejor… Lo que tenemos en mente es un \nprograma de desarrollo basado en los conceptos del trato justo y democrático… Producir más \nes la clave para la paz y la prosperidad. Y la clave para producir más es una aplicación mayor \ny más vigorosa del conocimiento técnico y científico moderno (Truman, 1964).",
+        "enunciado": "De acuerdo con Arturo Escobar, el propósito de la doctrina Truman era",
+        "opciones": [
+          "A. crear condiciones para reproducir en todo el mundo los rasgos característicos de las sociedades avanzadas.",
+          "B. adoptar, en el primer mundo, el sueño americano de paz y abundancia, la educación y los valores culturales modernos.",
+          "C. iniciar una nueva era en la comprensión y manejo de los asuntos de los países económicamente más avanzados.",
+          "D. generar altos niveles de industrialización y urbanización, tecnificando la agricultura de los países desarrollados."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "El texto, en el párrafo atribuido a Arturo Escobar, afirma explícitamente: 'El propósito era bastante ambicioso: crear las condiciones necesarias para reproducir en todo el mundo los rasgos característicos de las sociedades avanzadas de la época'. La opción A reproduce fielmente esta afirmación."
+      },
+      "metadatos": {
+        "competencia": "Identificación de información explícita en un texto.",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Recientemente, Isabel se convirtió en madrastra de Felipe. Ella acaba de estrellar accidentalmente la \nbicicleta de Felipe porque él la dejó a la entrada del garaje. Felipe entra en la cocina con la llanta \ntrasera de su bicicleta doblada.\nFelipe: Te anotaste un punto. ¡Gracias por dejarme sin bicicleta!\nIsabel: ¿Y cómo querías que la viera?\nFelipe: ¡Pues usando el espejo retrovisor, así se hace!\nIsabel: Perdón, pero escuché a tu padre decirte que dejaras tu bicicleta lejos.\nFelipe: Ah.\nSe desploma en una silla y se sienta con la cabeza inclinada.\nIsabel: Bueno, y ¿cómo te fue en el colegio hoy?\nElla le pasa una gaseosa.\nFelipe hace ruido de desprecio.\nIsabel: ¿Hiciste educación física hoy?\nFelipe: No.\nIsabel: Entonces, apuesto a que tuviste matemáticas.\nFelipe: Sí. ¿Y qué?\nIsabel: ¿Y qué hiciste…?\nEn este momento entra el padre de Felipe.  \nFelipe: (Sosteniendo su llanta doblada en las manos). ¡Mira lo que ella hizo!\nPadre: En primer lugar, por favor, no le digas a Isabel “ella”. Eso es muy grosero. En segundo lugar, \nte he dicho que no dejes tu bicicleta a la entrada del garaje. No me sorprende que eso haya pasado.\nFelipe: ¿Por qué siempre me echan la culpa? ¿Por qué no le dices a ella que tenga más cuidado? ¡Ella… \nIsabel me tiene que comprar una nueva! \nPadre: ¡Por nada del mundo! Puedes empezar a ahorrar para comprar una y a lo mejor la cuidarás \nmás cuando la compres con tu propio dinero.\nFelipe: Te advierto, me voy a ir de la casa apenas tenga la edad para hacerlo. ¡Eres la persona \nmás tacaña que haya conocido! \nSe va dando un portazo.",
+        "enunciado": "La bicicleta averiada le da a Felipe una oportunidad de",
+        "opciones": [
+          "A. insultar a su padre.",
+          "B. buscar el apoyo de su padre.",
+          "C. mostrar su resentimiento contra Isabel.",
+          "D. demostrarle a Isabel que él es casi un adulto."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "Desde el inicio, Felipe se dirige a Isabel con sarcasmo y reproche ('Te anotaste un punto. ¡Gracias por dejarme sin bicicleta!'). Luego, al llegar su padre, la culpa directamente a ella ('¡Mira lo que ella hizo!') y exige que le compre una nueva bicicleta. Esto demuestra que la situación de la bicicleta averiada le sirve como pretexto para expresar su resentimiento hacia su madrastra."
+      },
+      "metadatos": {
+        "competencia": "Inferencia de actitudes y emociones en un texto narrativo.",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El siguiente pasaje es tomado de una novela ambientada en la década de 1930. David y su esposa, Helena, han estado viviendo en una urbanización nueva, La Arboleda. David es el que habla en el pasaje.\nCuando regresé a La Arboleda descargué el pequeño árbol a la entrada cerca de la puerta principal y me dirigí a la cocina, y Helena dijo: “David, ¿dónde diablos has estado? No me dijiste que ibas a salir. Pensé que aún estabas trabajando en el techo cuando te llamé para que tomaras una taza de té”.\n- “Me fui y compré un árbol”, le dije.\n- “¿Un árbol?”\n“Un árbol para el jardín. Fui a los viveros de La Siembra Verde. Solamente costó seis chelines”, agregué orgullosamente.\n“‘¡Maravilloso, David!” exclamó ella. “¿Dónde está?”\n- “Afuera, a la entrada. Ven a verlo”.\nSu expresión cambió cuando lo vio, y tengo que admitir que se veía más bien sucio, débil y gris con sus raíces apretadas como un nudo de estopa mojada sin forma.\n- “Sí, pero ¿qué es?” preguntó ella. “Parece un árbol de caucho”.\n- “Es un árbol de caucho. Caucho de azúcar”.\n- “¡Oh!”, dijo ella, y por unos cuantos segundos se quedó en blanco, y luego dijo: “¿Dónde vas a ponerlo?, es decir, ¿dónde quieres que crezca?”\n- “Allá”. Le señalé. “¡Justo allá, en toda la mitad del jardín!”\n- “iOh!”\n- “¿Por qué solo dices: ‘iOh!’?”\n- “Por nada… Es decir, si va a quedar allá, justo en la mitad de todo, yo hubiera pensado en algo más pequeño, o incluso… “\n- “¿Qué tiene de malo el árbol de caucho?”\n- “Bueno, si quieres saberlo, querido, personalmente creo que son más bien ordinarios. Son tan monótonos, David. Honestamente prefiero algo decorativo, especialmente para allá, justo en el frente de la casa, algo como arbustos con buena floración, o camelias, o celindas. Lo que se vería hermoso, sería uno de esos arces japoneses enanos.”\n- “¡Ni se te ocurra, querida! ¡No quiero nada enano! Yo quiero un árbol. ¡Un árbol de verdad! ¿Te das cuenta?”, le dije, “no hay ni un solo árbol en toda esta maldita calle, quizás ni siquiera en la ciudad”.",
+        "enunciado": "Cuando Helena está discutiendo con David, ella",
+        "opciones": [
+          "A. enfatiza sus puntos de vista.",
+          "B. indaga por los intereses del otro.",
+          "C. se concentra en la búsqueda de un acuerdo.",
+          "D. convierte la discusión en un ataque personal."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "Helena expresa claramente su desacuerdo con la elección de David, argumentando que el árbol es 'ordinario' y 'monótono', y proponiendo alternativas que ella considera más decorativas. Esto demuestra que está enfatizando sus propios puntos de vista sobre el asunto."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El siguiente pasaje es tomado de una novela ambientada en la década de 1930. David y su esposa, Helena, han estado viviendo en una urbanización nueva, La Arboleda. David es el que habla en el pasaje.\nCuando regresé a La Arboleda descargué el pequeño árbol a la entrada cerca de la puerta principal y me dirigí a la cocina, y Helena dijo: “David, ¿dónde diablos has estado? No me dijiste que ibas a salir. Pensé que aún estabas trabajando en el techo cuando te llamé para que tomaras una taza de té”.\n- “Me fui y compré un árbol”, le dije.\n- “¿Un árbol?”\n“Un árbol para el jardín. Fui a los viveros de La Siembra Verde. Solamente costó seis chelines”, agregué orgullosamente.\n“‘¡Maravilloso, David!” exclamó ella. “¿Dónde está?”\n- “Afuera, a la entrada. Ven a verlo”.\nSu expresión cambió cuando lo vio, y tengo que admitir que se veía más bien sucio, débil y gris con sus raíces apretadas como un nudo de estopa mojada sin forma.\n- “Sí, pero ¿qué es?” preguntó ella. “Parece un árbol de caucho”.\n- “Es un árbol de caucho. Caucho de azúcar”.\n- “¡Oh!”, dijo ella, y por unos cuantos segundos se quedó en blanco, y luego dijo: “¿Dónde vas a ponerlo?, es decir, ¿dónde quieres que crezca?”\n- “Allá”. Le señalé. “¡Justo allá, en toda la mitad del jardín!”\n- “iOh!”\n- “¿Por qué solo dices: ‘iOh!’?”\n- “Por nada… Es decir, si va a quedar allá, justo en la mitad de todo, yo hubiera pensado en algo más pequeño, o incluso… “\n- “¿Qué tiene de malo el árbol de caucho?”\n- “Bueno, si quieres saberlo, querido, personalmente creo que son más bien ordinarios. Son tan monótonos, David. Honestamente prefiero algo decorativo, especialmente para allá, justo en el frente de la casa, algo como arbustos con buena floración, o camelias, o celindas. Lo que se vería hermoso, sería uno de esos arces japoneses enanos.”\n- “¡Ni se te ocurra, querida! ¡No quiero nada enano! Yo quiero un árbol. ¡Un árbol de verdad! ¿Te das cuenta?”, le dije, “no hay ni un solo árbol en toda esta maldita calle, quizás ni siquiera en la ciudad”.",
+        "enunciado": "Helena cambió su expresión porque",
+        "opciones": [
+          "A. David compró un árbol.",
+          "B. el árbol le pareció costoso.",
+          "C. el árbol no tenía la mejor apariencia.",
+          "D. David quería sembrar el árbol en el jardín."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El texto indica explícitamente que la expresión de Helena cambió 'cuando lo vio, y tengo que admitir que se veía más bien sucio, débil y gris con sus raíces apretadas como un nudo de estopa mojada sin forma', lo que se refiere directamente a la apariencia del árbol."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Tomado de: http://www.marketingnews.es/gran-consumo/noticia/1039285028005/tetra-pak-anuncia-primera-vez-propios-envases.1.html\nLos envases de Tetra Pak están fabricados con una materia prima natural renovable y reciclable -papel- y no dejan pasar NI LA LUZ NI EL AIRE. Por eso los alimentos se conservan en óptimas condiciones y mantienen todo su sabor, vitaminas y propiedades intactas hasta el momento de su consumo.\nCon los envases de Tetra Pak te llevas a casa lo más natural.\n(Nota: La pregunta hace referencia a una imagen de una vaca que acompaña el anuncio de Tetra Pak, aunque no está presente en el texto escaneado.)",
+        "enunciado": "El mensaje que el publicista quiso enviar al poner una vaca y referirse al envase de Tetra Pak se podría enunciar así:",
+        "opciones": [
+          "A. “Proteja el planeta utilizando envases reciclables y renovables”.",
+          "B. “Lleve la leche con la frescura que tiene en su envase natural”.",
+          "C. “Mantenga por más tiempo sus alimentos en óptimas condiciones”.",
+          "D. “Protéjase de la luz y del aire utilizando materias primas recicladas”."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La imagen de una vaca, fuente natural de leche, junto con la frase 'Con los envases de Tetra Pak te llevas a casa lo más natural', busca asociar el producto con la frescura y pureza de su origen, implicando que el envase mantiene esa cualidad natural."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Tomado de: http://www.marketingnews.es/gran-consumo/noticia/1039285028005/tetra-pak-anuncia-primera-vez-propios-envases.1.html\nLos envases de Tetra Pak están fabricados con una materia prima natural renovable y reciclable -papel- y no dejan pasar NI LA LUZ NI EL AIRE. Por eso los alimentos se conservan en óptimas condiciones y mantienen todo su sabor, vitaminas y propiedades intactas hasta el momento de su consumo.\nCon los envases de Tetra Pak te llevas a casa lo más natural.",
+        "enunciado": "Considere el siguiente enunciado: “Los envases de Tetra Pak están fabricados con una materia prima natural renovable y reciclable ‒papel‒ y no dejan pasar NI LA LUZ NI EL AIRE. Por eso los alimentos se conservan en óptimas condiciones y mantienen todo su sabor, vitaminas y propiedades intactas hasta el momento de su consumo” Este texto induce al lector a pensar que erróneamente",
+        "opciones": [
+          "A. los alimentos no se conservarán frescos, si no se utilizan envases Tetra Pak.",
+          "B. como el Tetra Pak está hecho con materiales reciclables, no deja pasar la luz ni el aire.",
+          "C. ya que los productos son envasados en Tetra Pak, tienen una duración ilimitada.",
+          "D. los envases que conservan los alimentos y el ambiente son los Tetra Pak."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El texto afirma que los alimentos se conservan en 'óptimas condiciones' y mantienen sus propiedades 'hasta el momento de su consumo', lo cual implica una buena conservación. Sin embargo, inferir que esto significa una 'duración ilimitada' es una exageración y una conclusión errónea que no se desprende del enunciado, ya que 'óptimas condiciones' no equivale a una vida útil infinita."
+      },
+      "metadatos": {
+        "competencia": "",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "",
+        "enunciado": "Mafalda le da a la tortuga el nombre “Burocracia” con el propósito de destacar que la burocracia es",
+        "opciones": [
+          "A. silenciosa y tranquila en su comportamiento.",
+          "B. tímida para relacionarse con personas desconocidas.",
+          "C. organizada para administrar su tiempo y el de los demás.",
+          "D. caprichosa en la organización de los horarios."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "Aunque la tira cómica original (no incluida en el texto) satiriza la lentitud y la ineficiencia de la burocracia, el nombre 'Burocracia' para una tortuga busca destacar una característica inherente o una función de la burocracia. La burocracia se define por ser un sistema 'organizado para administrar su tiempo y el de los demás'. La sátira de Mafalda surge del contraste entre esta supuesta organización y la lentitud o ineficacia que a menudo la caracteriza en la práctica, reflejada por la tortuga. Las otras opciones no describen adecuadamente la naturaleza o el propósito de la burocracia, ni la crítica implícita de Mafalda."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "EN CONTRA (Y A FAVOR) DE LAS CORRIDAS\nPor: Héctor Abad Faciolince\nEstoy en contra de las corridas de toros, pero también en contra de su prohibición. Si uno acepta que una mayoría puede prohibir los toros por compasión animal, tendrá que aceptar que un día otra mayoría prohíba a todos los ciudadanos matar animales para comer carne. \nLa tolerancia consiste en no prohibir lo que no nos gusta. Tolero las peleas de boxeo o la prostitución: no me gustan, pero tampoco las prohibiría. El argumento más fuerte de los antitaurinos es que en las corridas se tortura a muerte a un animal. No pongo en duda que el animal sufre horriblemente. Pongo en duda la consciencia plena de ese dolor, porque no sabemos cómo funciona la mente animal. Es una hipocresía discurrir contra las corridas de toros por la mañana y al mediodía comerse un sanguinolento filete de res. Me dirán: ese lomito no se lo obtuvo con tortura. ¿Cómo saben? Los criamos para montarlos o para comerlos. Olvidar esto es hipocresía. No voy a corridas. Me parecen un espectáculo primitivo. Quizás en eso consiste su encanto y su horror. Pero soy carnívoro. No veo que haya acuerdo entre las personas sensatas y morales sobre si las corridas deban prohibirse o no.\nTomado y adaptado de: Elespectador.com",
+        "enunciado": "De las siguientes ideas, la que se opone a la idea central defendida por el autor es:",
+        "opciones": [
+          "A. Las corridas de toros deben prohibirse.",
+          "B. Las fiestas taurinas son rituales de tortura.",
+          "C. La crianza de animales es una acción hipócrita.",
+          "D. La tolerancia es el medio para superar el desacuerdo."
+        ]
+      },
+      "solucion": {
+        "correcta": "A",
+        "justificacion_tecnica": "La idea central defendida por el autor es que, aunque está en contra de las corridas de toros, también está en contra de su prohibición, abogando por la tolerancia. Por lo tanto, la idea que se opone directamente a su postura es que 'Las corridas de toros deben prohibirse'. Las opciones B y C son ideas con las que el autor está de acuerdo o no disputa, y la opción D es una idea que el autor defiende."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "EL CONSUMIDOR DEL “AJUSTE”\nLuis Enrique Alonso, autor español reconocido por sus estudios sociológicos sobre el nuevo consumidor, afirma que los consumidores del cambio del milenio superaron la llamada cultura light posmoderna y que hoy estamos frente al consumidor del ajuste; uno con fuerte tendencia a la personalización de las referencias y la individualización de los argumentos en las presentaciones de la identidad en la vida cotidiana. Dice, además, que la cultura de masas se ha vuelto más selectiva y el consumo se convierte en testigo de la afirmación de la personalidad, siguiendo pautas no tanto de adhesión a macrogrupos abstractos e indiferenciados, como a círculos, relatos y símbolos fuertemente particularistas.\nEse nuevo consumidor socializado exige y escoge con mayor libertad e inteligencia, es una mezcla de convicción, impulso de compra y reflexión; su compra está determinada por las percepciones, las representaciones y los valores que conforman su estilo de vida, su ámbito privado y este en razón de su pertenencia a un grupo que legitima su actuar.\nBien decía Mattelart que “la era de la mencionada sociedad de la información es también la de la producción de estados mentales”. Y es que este consumidor, compra y consume de acuerdo con su estado mental. Por eso, cada día con más fuerza, es necesario alcanzar a este consumidor en su cotidianidad y sorprenderlo no solo con la fuerza del mensaje sino con la novedad del medio: altas dosis de sorpresa y sentido de oportunidad. Lo ingenioso son los nuevos canales, las formas de entrometerse en su cotidianidad, generando percepciones favorables, amigables, positivas. Hoy la producción de “estados mentales” es garantía de posicionamiento, de recordación, de percepciones acordes al producto y la marca; porque en definitiva las personas no actúan por lo que oyen, sino por lo que “ven” en su imaginación cuando oyen, como lo dice Santiago Rodríguez, “la palabra mar no ahoga a nadie. El concepto que lleva dentro, sí”.\nAdaptado de www.revistapym.com.co/Nohra Ramírez Herrera. Publicado el 3 de agosto del 2011.",
+        "enunciado": "La afirmación “La era de la mencionada sociedad de la información es también la de la producción de estados mentales” es",
+        "opciones": [
+          "A. una conclusión a la que llega la autora del texto después de reconocer que hay un nuevo tipo de consumidor.",
+          "B. una idea que se supone verdadera así no se planteen evidencias para comprobarla.",
+          "C. una inferencia que resulta de relacionar las ideas del texto con la imagen del consumidor de la cultura light.",
+          "D. un argumento sustentado desde el concepto de sociedad de la información asumido en el texto."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La afirmación es una cita directa de Mattelart, introducida con 'Bien decía Mattelart que...'. El autor del texto la utiliza para sustentar su explicación sobre cómo el nuevo consumidor compra y consume según su estado mental, y la importancia de la 'producción de estados mentales' en el marketing. Por lo tanto, funciona como un argumento o premisa que apoya la tesis del texto sobre el consumidor del ajuste dentro del contexto de la sociedad de la información."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "A finales de 2000, Wendy, una adolescente hondureña, fue violada en grupo por pandilleros de la Mara Salvatrucha. Tras el ritual conocido como “el trencito”, los mareros decidieron hacer negocio y corrieron la voz de que cobraban cincuenta lempiras a quien quisiera tener relaciones con la muchacha.\nEl pasado diciembre la policía detuvo en Málaga a una rumana que había firmado un contrato para vender sus dos hijas a unos proxenetas. Por 5.000 euros aceptó que fueran llevadas a España a prostituirse. Luisa, universitaria bogotana, empezó en un videochat. Le pagaban por desnudarse ante la cámara. De allí pasó a concertar citas vía celular y ya con clientes se enroló en un lujoso burdel: “Si estoy con un man que me gusta porque sí, ¿por qué no voy a estar con otro por plata?”. (…) La Valeska vive en función de la plata. Ejerce la prostitución desde los 17 años, cuando aburrida del maltrato de su padre dejó la comodidad del barrio Laureles para ofrecerse en Bogotá. (…) Poca gente pasa el umbral, pero son varias las vías para llegar al sexo pago. A pesar de esta verdad de a puño, muchos se resisten a la evidencia disponible y enfatizan una doctrina cada vez más terca e improcedente para la prevención: la prostitución siempre es forzada. Sin embargo, ¿cuántas personas venden su cuerpo empujadas por la miseria, cuántas obligadas por proxenetas, cuántas seducidas y abandonadas, cuántas huyendo del abuso, cuántas por morbo o curiosidad, cuántas por arribistas, cuántas por la adrenalina, cuántas por hipersexuales? ¿Cuántas Wendys por cada Valeska o cada Luisa? Nadie sabe, las respuestas no son obvias e incluso la disponibilidad de testimonios puede estar sesgada. Además de los antecedentes familiares o las experiencias individuales, el entorno y la época influyen. En Colombia, aunque tenemos indicios de que el negocio de las prepagos está en franca expansión, no conocemos el tamaño de la actividad ni su composición. Nadie comprende bien por qué se inician, por qué se mantienen o por qué dejan la actividad, y cada vez es mayor la influencia de quienes no están interesados en que se sepa. La industria del rescate es ya una poderosa alianza multinacional de burócratas, periodistas y oenegés (ONG) que logró simplificar hasta el absurdo el diagnóstico, demostrando de paso que no solo tiene más prejuicios que la Iglesia, los viejos criminólogos o los médicos higienistas sino que carece de cualquier vocación para entender lo que ocurre, lo que piensan o lo que quieren las víctimas. Esa alianza pretende intervenir un mercado sobre el que se sabe no solo poco, sino cada vez menos. (…) “No me arrepiento absolutamente de nada”, dice una prostituta. Los momentos en el burdel “fueron unos de los mejores de mi vida, por el simple hecho de haber conocido a Giovanni y haber encontrado esa mujer nueva que soy ahora… Utilizar el sexo como medio para encontrar lo que todo el mundo busca: reconocimiento, placer, autoestima y, en definitiva, amor y cariño... ¿Qué hay de patológico en eso?”.\nRubio, M. (2012, junio). Wendy, Valérie y todas las demás. El malpensante, vol. 131. Tomado y adaptado de: http://www.elmalpensante.com/index.php?doc=display_contenido&id=2573",
+        "enunciado": "La afirmación de Luisa, “Si estoy con un man que me gusta porque sí, ¿por qué no voy a estar con otro por plata?”, implica que ella",
+        "opciones": [
+          "A. toma decisiones dentro de las normas de una comunidad.",
+          "B. no le da más importancia a los sentimientos que al dinero.",
+          "C. gusta de los hombres que tienen dinero.",
+          "D. la opinión de los demás es importante a la hora de tomar decisiones."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La afirmación de Luisa establece una equivalencia entre estar con alguien por gusto (sentimientos) y estar con alguien por dinero. El '¿por qué no?' sugiere que, para ella, el dinero es una motivación tan válida como el afecto o el gusto personal, implicando que no prioriza los sentimientos sobre la retribución económica en sus decisiones."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "La Justicia es en primer lugar una cualidad posible, pero no necesaria, de un orden social que regula las relaciones mutuas entre los hombres. Sólo secundariamente es una virtud humana, ya que un hombre es justo sólo si su conducta se adecúa a las normas de un orden social supuestamente justo. Pero ¿qué significa decir que un orden social es justo? Significa que este orden social regula la conducta de los hombres de un modo satisfactorio para todos, es decir, que todos los hombres encuentran en él la felicidad. La búsqueda de la Justicia es la eterna búsqueda de la felicidad humana. Es una finalidad que el hombre no puede encontrar por sí mismo y por ello la busca en la sociedad. La Justicia es la felicidad social, garantizada por un orden social. Platón, identificando la Justicia con la felicidad, sostiene que un hombre justo es feliz y un hombre injusto es infeliz. Evidentemente, la afirmación según la cual la Justicia es la felicidad no es una respuesta definitiva, sino una forma de eludir el problema. Pues inmediatamente se plantea la cuestión: ‘¿Qué es la felicidad?’.\nTomado de: Kelsen, H. (1992). ¿Qué es justicia?. Planeta-De Agostini.",
+        "enunciado": "De los siguientes enunciados, ¿cuál NO se puede deducir correctamente de la afirmación “un hombre es justo solo si su conducta se adecúa a las normas de un orden social supuestamente justo”?",
+        "opciones": [
+          "A. Un hombre que se comporta justamente sigue las normas de un orden social.",
+          "B. Todo hombre que no se adecúe a las normas de un orden social justo es injusto.",
+          "C. Hay hombres que se adecúan a un orden social supuestamente justo y sin embargo son injustos.",
+          "D. No hay hombres que se adecúen a un orden social supuestamente justo y sin embargo sean injustos."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La afirmación original es una condición necesaria: 'P solo si Q' (Si un hombre es justo (P), entonces su conducta se adecúa a las normas (Q)). Esto implica P → Q. \n- La opción A (P → Q) es una deducción directa.\n- La opción B (¬Q → ¬P) es la contrapositiva, también deducible.\n- La opción C (Q ∧ ¬P) es consistente con P → Q, ya que Q no es una condición suficiente para P. Es decir, alguien puede cumplir las normas (Q) y no ser justo (¬P) según otros criterios no cubiertos por la condición 'solo si'. Por lo tanto, es posible que existan tales hombres.\n- La opción D (¬(Q ∧ ¬P), que es equivalente a Q → P) es la conversa de la afirmación original. La conversa no es lógicamente deducible de una implicación condicional. La afirmación original no dice que adecuarse a las normas (Q) sea suficiente para ser justo (P), solo que es necesario. Por lo tanto, esta opción NO se puede deducir."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "La Justicia es en primer lugar una cualidad posible, pero no necesaria, de un orden social que regula las relaciones mutuas entre los hombres. Sólo secundariamente es una virtud humana, ya que un hombre es justo sólo si su conducta se adecúa a las normas de un orden social supuestamente justo. Pero ¿qué significa decir que un orden social es justo? Significa que este orden social regula la conducta de los hombres de un modo satisfactorio para todos, es decir, que todos los hombres encuentran en él la felicidad. La búsqueda de la Justicia es la eterna búsqueda de la felicidad humana. Es una finalidad que el hombre no puede encontrar por sí mismo y por ello la busca en la sociedad. La Justicia es la felicidad social, garantizada por un orden social. Platón, identificando la Justicia con la felicidad, sostiene que un hombre justo es feliz y un hombre injusto es infeliz. Evidentemente, la afirmación según la cual la Justicia es la felicidad no es una respuesta definitiva, sino una forma de eludir el problema. Pues inmediatamente se plantea la cuestión: ‘¿Qué es la felicidad?’.\nTomado de: Kelsen, H. (1992). ¿Qué es justicia?. Planeta-De Agostini.",
+        "enunciado": "De los siguientes enunciados, ¿cuál NO se puede deducir correctamente de la afirmación “un hombre es justo solo si su conducta se adecúa a las normas de un orden social supuestamente justo”?",
+        "opciones": [
+          "A. Un hombre que se comporta justamente sigue las normas de un orden social.",
+          "B. Todo hombre que no se adecúe a las normas de un orden social justo es injusto.",
+          "C. Hay hombres que se adecúan a un orden social supuestamente justo y sin embargo son injustos.",
+          "D. No hay hombres que se adecúen a un orden social supuestamente justo y sin embargo sean injustos."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La afirmación original es una condición necesaria: 'P solo si Q' (Si un hombre es justo (P), entonces su conducta se adecúa a las normas (Q)). Esto implica P → Q. \n- La opción A (P → Q) es una deducción directa.\n- La opción B (¬Q → ¬P) es la contrapositiva, también deducible.\n- La opción C (Q ∧ ¬P) es consistente con P → Q, ya que Q no es una condición suficiente para P. Es decir, alguien puede cumplir las normas (Q) y no ser justo (¬P) según otros criterios no cubiertos por la condición 'solo si'. Por lo tanto, es posible que existan tales hombres.\n- La opción D (¬(Q ∧ ¬P), que es equivalente a Q → P) es la conversa de la afirmación original. La conversa no es lógicamente deducible de una implicación condicional. La afirmación original no dice que adecuarse a las normas (Q) sea suficiente para ser justo (P), solo que es necesario. Por lo tanto, esta opción NO se puede deducir."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "La Justicia es en primer lugar una cualidad posible, pero no necesaria, de un orden social que regula las relaciones mutuas entre los hombres. Sólo secundariamente es una virtud humana, ya que un hombre es justo sólo si su conducta se adecúa a las normas de un orden social supuestamente justo. Pero ¿qué significa decir que un orden social es justo? Significa que este orden social regula la conducta de los hombres de un modo satisfactorio para todos, es decir, que todos los hombres encuentran en él la felicidad. La búsqueda de la Justicia es la eterna búsqueda de la felicidad humana. Es una finalidad que el hombre no puede encontrar por sí mismo y por ello la busca en la sociedad. La Justicia es la felicidad social, garantizada por un orden social. Platón, identificando la Justicia con la felicidad, sostiene que un hombre justo es feliz y un hombre injusto es infeliz. Evidentemente, la afirmación según la cual la Justicia es la felicidad no es una respuesta definitiva, sino una forma de eludir el problema. Pues inmediatamente se plantea la cuestión: ‘¿Qué es la felicidad?’.\nTomado de: Kelsen, H. (1992). ¿Qué es justicia?. Planeta-De Agostini.",
+        "enunciado": "Considere el siguiente fragmento: “La Justicia es en primer lugar una cualidad posible, pero no necesaria, de un orden social que regula las relaciones mutuas entre los hombres. Sólo secundariamente es una virtud humana, ya que un hombre es justo sólo si su conducta se adecúa a las normas de un orden social supuestamente justo”. Las palabras subrayadas indican respectivamente",
+        "opciones": [
+          "A. una oposición y una salvedad.",
+          "B. una aclaración y una razón.",
+          "C. una aclaración y una oposición.",
+          "D. una oposición y una conclusión."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La frase 'pero no necesaria' funciona como una aclaración o matización de la cualidad 'posible', indicando que no es una condición obligatoria. La expresión 'ya que' es una conjunción causal que introduce una razón o justificación para la afirmación precedente ('Sólo secundariamente es una virtud humana'). Por lo tanto, las funciones son, respectivamente, una aclaración y una razón."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Considere el siguiente fragmento: “¿Qué significa decir que un orden social es justo? Significa que este orden social regula la conducta de los hombres de un modo satisfactorio para todos, es decir, que todos los hombres encuentran en él la felicidad”.",
+        "enunciado": "¿Cuál de las siguientes opciones es una antítesis de las ideas presentadas?",
+        "opciones": [
+          "A. El orden social justo beneficia a todos los miembros de la comunidad donde tal orden rige.",
+          "B. Un orden social no puede ser justo y no regular de modo satisfactorio el comportamiento de todos los miembros de la comunidad donde tal orden rige.",
+          "C. Los órdenes sociales justos proveen felicidad para todos los miembros de la comunidad donde tales órdenes rigen.",
+          "D. Un orden social puede ser justo y aun así no regular de modo satisfactorio el comportamiento de todos los miembros de la comunidad donde tal orden rige."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "El fragmento define un orden social justo como aquel que es 'satisfactorio para todos' y donde 'todos los hombres encuentran en él la felicidad'. La antítesis directa de esta idea es que un orden social podría ser justo sin ser satisfactorio para todos, lo cual es lo que plantea la opción D."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "Considere el siguiente enunciado: “La búsqueda de la Justicia es la eterna búsqueda de la felicidad humana”.",
+        "enunciado": "¿Cuál de las siguientes opciones se puede concluir del enunciado?",
+        "opciones": [
+          "A. Quien busca la justicia no encuentra la felicidad.",
+          "B. Quien busca la justicia también busca la felicidad.",
+          "C. El que busca la justicia nunca encuentra la felicidad.",
+          "D. El que busca la justicia siempre encuentra la felicidad."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El enunciado establece una equivalencia entre la búsqueda de la justicia y la búsqueda de la felicidad humana. Si una es la 'eterna búsqueda' de la otra, implica que ambas búsquedas están intrínsecamente ligadas y se dan de forma simultánea o interdependiente. Por lo tanto, quien busca la justicia, por definición del enunciado, también busca la felicidad."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "“Aunque las comodidades de esta vida pueden aumentarse con la ayuda mutua, sin embargo, como eso se puede conseguir dominando a los demás mejor que asociándose con ellos, nadie debe dudar de que los hombres por su naturaleza, si no existiera el miedo, se verían inclinados más al dominio que a la sociedad. Por lo tanto, hay que afirmar que el origen de las sociedades grandes y duraderas no se ha debido a la mutua benevolencia de los hombres sino al miedo mutuo”. Tomado de: Hobbes, T. (1999). Tratado sobre el ciudadano. trad. Joaquín Rodríguez Feo, Madrid, Trotta.",
+        "enunciado": "Según el enunciado anterior, ¿cuál de las siguientes palabras sería el antónimo más adecuado para la expresión “mutua benevolencia”?",
+        "opciones": [
+          "A. Mutua discrepancia.",
+          "B. Mutua negligencia.",
+          "C. Mutuo desagrado.",
+          "D. Mutua hostilidad."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La 'mutua benevolencia' se refiere a la buena voluntad, la amabilidad o la disposición a hacer el bien entre las personas. Su antónimo directo es la 'mutua hostilidad', que implica enemistad, agresión o mala voluntad recíproca."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "“Aunque las comodidades de esta vida pueden aumentarse con la ayuda mutua, sin embargo, como eso se puede conseguir dominando a los demás mejor que asociándose con ellos, nadie debe dudar de que los hombres por su naturaleza, si no existiera el miedo, se verían inclinados más al dominio que a la sociedad. Por lo tanto, hay que afirmar que el origen de las sociedades grandes y duraderas no se ha debido a la mutua benevolencia de los hombres sino al miedo mutuo”. Tomado de: Hobbes, T. (1999). Tratado sobre el ciudadano. trad. Joaquín Rodríguez Feo, Madrid, Trotta.",
+        "enunciado": "Por un lado el autor afirma (i) que el miedo origina las sociedades. Por otro lado, (ii) que si no existiera el miedo el hombre buscaría dominar a los demás. ¿Cuál es la relación argumentativa entre estas dos afirmaciones?",
+        "opciones": [
+          "A. (i) es una premisa y (ii) la conclusión.",
+          "B. (ii) es una premisa y (i) la conclusión.",
+          "C. (i) y (ii) son premisas de un mismo argumento.",
+          "D. (i) y (ii) presentan la misma conclusión de diferente manera."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "El texto argumenta que, dado que los hombres por naturaleza se inclinarían al dominio si no fuera por el miedo (afirmación ii), se concluye que el origen de las sociedades no es la benevolencia sino el miedo mutuo (afirmación i). La frase 'Por lo tanto' en el texto original indica claramente que (i) es una conclusión derivada de la premisa (ii)."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "“Aunque las comodidades de esta vida pueden aumentarse con la ayuda mutua, sin embargo, como eso se puede conseguir dominando a los demás mejor que asociándose con ellos, nadie debe dudar de que los hombres por su naturaleza, si no existiera el miedo, se verían inclinados más al dominio que a la sociedad. Por lo tanto, hay que afirmar que el origen de las sociedades grandes y duraderas no se ha debido a la mutua benevolencia de los hombres sino al miedo mutuo”. Tomado de: Hobbes, T. (1999). Tratado sobre el ciudadano. trad. Joaquín Rodríguez Feo, Madrid, Trotta.",
+        "enunciado": "¿Qué función cumple el conector “sin embargo” en el texto anterior?",
+        "opciones": [
+          "A. Aclarar la idea de que la ayuda mutua aumenta las comodidades con la idea de que el dominio de los demás es una mejor forma de aumentarlas.",
+          "B. Desmentir la idea de que la ayuda mutua aumenta las comodidades y afirmar que es por medio del dominio de los demás que se logra.",
+          "C. Contrastar la idea de que la ayuda mutua aumenta las comodidades, con la idea de que es más efectivo dominar a los demás para aumentarlas.",
+          "D. Cuestionar la idea de que la ayuda mutua aumenta las comodidades al afirmar que en realidad el dominio puede aumentarlas."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "El conector 'sin embargo' introduce una idea que se opone o contrasta con la afirmación anterior. En este caso, contrasta la posibilidad de aumentar las comodidades mediante la ayuda mutua con la idea de que el dominio sobre los demás es una forma 'mejor' o más efectiva de lograrlo, presentando una perspectiva alternativa o contrapuesta."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "“Aunque las comodidades de esta vida pueden aumentarse con la ayuda mutua, sin embargo, como eso se puede conseguir dominando a los demás mejor que asociándose con ellos, nadie debe dudar de que los hombres por su naturaleza, si no existiera el miedo, se verían inclinados más al dominio que a la sociedad. Por lo tanto, hay que afirmar que el origen de las sociedades grandes y duraderas no se ha debido a la mutua benevolencia de los hombres sino al miedo mutuo”. Tomado de: Hobbes, T. (1999). Tratado sobre el ciudadano. trad. Joaquín Rodríguez Feo, Madrid, Trotta.",
+        "enunciado": "¿Cuál de las siguientes afirmaciones expresa de manera exacta la antítesis de la tesis principal del texto anterior?",
+        "opciones": [
+          "A. El origen de las sociedades grandes y duraderas se debe a la desconfianza de los hombres que las conforman.",
+          "B. El origen de las sociedades grandes y duraderas se explica por la indiferencia de los hombres que las conforman.",
+          "C. El origen de las sociedades grandes y duraderas se halla en la obediencia recíproca de los hombres que las conforman.",
+          "D. El origen de las sociedades grandes y duraderas resulta de la colaboración desinteresada de los hombres que las conforman."
+        ]
+      },
+      "solucion": {
+        "correcta": "D",
+        "justificacion_tecnica": "La tesis principal del texto es que el origen de las sociedades grandes y duraderas se debe al 'miedo mutuo' y no a la 'mutua benevolencia'. La antítesis de esta tesis sería que el origen de las sociedades se encuentra en una cualidad positiva como la 'colaboración desinteresada', que es una manifestación de la benevolencia o buena voluntad, y se opone directamente a la idea del miedo como motor fundacional."
+      },
+      "metadatos": {
+        "competencia": "Lectura Crítica",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto al que se refieren las preguntas no fue proporcionado en el fragmento escaneado.",
+        "enunciado": "De acuerdo con el texto ¿cuál de las siguientes afirmaciones es compatible con la posición del autor sobre la inclinación natural del hombre hacia la dominación de los demás?",
+        "opciones": [
+          "A. El dominio es una inclinación desfavorable en tanto que no aumenta las comodidades de la vida.",
+          "B. El dominio es una inclinación deseable en tanto que favorece la cooperación entre los hombres.",
+          "C. El dominio es una inclinación ineludible, pues resulta más eficiente para alcanzar comodidades que la ayuda mutua.",
+          "D. El dominio es una inclinación admirable en tanto que causa el miedo que conlleva a la creación de la sociedad."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "La opción B es correcta si el texto argumenta que la inclinación natural del hombre hacia la dominación, aunque potencialmente conflictiva, puede ser el motor para la creación de estructuras sociales o acuerdos que, al establecer un orden o un poder superior, paradójicamente, facilitan la cooperación y la convivencia pacífica entre los individuos."
+      },
+      "metadatos": {
+        "competencia": "Identifica y entiende los contenidos locales que conforman un texto.",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "La propaganda a la que se refiere la pregunta no fue proporcionada en el fragmento escaneado.",
+        "enunciado": "En la propaganda, la expresión “ESCOGE LA MADRE DE TUS HIJOS”, busca dar a entender que",
+        "opciones": [
+          "A. un contrato conlleva responsabilidades mutuas.",
+          "B. al elegir los servicios de la entidad, se aseguran las condiciones para conformar una familia.",
+          "C. el dinero garantiza la armonía de las parejas.",
+          "D. escoger un banco es tan importante como compartir tiempo con la pareja."
+        ]
+      },
+      "solucion": {
+        "correcta": "C",
+        "justificacion_tecnica": "La expresión busca establecer una analogía hiperbólica entre la elección de una pareja para formar una familia y la elección de una entidad (presumiblemente financiera). Al equiparar la importancia de ambas decisiones, la propaganda sugiere que los servicios de la entidad (relacionados con el dinero) son fundamentales para asegurar la estabilidad y armonía familiar, implicando que el dinero es un pilar para dicha armonía."
+      },
+      "metadatos": {
+        "competencia": "Reflexiona a partir de un texto y evalúa su contenido.",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    },
+    {
+      "contenido": {
+        "contexto": "El texto al que se refieren las preguntas no fue proporcionado en el fragmento escaneado.",
+        "enunciado": "De acuerdo con las ideas expresadas en el texto, si “los hombres por su naturaleza están más inclinados al dominio que a la sociedad”, ¿por qué aparecieron sociedades grandes y duraderas?",
+        "opciones": [
+          "A. Es natural para el hombre asociarse con otros para ejercer su dominio con seguridad.",
+          "B. Para ampliar su capacidad de dominio, al hombre le resulta más efectivo vivir en sociedad.",
+          "C. Es propio del hombre evitar todo tipo de dominio a través de las relaciones confiables que le brinda la vida en sociedad.",
+          "D. El hombre busca la seguridad y es más seguro para él vivir en comunidad que estar expuesto a ser dominado por otro."
+        ]
+      },
+      "solucion": {
+        "correcta": "B",
+        "justificacion_tecnica": "Si la inclinación natural es al dominio, la aparición de sociedades duraderas se explica porque la vida en comunidad permite a los individuos o grupos ejercer un dominio más efectivo y seguro, ya sea sobre el entorno, otros grupos, o para protegerse mutuamente de la dominación externa, lo que amplifica su poder individual o colectivo."
+      },
+      "metadatos": {
+        "competencia": "Reflexiona a partir de un texto y evalúa su contenido.",
+        "fuente": "01_02_Cuadernillo_de_preguntas_Lectura_Critica-_Saber-Pro.pdf"
+      }
+    }
+  ]
+}
