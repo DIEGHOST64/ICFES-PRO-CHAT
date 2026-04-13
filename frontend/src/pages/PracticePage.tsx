@@ -490,7 +490,7 @@ export const PracticePage: React.FC = () => {
         setEvaluandoEnsayo(true);
         setEnsayoResult(null);
         try {
-            const tema = q?.contexto || q?.enunciado || 'Dilema de reflexión ICFES';
+            const tema = q?.texto_base || q?.enunciado || 'Dilema de reflexión ICFES';
             const res = await aiAPI.evaluarEnsayo({ tema, ensayo: ensayoText });
             setEnsayoResult(res.data);
             setRevealed(true);

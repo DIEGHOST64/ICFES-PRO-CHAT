@@ -9,6 +9,7 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (!id.includes('node_modules')) return undefined
+          if (id.includes('three') || id.includes('@react-three')) return 'three'
           if (id.includes('plotly.js') || id.includes('react-plotly.js')) return 'plotly'
           if (id.includes('katex') || id.includes('react-katex')) return 'katex'
           if (id.includes('gsap') || id.includes('@gsap/react')) return 'gsap'

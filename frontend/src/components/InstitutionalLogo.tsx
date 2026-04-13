@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 type InstitutionalLogoProps = {
   size?: number;
@@ -13,6 +14,7 @@ export const InstitutionalLogo: React.FC<InstitutionalLogoProps> = ({
   withLabel = false,
   labelColor = '#385162',
 }) => {
+  const { theme } = useTheme();
   const [imgError, setImgError] = useState(false);
   const boxSize = Math.round(size * 1.12);
   const boxRadius = radius ?? Math.max(10, Math.round(boxSize * 0.12));
@@ -41,7 +43,7 @@ export const InstitutionalLogo: React.FC<InstitutionalLogoProps> = ({
               width: `${size}px`,
               height: `${size}px`,
               objectFit: 'contain',
-              filter: 'drop-shadow(0 6px 14px rgba(16, 41, 57, 0.22))',
+              filter: `drop-shadow(0 6px 14px rgba(16, 41, 57, 0.22)) ${theme === 'dark' ? 'invert(1) brightness(2)' : ''}`,
             }}
             onError={() => setImgError(true)}
           />

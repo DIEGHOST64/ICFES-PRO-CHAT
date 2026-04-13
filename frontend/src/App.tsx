@@ -1,7 +1,9 @@
-import React, { Suspense, lazy } from 'react';
+import React, { lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { VisualMoodProvider } from './context/VisualMoodContext';
+import { RootLayout } from './components/RootLayout';
 
 const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })));
 const ChatPage = lazy(() => import('./pages/ChatPage').then(m => ({ default: m.ChatPage })));
@@ -27,19 +29,22 @@ const CoordinatorRoute: React.FC<{ children: React.ReactNode }> = ({ children })
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/coordinador" element={<CoordinadorLoginPage />} />
+      {/* RootLayout wraps ALL routes — Canvas persists across navigation */}
+      <Route element={<RootLayout />}>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/coordinador" element={<CoordinadorLoginPage />} />
 
-      {/* Rutas protegidas — estudiante */}
-      <Route path="/chat" element={<StudentRoute><ChatPage /></StudentRoute>} />
-      <Route path="/practica" element={<StudentRoute><PracticePage /></StudentRoute>} />
+        {/* Rutas protegidas — estudiante */}
+        <Route path="/chat" element={<StudentRoute><ChatPage /></StudentRoute>} />
+        <Route path="/practica" element={<StudentRoute><PracticePage /></StudentRoute>} />
 
-      {/* Rutas protegidas — coordinador */}
-      <Route path="/coordinador/dashboard" element={<CoordinatorRoute><DashboardPage /></CoordinatorRoute>} />
+        {/* Rutas protegidas — coordinador */}
+        <Route path="/coordinador/dashboard" element={<CoordinatorRoute><DashboardPage /></CoordinatorRoute>} />
 
-      {/* Catch-all */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Catch-all */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Route>
     </Routes>
   );
 }
@@ -49,9 +54,9 @@ function App() {
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <Suspense fallback={<div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', color: 'var(--text-muted)' }}>Cargando experiencia...</div>}>
+          <VisualMoodProvider>
             <AppRoutes />
-          </Suspense>
+          </VisualMoodProvider>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

@@ -52,6 +52,7 @@ async def mutate_and_insert_background(seeds: list[dict], competencia: str, modu
         "Abajo tienes una excelente pregunta semilla en formato JSON.\n"
         "Tu misión es crear DOS (2) variantes mutadas (clones asimétricos) basadas en esta semilla.\n"
         "Deben evaluar EXACTAMENTE LA MISMA lógica, pero cambiando el escenario, los números, los personajes o el contexto, de manera que el estudiante deba aplicar el mismo conocimiento sin memorizar el molde.\n\n"
+        "PROHIBIDO: No puedes incluir en las opciones de respuesta palabras genéricas como 'PRO Enunciado Opciones de respuesta', ni fragmentos crudos de tablas, ni listar nombres de personas (directores, secretarías).\n"
         "FORMATO DE SALIDA (Solo JSON, sin bloques de código markdown):\n"
         "[\n"
         "  {\n"

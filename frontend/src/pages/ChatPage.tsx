@@ -15,8 +15,9 @@ import { useTheme } from '../context/ThemeContext';
 import { aiAPI, queriesAPI } from '../api/client';
 import type { ChatMessage, QueryRecord } from '../types';
 import { useGsapPageMotion } from '../hooks/useGsapPageMotion';
+import { useVisualMood } from '../context/VisualMoodContext';
+import { InstitutionalLogo } from '../components/InstitutionalLogo';
 
-const CHAT_WHITE_LOGO_SRC = '/assets/logo-blanco-chat.png';
 const CHAT_VISUAL_HISTORY_PREFIX = 'sp_chat_visual_history_cutoff_v1';
 const CHAT_STUDY_FOLDERS_PREFIX = 'sp_chat_study_folders_v1';
 const CHAT_STUDY_FOLDER_MAP_PREFIX = 'sp_chat_study_folder_map_v1';
@@ -289,10 +290,10 @@ const MessageBubble: React.FC<{
                     borderRadius: isUser
                         ? 'var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg)'
                         : 'var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm)',
-                    background: isUser ? 'var(--primary)' : 'linear-gradient(135deg, #ffffff 0%, #f6fbff 100%)',
+                    background: isUser ? 'var(--primary)' : 'var(--surface)',
                     color: isUser ? '#fff' : 'var(--text)',
                     border: isUser ? 'none' : '1px solid var(--border)',
-                    boxShadow: isUser ? '0 10px 20px rgba(49,72,89,0.24)' : '0 8px 18px rgba(45,94,126,0.10)',
+                    boxShadow: isUser ? '0 10px 20px rgba(0,0,0,0.20)' : '0 8px 18px rgba(0,0,0,0.10)',
                     fontSize: '14px',
                     lineHeight: '1.6',
                 }}>
@@ -407,13 +408,13 @@ const MessageBubble: React.FC<{
                         marginTop: '10px',
                         border: '1px solid var(--border)',
                         borderRadius: '12px',
-                        background: 'linear-gradient(130deg, #ffffff 0%, #f4f9ff 100%)',
+                        background: 'var(--surface)',
                         padding: '10px 12px',
                     }}>
-                        <p style={{ fontSize: '12px', fontWeight: 700, color: '#365063', marginBottom: '8px' }}>{msg.guideTitle || 'Guia visual paso a paso'}</p>
+                        <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>{msg.guideTitle || 'Guia visual paso a paso'}</p>
                         <ol style={{ paddingLeft: '18px', margin: 0, display: 'grid', gap: '6px' }}>
                             {msg.guideSteps.map((step, idx) => (
-                                <li key={`${idx}-${step}`} style={{ fontSize: '12px', color: '#3a4f5f', lineHeight: 1.45 }}>{step}</li>
+                                <li key={`${idx}-${step}`} style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.45 }}>{step}</li>
                             ))}
                         </ol>
                     </div>
@@ -523,7 +524,15 @@ export const ChatPage: React.FC = () => {
         return studyFolders.find((f) => f.id === folderId)?.name || 'Sin carpeta';
     };
 
+    const { setMood } = useVisualMood();
+
     useGsapPageMotion(pageRef);
+
+    // Set visual mood to authenticated on mount, reset on unmount
+    useEffect(() => {
+        setMood('authenticated');
+        return () => setMood('idle');
+    }, [setMood]);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -768,6 +777,7 @@ export const ChatPage: React.FC = () => {
 
         setInput('');
         setLoading(true);
+        setMood('processing');
 
         const userMsg: ChatMessage = {
             id: Date.now().toString(),
@@ -919,6 +929,7 @@ export const ChatPage: React.FC = () => {
         }
 
         setLoading(false);
+        setMood('authenticated');
         inputRef.current?.focus();
     };
 
@@ -955,17 +966,17 @@ export const ChatPage: React.FC = () => {
             inset: 0,
             display: 'grid',
             gridTemplateColumns: '320px 1fr',
-            background: 'radial-gradient(circle at 8% 16%, #dceef9 0%, transparent 34%), radial-gradient(circle at 94% 86%, #dff3e8 0%, transparent 32%), linear-gradient(160deg, #edf3f7 0%, #e8eef3 52%, #e3ebf0 100%)',
+            background: 'transparent',
             overflow: 'hidden',
         }}>
-            <aside data-motion="panel" style={{
-                background: 'linear-gradient(180deg, #2a3e4d 0%, #1f313e 100%)',
-                color: '#eaf1f5',
+            <aside data-motion="panel" className="glass-panel" style={{
+                background: 'var(--surface)',
+                color: 'var(--text)',
                 padding: '20px 16px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '16px',
-                borderRight: '1px solid rgba(255,255,255,0.08)',
+                borderRight: '1px solid var(--border)',
                 position: 'relative',
                 overflow: 'hidden',
             }}>
@@ -992,34 +1003,23 @@ export const ChatPage: React.FC = () => {
                 </div>
 
                 <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: '16px', minHeight: '100%' }}>
-                <div style={{ borderBottom: '1px solid rgba(255,255,255,0.14)', paddingBottom: '14px', textAlign: 'center' }}>
+                <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '14px', textAlign: 'center' }}>
                     <div style={{
                         marginBottom: '12px',
                         display: 'flex',
                         justifyContent: 'center',
                         position: 'relative',
                     }}>
-                        <img
-                            src={CHAT_WHITE_LOGO_SRC}
-                            alt="Logo institucional blanco"
-                            style={{
-                                width: '96px',
-                                height: '96px',
-                                objectFit: 'contain',
-                                position: 'relative',
-                                zIndex: 1,
-                                opacity: 0.96,
-                            }}
-                        />
+                        <InstitutionalLogo size={96} />
                     </div>
-                    <p style={{ fontSize: '12px', opacity: 0.8 }}>ASCENSO PRO</p>
-                    <h2 style={{ fontSize: '22px', fontFamily: 'var(--font-heading)', color: '#fff' }}>Sala de Estudio</h2>
-                    <p style={{ fontSize: '12px', opacity: 0.75 }}>{student?.nombre}</p>
+                    <p style={{ fontSize: '12px', color: 'var(--text-hint)' }}>ASCENSO PRO</p>
+                    <h2 style={{ fontSize: '22px', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>Sala de Estudio</h2>
+                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{student?.nombre}</p>
                 </div>
 
                 <button onClick={handleGoPractice} className="btn" disabled={practiceTransitioning} style={{
                     width: '100%', justifyContent: 'space-between', height: '44px',
-                    background: 'rgba(255,255,255,0.12)', color: '#fff', border: '1px solid rgba(255,255,255,0.16)',
+                    background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)',
                     opacity: practiceTransitioning ? 0.75 : 1,
                 }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Barbell size={16} weight="duotone" /> Ir a práctica</span>
@@ -1027,12 +1027,12 @@ export const ChatPage: React.FC = () => {
                 </button>
 
                 <div style={{
-                    background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+                    background: 'color-mix(in srgb, var(--surface) 40%, transparent)', border: '1px solid var(--border)',
                     borderRadius: '12px', padding: '10px', maxHeight: '245px', overflowY: 'auto'
                 }}>
                     <p style={{
                         display: 'flex', alignItems: 'center', gap: '8px',
-                        fontSize: '12px', fontWeight: 700, color: '#e6eff5', marginBottom: '8px'
+                        fontSize: '12px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px'
                     }}>
                         <FolderPlus size={15} /> Carpetas de estudio
                     </p>
@@ -1057,9 +1057,9 @@ export const ChatPage: React.FC = () => {
                             style={{
                                 height: '30px',
                                 borderRadius: '8px',
-                                border: '1px solid rgba(255,255,255,0.2)',
-                                background: 'rgba(255,255,255,0.08)',
-                                color: '#eaf1f5',
+                                border: '1px solid var(--border)',
+                                background: 'var(--surface)',
+                                color: 'var(--text)',
                                 padding: '0 8px',
                                 fontSize: '11px',
                                 fontWeight: 700,
@@ -1075,12 +1075,12 @@ export const ChatPage: React.FC = () => {
 
                     <div style={{ display: 'grid', gap: '6px' }}>
                         {studyFolders.length === 0 && (
-                            <p style={{ margin: 0, fontSize: '11px', color: 'rgba(214, 227, 236, 0.72)' }}>Crea una carpeta para iniciar chats temáticos.</p>
+                            <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)' }}>Crea una carpeta para iniciar chats temáticos.</p>
                         )}
                         {studyFolders.map((folder) => (
                             <div key={folder.id} style={{
-                                border: activeWorkspaceFolderId === folder.id ? '1px solid rgba(148, 211, 255, 0.62)' : '1px solid rgba(255,255,255,0.14)',
-                                background: activeWorkspaceFolderId === folder.id ? 'rgba(137, 201, 240, 0.16)' : 'rgba(255,255,255,0.04)',
+                                border: activeWorkspaceFolderId === folder.id ? '1px solid var(--primary)' : '1px solid var(--border)',
+                                background: activeWorkspaceFolderId === folder.id ? 'color-mix(in srgb, var(--primary) 16%, transparent)' : 'var(--surface)',
                                 borderRadius: '8px',
                                 padding: '6px',
                                 display: 'grid',
@@ -1094,7 +1094,7 @@ export const ChatPage: React.FC = () => {
                                             textAlign: 'left',
                                             border: 'none',
                                             background: 'transparent',
-                                            color: '#e6eff5',
+                                            color: 'var(--text)',
                                             fontSize: '11px',
                                             fontWeight: 700,
                                             cursor: 'pointer',
@@ -1110,9 +1110,9 @@ export const ChatPage: React.FC = () => {
                                             height: '24px',
                                             width: '24px',
                                             borderRadius: '6px',
-                                            border: '1px solid rgba(255,255,255,0.2)',
-                                            background: 'rgba(255,255,255,0.08)',
-                                            color: '#ffb8b8',
+                                            border: '1px solid var(--border)',
+                                            background: 'var(--surface)',
+                                            color: 'var(--danger)',
                                             display: 'inline-flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -1126,9 +1126,9 @@ export const ChatPage: React.FC = () => {
                                         style={{
                                             height: '24px',
                                             borderRadius: '6px',
-                                            border: '1px solid rgba(255,255,255,0.2)',
-                                            background: 'rgba(255,255,255,0.08)',
-                                            color: '#eaf1f5',
+                                            border: '1px solid var(--border)',
+                                            background: 'var(--surface)',
+                                            color: 'var(--text)',
                                             padding: '0 6px',
                                             fontSize: '10px',
                                             display: 'inline-flex',
@@ -1192,12 +1192,12 @@ export const ChatPage: React.FC = () => {
                 </div>
 
                 <div style={{
-                    background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+                    background: 'color-mix(in srgb, var(--surface) 40%, transparent)', border: '1px solid var(--border)',
                     borderRadius: '12px', padding: '10px', maxHeight: '280px', overflowY: 'auto'
                 }}>
                     <p style={{
                         display: 'flex', alignItems: 'center', gap: '8px',
-                        fontSize: '12px', fontWeight: 700, color: '#e6eff5', marginBottom: '8px'
+                        fontSize: '12px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px'
                     }}>
                         <ClockCounterClockwise size={16} weight="duotone" /> Historial
                     </p>
@@ -1211,9 +1211,9 @@ export const ChatPage: React.FC = () => {
                                 gap: '6px',
                                 height: '30px',
                                 borderRadius: '8px',
-                                border: '1px solid rgba(255,255,255,0.2)',
-                                background: 'rgba(255,255,255,0.08)',
-                                color: '#eaf1f5',
+                                border: '1px solid var(--border)',
+                                background: 'var(--surface)',
+                                color: 'var(--text-muted)',
                                 fontSize: '11px',
                                 fontWeight: 700,
                                 cursor: 'pointer',
@@ -1244,11 +1244,11 @@ export const ChatPage: React.FC = () => {
                                             flexShrink: 0,
                                             height: '30px',
                                             borderRadius: '999px',
-                                            border: active ? '1px solid rgba(150, 214, 255, 0.72)' : '1px solid rgba(255,255,255,0.22)',
+                                            border: active ? '1px solid var(--primary)' : '1px solid var(--border)',
                                             background: active
-                                                ? 'linear-gradient(135deg, rgba(134,198,240,0.3), rgba(110,174,216,0.26))'
-                                                : 'linear-gradient(135deg, rgba(255,255,255,0.11), rgba(255,255,255,0.04))',
-                                            color: active ? '#eef8ff' : '#dce8f0',
+                                                ? 'color-mix(in srgb, var(--primary) 20%, transparent)'
+                                                : 'var(--surface)',
+                                            color: active ? 'var(--text)' : 'var(--text-muted)',
                                             padding: '0 10px',
                                             fontSize: '11px',
                                             fontWeight: active ? 700 : 600,
@@ -1266,7 +1266,7 @@ export const ChatPage: React.FC = () => {
                         </div>
                     </div>
                     {visibleHistory.length === 0
-                        ? <p style={{ fontSize: '12px', opacity: 0.8, textAlign: 'center', padding: '8px' }}>Sin historial</p>
+                        ? <p style={{ fontSize: '12px', opacity: 0.8, textAlign: 'center', padding: '8px', color: 'var(--text-muted)' }}>Sin historial</p>
                         : historyGroups.map(group => (
                             <div key={group.key} style={{ marginBottom: '8px' }}>
                                 <p style={{
@@ -1275,7 +1275,7 @@ export const ChatPage: React.FC = () => {
                                     fontWeight: 700,
                                     letterSpacing: '0.03em',
                                     textTransform: 'uppercase',
-                                    color: 'rgba(230, 239, 245, 0.78)',
+                                    color: 'var(--text-hint)',
                                 }}>
                                     {group.label}
                                 </p>
@@ -1298,7 +1298,7 @@ export const ChatPage: React.FC = () => {
                                             key={`${group.key}-${q.id}-${idx}`}
                                             style={{
                                                 padding: '8px',
-                                                borderBottom: isLast ? 'none' : '1px solid rgba(255,255,255,0.12)',
+                                                borderBottom: isLast ? 'none' : '1px solid var(--border)',
                                                 cursor: 'pointer',
                                             }}
                                             onClick={() => {
@@ -1310,17 +1310,17 @@ export const ChatPage: React.FC = () => {
                                                 ]);
                                             }}
                                         >
-                                            <p style={{ fontSize: '12px', color: '#d6e3ec', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{q.pregunta}</p>
+                                            <p style={{ fontSize: '12px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{q.pregunta}</p>
                                             <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginTop: '4px' }}>
-                                                <p style={{ fontSize: '11px', color: 'rgba(214, 227, 236, 0.66)', margin: 0 }}>{timeLabel}</p>
+                                                <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>{timeLabel}</p>
                                                 <span
                                                     style={{
                                                         marginLeft: 'auto',
                                                         height: '20px',
                                                         borderRadius: '6px',
-                                                        border: '1px solid rgba(255,255,255,0.18)',
-                                                        background: 'rgba(255,255,255,0.08)',
-                                                        color: '#d6e3ec',
+                                                        border: '1px solid var(--border)',
+                                                        background: 'var(--surface)',
+                                                        color: 'var(--text-muted)',
                                                         fontSize: '10px',
                                                         padding: '0 6px',
                                                         display: 'inline-flex',
@@ -1338,10 +1338,10 @@ export const ChatPage: React.FC = () => {
                 </div>
 
                 <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
-                    <button className="btn-icon" onClick={toggleTheme} aria-label="Cambiar tema" style={{ flex: 1, width: 'auto', height: '38px', color: '#fff', borderColor: 'rgba(255,255,255,0.22)', background: 'rgba(255,255,255,0.06)' }}>
+                    <button className="btn-icon" onClick={toggleTheme} aria-label="Cambiar tema" style={{ flex: 1, width: 'auto', height: '38px', color: 'var(--text)', borderColor: 'var(--border)', background: 'var(--surface)' }}>
                         {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
                     </button>
-                    <button className="btn-icon" onClick={() => { logout(); navigate('/login'); }} aria-label="Cerrar sesión" style={{ flex: 1, width: 'auto', height: '38px', color: '#ffb0b0', borderColor: 'rgba(255,255,255,0.22)', background: 'rgba(255,255,255,0.06)' }}>
+                    <button className="btn-icon" onClick={() => { logout(); navigate('/login'); }} aria-label="Cerrar sesión" style={{ flex: 1, width: 'auto', height: '38px', color: 'var(--danger)', borderColor: 'var(--border)', background: 'var(--surface)' }}>
                         <LogOut size={15} />
                     </button>
                 </div>
@@ -1356,7 +1356,7 @@ export const ChatPage: React.FC = () => {
                     justifyContent: 'space-between',
                     padding: '0 24px',
                     borderBottom: '1px solid var(--border)',
-                    background: 'rgba(255,255,255,0.72)',
+                    background: 'color-mix(in srgb, var(--surface) 80%, transparent)',
                     backdropFilter: 'blur(8px)',
                 }}>
                     <div>
@@ -1374,9 +1374,9 @@ export const ChatPage: React.FC = () => {
                                 padding: '0 10px',
                                 fontSize: '12px',
                                 borderRadius: '999px',
-                                background: 'rgba(255,255,255,0.74)',
-                                border: '1px solid #d0dbe4',
-                                color: '#375264',
+                                background: 'var(--surface)',
+                                border: '1px solid var(--border)',
+                                color: 'var(--text)',
                                 display: 'inline-flex',
                                 alignItems: 'center',
                                 gap: '6px',
@@ -1413,10 +1413,10 @@ export const ChatPage: React.FC = () => {
                                             style={{
                                                 padding: '8px 12px',
                                                 borderRadius: '999px',
-                                                border: '1px solid #c9dce9',
-                                                background: 'linear-gradient(130deg, #ffffff 0%, #eef7ff 100%)',
+                                                border: '1px solid var(--border)',
+                                                background: 'var(--surface)',
                                                 fontSize: '12px',
-                                                color: '#355063',
+                                                color: 'var(--text)',
                                                 transition: 'var(--t-fast)',
                                             }}
                                             onMouseOver={e => {
@@ -1446,10 +1446,11 @@ export const ChatPage: React.FC = () => {
                     left: '24px',
                     right: '24px',
                     bottom: '20px',
-                    background: 'rgba(255,255,255,0.9)',
+                    background: 'color-mix(in srgb, var(--surface) 90%, transparent)',
                     border: '1px solid var(--border)',
                     borderRadius: '18px',
-                    boxShadow: '0 14px 30px rgba(24,53,74,0.14)',
+                    boxShadow: '0 14px 30px rgba(0,0,0,0.14)',
+                    backdropFilter: 'blur(10px)',
                     padding: '10px 10px 12px 14px',
                 }}>
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>

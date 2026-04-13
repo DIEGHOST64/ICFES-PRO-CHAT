@@ -538,3 +538,34 @@ h1,h2,h3,h4,h5,h6 {
     transform: translateY(0);
   }
 }
+
+/* ── Global Particle Background Layering ─────────────── */
+.particle-canvas-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* Canvas fills viewport, sits behind everything */
+}
+
+.app-content {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  /* All page UI renders in this layer above the Canvas */
+}
+
+/* ── Glassmorphism utilities ─────────────────────────── */
+.glass-panel {
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+
+.glass-panel-strong {
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}

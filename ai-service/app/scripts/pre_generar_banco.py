@@ -18,7 +18,6 @@ async def sembrar_banco(programa: str, num_ciclos: int = 5):
     ChromaService.initialize()
     
     competencias_estrategicas = [
-        "Lectura Crítica",
         "Razonamiento Cuantitativo",
     ]
     

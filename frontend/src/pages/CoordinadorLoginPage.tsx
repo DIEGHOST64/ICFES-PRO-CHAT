@@ -11,7 +11,6 @@ export const CoordinadorLoginPage: React.FC = () => {
     const accessTimerRef = useRef<number | null>(null);
     const navigate = useNavigate();
     const { loginCoordinator } = useAuth();
-    // tema disponible pero no usado directamente aquí — toggle en header superior
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -59,9 +58,9 @@ export const CoordinadorLoginPage: React.FC = () => {
         <div ref={pageRef} style={{
             minHeight: '100vh',
             padding: '24px',
-            background: 'radial-gradient(circle at 14% 12%, #dbe4ea 0%, transparent 36%), radial-gradient(circle at 88% 85%, #e2e8e2 0%, transparent 32%), linear-gradient(155deg, #eef2f4 0%, #e8edf0 45%, #e4eaed 100%)',
             position: 'relative',
             overflow: 'hidden',
+            /* Transparent — WebGL particles show through from RootLayout */
         }}>
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 <div data-motion="blob" style={{
@@ -73,7 +72,7 @@ export const CoordinadorLoginPage: React.FC = () => {
                 <div data-motion="blob" style={{
                     position: 'absolute', left: '-10%', bottom: '-16%',
                     width: '430px', height: '430px', borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(75,102,87,0.20) 0%, rgba(75,102,87,0.05) 48%, transparent 74%)',
+                    background: 'radial-gradient(circle, rgba(118,168,154,0.15) 0%, rgba(118,168,154,0.05) 48%, transparent 74%)',
                     filter: 'blur(20px)', animation: 'aurora-float 15s ease-in-out infinite reverse',
                 }} />
             </div>
@@ -92,22 +91,23 @@ export const CoordinadorLoginPage: React.FC = () => {
                 paddingBottom: '18px',
                 zIndex: 1,
             }}>
-                <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'center', marginBottom: '2px' }}>
+                <div 
+                    onClick={() => navigate('/')}
+                    style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'center', marginBottom: '2px', cursor: 'pointer' }}
+                    title="Volver a la vista principal"
+                >
                     <InstitutionalLogo size={148} />
                 </div>
 
-                <section data-motion="panel" style={{
+                <section data-motion="panel" className="glass-panel" style={{
                     borderRadius: '28px',
                     padding: '36px',
-                    border: '1px solid rgba(255,255,255,0.66)',
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.84) 0%, rgba(245,248,250,0.8) 100%)',
-                    boxShadow: '0 28px 60px rgba(8, 33, 64, 0.12)',
-                    backdropFilter: 'blur(8px)',
+                    boxShadow: 'var(--shadow-lg)',
                 }}>
                     <div style={{
                         display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '18px',
-                        fontSize: '12px', fontWeight: 700, color: '#3f5566',
-                        background: 'rgba(63,85,102,0.09)', border: '1px solid rgba(63,85,102,0.16)',
+                        fontSize: '12px', fontWeight: 700, color: 'var(--accent)',
+                        background: 'var(--accent-soft)', border: '1px solid color-mix(in srgb, var(--accent) 30%, transparent)',
                         padding: '6px 12px', borderRadius: '999px', letterSpacing: '0.03em',
                     }}>
                         <Compass size={14} /> MODO COORDINACION ACADEMICA
@@ -115,7 +115,8 @@ export const CoordinadorLoginPage: React.FC = () => {
 
                     <h1 style={{
                         fontSize: 'clamp(30px, 4vw, 48px)', lineHeight: 1.05,
-                        color: '#1f2d38', marginBottom: '14px', letterSpacing: '-0.03em',
+                        color: 'var(--text)', marginBottom: '14px', letterSpacing: '-0.03em',
+                        fontFamily: 'var(--font-heading)'
                     }}>
                         Gestiona el progreso
                         <br />
@@ -124,7 +125,7 @@ export const CoordinadorLoginPage: React.FC = () => {
                         en Ascenso Pro.
                     </h1>
 
-                    <p style={{ color: '#455a68', fontSize: '16px', maxWidth: '52ch', marginBottom: '24px' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '16px', maxWidth: '52ch', marginBottom: '24px' }}>
                         Accede al panel de coordinacion para revisar indicadores, acompanar resultados y orientar acciones de mejora para Saber Pro.
                     </p>
 
@@ -134,11 +135,11 @@ export const CoordinadorLoginPage: React.FC = () => {
                             'Vision central del avance de practica y consultas.',
                             'Herramientas para decisiones academicas con evidencia.',
                         ].map((item) => (
-                            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#334652', fontSize: '14px' }}>
+                            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text)', fontSize: '14px' }}>
                                 <span style={{
                                     width: '8px', height: '8px', borderRadius: '50%',
-                                    background: 'linear-gradient(120deg, #3a5a76, #5a7c70)',
-                                    boxShadow: '0 0 0 4px rgba(58,90,118,0.14)',
+                                    background: 'var(--accent)',
+                                    boxShadow: '0 0 0 4px var(--accent-glow)',
                                 }} />
                                 {item}
                             </div>
@@ -146,30 +147,27 @@ export const CoordinadorLoginPage: React.FC = () => {
                     </div>
                 </section>
 
-                <section data-motion="panel" className="animate-scale-in" style={{
+                <section data-motion="panel" className="animate-scale-in glass-panel" style={{
                     borderRadius: '28px',
                     padding: '24px',
-                    border: '1px solid rgba(255,255,255,0.75)',
-                    background: 'linear-gradient(150deg, rgba(255,255,255,0.93) 0%, rgba(245,248,250,0.88) 100%)',
-                    boxShadow: '0 26px 60px rgba(12, 27, 51, 0.14)',
-                    backdropFilter: 'blur(9px)',
+                    boxShadow: 'var(--shadow-lg)',
                 }}>
                     <div style={{ marginBottom: '18px' }}>
                         <div style={{
                             display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '10px',
-                            fontSize: '11px', fontWeight: 700, color: '#3e5566',
-                            background: 'rgba(62,85,102,0.10)', borderRadius: '999px', padding: '5px 10px',
+                            fontSize: '11px', fontWeight: 700, color: 'var(--accent)',
+                            background: 'var(--accent-soft)', borderRadius: '999px', padding: '5px 10px',
                         }}>
                             <ShieldCheck size={12} /> ACCESO RESTRINGIDO
                         </div>
-                        <h2 style={{ fontSize: '26px', color: '#1f2d38', marginBottom: '4px' }}>Panel Coordinador</h2>
-                        <p style={{ color: '#5a6f84', fontSize: '13px' }}>Ingresa con tus credenciales institucionales.</p>
+                        <h2 style={{ fontSize: '26px', color: 'var(--text)', marginBottom: '4px', fontFamily: 'var(--font-heading)' }}>Panel Coordinador</h2>
+                        <p style={{ color: 'var(--text-hint)', fontSize: '13px' }}>Ingresa con tus credenciales institucionales.</p>
                     </div>
 
                     {error && (
                         <div style={{
                             width: '100%', padding: '10px 12px', marginBottom: '12px', borderRadius: '10px',
-                            fontSize: '13px', color: '#9d1f1f', border: '1px solid #f8b4b4', background: '#fff1f2',
+                            fontSize: '13px', color: 'var(--danger)', border: '1px solid var(--danger-soft)', background: 'color-mix(in srgb, var(--danger) 10%, transparent)',
                         }}>
                             {error}
                         </div>
@@ -177,14 +175,14 @@ export const CoordinadorLoginPage: React.FC = () => {
 
                     <form data-motion="card" onSubmit={handleLogin} className="animate-fade-up">
                         <div style={{ marginBottom: '12px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px', color: '#4a6076' }}>
+                            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px', color: 'var(--text-muted)' }}>
                                 Correo institucional
                             </label>
                             <div style={{ position: 'relative' }}>
-                                <Mail size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#7a8ea3' }} />
+                                <Mail size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-hint)' }} />
                                 <input
                                     className="input"
-                                    style={{ paddingLeft: '38px', background: '#fff', borderColor: '#dce6f0' }}
+                                    style={{ paddingLeft: '38px', background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text)' }}
                                     type="email"
                                     placeholder="coordinador@ucundinamarca.edu.co"
                                     value={email}
@@ -195,14 +193,14 @@ export const CoordinadorLoginPage: React.FC = () => {
                         </div>
 
                         <div style={{ marginBottom: '18px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px', color: '#4a6076' }}>
+                            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px', color: 'var(--text-muted)' }}>
                                 Contrasena
                             </label>
                             <div style={{ position: 'relative' }}>
-                                <Lock size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#7a8ea3' }} />
+                                <Lock size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-hint)' }} />
                                 <input
                                     className="input"
-                                    style={{ paddingLeft: '38px', background: '#fff', borderColor: '#dce6f0' }}
+                                    style={{ paddingLeft: '38px', background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text)' }}
                                     type="password"
                                     placeholder="••••••••"
                                     value={password}
@@ -222,31 +220,31 @@ export const CoordinadorLoginPage: React.FC = () => {
                                 height: '44px',
                                 color: '#fff',
                                 fontWeight: 700,
-                                background: 'linear-gradient(120deg, #365064 0%, #486579 100%)',
-                                boxShadow: '0 10px 24px rgba(53, 78, 98, 0.30)',
+                                background: 'var(--accent)',
+                                boxShadow: '0 10px 24px var(--accent-glow)',
                             }}
                         >
                             {loading ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <>Entrar al panel <ArrowRight size={16} /></>}
                         </button>
                     </form>
 
-                    <div style={{ textAlign: 'center', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e5edf5' }}>
+                    <div style={{ textAlign: 'center', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
                         <button
                             onClick={() => navigate('/login')}
-                            style={{ fontSize: '13px', color: '#496278', fontWeight: 600, cursor: 'pointer', background: 'none', border: 'none' }}
+                            style={{ fontSize: '13px', color: 'var(--text)', fontWeight: 600, cursor: 'pointer', background: 'none', border: 'none' }}
                         >
                             <BookOpen size={13} style={{ display: 'inline', marginRight: '4px' }} />
                             Eres estudiante? Accede aqui
                         </button>
                     </div>
 
-                    <p style={{ textAlign: 'center', marginTop: '14px', fontSize: '11px', color: '#7c8fa4' }}>
+                    <p style={{ textAlign: 'center', marginTop: '14px', fontSize: '11px', color: 'var(--text-hint)' }}>
                         Acceso institucional protegido
                     </p>
                 </section>
 
                 <div style={{ position: 'absolute', left: 0, right: 0, bottom: '18px', textAlign: 'center' }}>
-                    <p style={{ margin: 0, color: '#4f6576', fontSize: '12px', fontWeight: 700, letterSpacing: '0.04em' }}>
+                    <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.04em' }}>
                         UNIVERSIDAD DE CUNDINAMARCA
                     </p>
                     <p style={{ margin: '1px 0 0', color: '#4f6576', opacity: 0.85, fontSize: '11px' }}>
@@ -344,7 +342,7 @@ export const CoordinadorLoginPage: React.FC = () => {
                                             width: '6px',
                                             height: '6px',
                                             borderRadius: '999px',
-                                            background: i % 2 === 0 ? 'rgba(148, 201, 235, 0.88)' : 'rgba(149, 220, 186, 0.84)',
+                                            background: i % 2 === 0 ? 'var(--accent)' : 'var(--success)',
                                             boxShadow: '0 0 8px rgba(255,255,255,0.35)',
                                             animation: `coordinator-loader-orbit ${1.8 + i * 0.12}s linear ${i * 0.14}s infinite`,
                                         }}

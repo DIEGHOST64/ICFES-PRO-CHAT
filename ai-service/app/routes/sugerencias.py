@@ -1578,6 +1578,8 @@ def _generate_questions_sync(fragments: list[str], cantidad: int,
         f"REGLAS ESTRICTAS:\n"
         f"{reglas_opciones}\n"
         f"- NUNCA uses fragmentos administrativos/legales/editoriales (derechos, licencias).\n"
+        f"- IGNORA COMPLETAMENTE nombres de directores, secretarias, oficinas asesoras, o créditos similares. Si los incluyes en la respuesta, el sistema fallará.\n"
+        f"- Si el fragmento principal es una tabla cruda de números o estadísticas (terremotos, habitantes), no la copies y pegues directamente como texto en las opciones de respuesta. Interpreta los datos y ponlos en una pregunta de análisis lógico.\n"
         f"- DEBES DEVOLVER UN JSON ESTRICTO VÁLIDO. NO USES SALTOS DE LÍNEA LITERALES dentro de los textos. Usa '\\n' explícitamente.\n"
         f"- MUY IMPORTANTE: Si necesitas usar comillas dentro de 'texto_base' o 'enunciado', USA COMILLAS SIMPLES (' '). NO USES COMILLAS DOBLES (\") dentro del texto o romperás el JSON.\n"
         f"- texto_base: debe ser extenso (2 o 3 párrafos), mostrando una situación o dilema claro, denso, ético o laboral.\n"
