@@ -233,6 +233,10 @@ async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: 
         practice_students = await fetch_json(client, "/dashboard/practice-students", params, headers)
         practice_competencies = await fetch_json(client, "/dashboard/practice-competencies", params, headers)
         level_progression = await fetch_json(client, "/dashboard/level-progression", params, headers)
+        difficulty_dist = await fetch_json(client, "/dashboard/difficulty-distribution", params, headers)
+        english_parts = await fetch_json(client, "/dashboard/english-parts", params, headers)
+        response_time = await fetch_json(client, "/dashboard/response-time", params, headers)
+        ratings = await fetch_json(client, "/dashboard/ratings-breakdown", params, headers)
 
     return {
         "metrics":    metrics,
@@ -242,6 +246,10 @@ async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: 
         "practice_students": practice_students,
         "practice_competencies": practice_competencies,
         "level_progression": level_progression,
+        "difficulty_distribution": difficulty_dist,
+        "english_parts": english_parts,
+        "response_time": response_time,
+        "ratings": ratings,
     }
 
 
@@ -290,6 +298,26 @@ async def export_excel(
             df_level = pd.DataFrame(data["level_progression"])
             if not df_level.empty:
                 df_level.to_excel(writer, sheet_name="Progresion Nivel", index=False)
+
+            # Hoja 8: Distribucion por Dificultad
+            df_diff = pd.DataFrame(data["difficulty_distribution"])
+            if not df_diff.empty:
+                df_diff.to_excel(writer, sheet_name="Distribucion Dificultad", index=False)
+
+            # Hoja 9: Ingles por Tipo (Parte 1-7)
+            df_eng = pd.DataFrame(data["english_parts"])
+            if not df_eng.empty:
+                df_eng.to_excel(writer, sheet_name="Ingles por Tipo", index=False)
+
+            # Hoja 10: Tiempo de Respuesta
+            df_time = pd.DataFrame(data["response_time"])
+            if not df_time.empty:
+                df_time.to_excel(writer, sheet_name="Tiempo Respuesta", index=False)
+
+            # Hoja 11: Calificaciones
+            df_ratings = pd.DataFrame(data["ratings"])
+            if not df_ratings.empty:
+                df_ratings.to_excel(writer, sheet_name="Calificaciones", index=False)
 
         output.seek(0)
         filename = f"reporte_saberpro_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"

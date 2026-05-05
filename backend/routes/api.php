@@ -40,4 +40,8 @@ Route::middleware(['auth:sanctum', 'ability:role:coordinator'])->group(function 
     Route::get('dashboard/practice-students', [DashboardController::class , 'practiceStudents']);
     Route::get('dashboard/practice-competencies', [DashboardController::class , 'practiceCompetencies']);
     Route::get('dashboard/level-progression', [DashboardController::class , 'levelProgression']);
+    Route::get('dashboard/difficulty-distribution', [DashboardController::class , 'difficultyDistribution']);
+    Route::get('dashboard/english-parts', [DashboardController::class , 'englishParts']);
+    Route::get('dashboard/response-time', [DashboardController::class , 'responseTime']);
+    Route::get('dashboard/ratings-breakdown', [DashboardController::class , 'ratingsBreakdown']);
 });

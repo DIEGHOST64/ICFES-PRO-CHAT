@@ -196,6 +196,98 @@ class DashboardController extends Controller
     }
 
     /**
+     * Distribucion por nivel de dificultad (basico/intermedio/avanzado) por competencia.
+     */
+    public function difficultyDistribution(Request $request)
+    {
+        $q = Query::query()->where('es_practica', true);
+        $q = $this->applyFilters($q, $request);
+
+        $rows = $q->select(
+                'competencia',
+                'nivel_pregunta',
+                DB::raw('COUNT(*) as total'),
+                DB::raw('ROUND(AVG(CASE WHEN acierto THEN 1.0 ELSE 0.0 END) * 100, 1) as tasa_acierto')
+            )
+            ->whereNotNull('nivel_pregunta')
+            ->groupBy('competencia', 'nivel_pregunta')
+            ->orderBy('competencia')
+            ->orderBy('nivel_pregunta')
+            ->get();
+
+        return response()->json($rows);
+    }
+
+    /**
+     * Desglose de Ingles por tipo de pregunta (part1 a part7).
+     */
+    public function englishParts(Request $request)
+    {
+        $q = Query::query()->where('es_practica', true)->where('competencia', 'Ingles');
+        $q = $this->applyFilters($q, $request);
+
+        $rows = $q->select(
+                'tipo_pregunta',
+                DB::raw('COUNT(*) as total'),
+                DB::raw('COUNT(DISTINCT student_id) as estudiantes'),
+                DB::raw('ROUND(AVG(CASE WHEN acierto THEN 1.0 ELSE 0.0 END) * 100, 1) as tasa_acierto'),
+                DB::raw('ROUND(AVG(tiempo_respuesta_ms) / 1000, 1) as tiempo_promedio_seg')
+            )
+            ->whereNotNull('tipo_pregunta')
+            ->groupBy('tipo_pregunta')
+            ->orderBy('tipo_pregunta')
+            ->get();
+
+        return response()->json($rows);
+    }
+
+    /**
+     * Tiempo de respuesta promedio por competencia.
+     */
+    public function responseTime(Request $request)
+    {
+        $q = Query::query()->where('es_practica', true);
+        $q = $this->applyFilters($q, $request);
+
+        $rows = $q->select(
+                'competencia',
+                DB::raw('ROUND(AVG(tiempo_respuesta_ms) / 1000, 1) as tiempo_promedio_seg'),
+                DB::raw('ROUND(AVG(CASE WHEN acierto THEN tiempo_respuesta_ms ELSE NULL END) / 1000, 1) as tiempo_acierto_seg'),
+                DB::raw('ROUND(AVG(CASE WHEN NOT acierto THEN tiempo_respuesta_ms ELSE NULL END) / 1000, 1) as tiempo_error_seg'),
+                DB::raw('COUNT(*) as total')
+            )
+            ->whereNotNull('tiempo_respuesta_ms')
+            ->groupBy('competencia')
+            ->orderBy('tiempo_promedio_seg', 'desc')
+            ->get();
+
+        return response()->json($rows);
+    }
+
+    /**
+     * Calificaciones positivas por competencia y programa.
+     */
+    public function ratingsBreakdown(Request $request)
+    {
+        $q = Query::query();
+        $q = $this->applyFilters($q, $request);
+
+        $rows = $q->select(
+                'competencia',
+                'programa',
+                DB::raw('COUNT(*) as total'),
+                DB::raw('SUM(CASE WHEN calificacion THEN 1 ELSE 0 END) as positivas'),
+                DB::raw('ROUND(AVG(CASE WHEN calificacion THEN 1.0 ELSE 0.0 END) * 100, 1) as porcentaje')
+            )
+            ->whereNotNull('calificacion')
+            ->groupBy('competencia', 'programa')
+            ->orderBy('porcentaje', 'desc')
+            ->get();
+
+        return response()->json($rows);
+    }
+
+    /**
      * Helper: aplica filtros de programa y rango de fechas — RF-18
      */
     private function applyFilters($query, Request $request)
