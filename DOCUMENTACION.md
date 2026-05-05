@@ -32,144 +32,116 @@ graph TB
 
 ---
 
-## 2. Diagrama Entidad-Relacion (ERD) - PostgreSQL
+## 2. Diagrama Entidad-Relacion (ERD)
 
 ```mermaid
 erDiagram
-    students ||--o{ queries : "realiza"
-    coordinators ||--o{ personal_access_tokens : "autentica"
-    users ||--o{ personal_access_tokens : "autentica"
+    students ||--o{ queries : "realiza consultas<br/>y practicas"
+    students ||--o{ personal_access_tokens : "tiene tokens<br/>de acceso API"
+    coordinators ||--o{ personal_access_tokens : "tiene tokens<br/>de acceso API"
+    users ||--o{ personal_access_tokens : "tiene tokens<br/>de acceso API"
+    students ||--o{ sessions : "mantiene sesiones<br/>de navegador"
+    users ||--o{ sessions : "mantiene sesiones<br/>de navegador"
     
     students {
-        bigint id PK
-        varchar cedula UK "20"
-        varchar nombre "150"
-        varchar programa "100"
-        varchar password_hash "255"
-        timestamp created_at
-        timestamp updated_at
+        bigint id PK "autoincremental"
+        varchar cedula UK "20 - identificador unico del estudiante"
+        varchar nombre "150 - nombre completo"
+        varchar programa "100 - carrera academica"
+        varchar password_hash "255 - bcrypt hash"
     }
 
     coordinators {
-        bigint id PK
-        varchar nombre "150"
-        varchar email UK "255"
-        varchar password "255"
-        timestamp created_at
-        timestamp updated_at
+        bigint id PK "autoincremental"
+        varchar nombre "150 - nombre completo"
+        varchar email UK "255 - correo institucional"
+        varchar password "255 - bcrypt hash"
     }
 
     users {
-        bigint id PK
+        bigint id PK "autoincremental - Laravel auth nativo"
         varchar name "255"
         varchar email UK "255"
-        timestamp email_verified_at
-        varchar password "255"
-        varchar remember_token "100"
-        timestamp created_at
-        timestamp updated_at
+        timestamp email_verified_at "nullable - verificacion de email"
+        varchar password "255 - bcrypt hash"
+        varchar remember_token "100 - sesion persistente"
     }
 
     queries {
-        bigint id PK
-        bigint student_id FK
-        varchar student_hash "64"
-        varchar student_nombre "150"
-        varchar programa "100"
-        varchar competencia "100"
-        text pregunta
-        text respuesta
-        boolean es_practica
-        boolean acierto
-        varchar nivel_pregunta "20"
-        varchar nivel_objetivo "20"
-        varchar tipo_pregunta "40"
-        int tiempo_respuesta_ms
-        boolean calificacion
-        timestamp created_at
-        timestamp updated_at
+        bigint id PK "autoincremental"
+        bigint student_id FK "ref → students.id (logica, sin FK)"
+        varchar student_hash "64 - SHA-256 anonimizado"
+        varchar student_nombre "150 - nombre del estudiante"
+        varchar programa "100 - carrera en el momento"
+        varchar competencia "100 - competencia ICFES"
+        text pregunta "texto completo de la pregunta"
+        text respuesta "opcion elegida + correcta + explicacion"
+        boolean es_practica "true = practica, false = consulta"
+        boolean acierto "resultado (nullable hasta evaluacion)"
+        varchar nivel_pregunta "20 - basico/intermedio/avanzado/A2/B1"
+        varchar nivel_objetivo "20 - nivel adaptativo del estudiante"
+        varchar tipo_pregunta "40 - part1-part7 (solo Ingles)"
+        int tiempo_respuesta_ms "milisegundos en responder"
+        boolean calificacion "utilidad reportada por estudiante"
     }
 
     sessions {
-        varchar id PK "255"
-        bigint user_id FK
+        varchar id PK "255 - ID de sesion Laravel"
+        bigint user_id FK "ref → users.id o students.cedula"
         varchar ip_address "45"
-        text user_agent
-        text payload
-        int last_activity
+        text user_agent "navegador del usuario"
+        text payload "datos serializados de sesion"
+        int last_activity "timestamp ultima actividad"
     }
 
     personal_access_tokens {
-        bigint id PK
-        varchar tokenable_type "255"
-        bigint tokenable_id
-        text name
-        varchar token UK "64"
-        text abilities
-        timestamp last_used_at
-        timestamp expires_at
-        timestamp created_at
-        timestamp updated_at
+        bigint id PK "autoincremental - Sanctum API tokens"
+        varchar tokenable_type "255 - students, users o coordinators"
+        bigint tokenable_id "ID del modelo dueno del token"
+        text name "nombre descriptivo del token"
+        varchar token UK "64 - hash SHA-256 del token"
+        text abilities "permisos del token (json)"
+        timestamp last_used_at "ultimo uso del token"
+        timestamp expires_at "fecha de expiracion"
     }
 
     cache {
-        varchar key PK "255"
-        text value
-        int expiration
-    }
-
-    cache_locks {
-        varchar key PK "255"
-        varchar owner "255"
-        int expiration
+        varchar key PK "255 - clave de cache"
+        text value "valor serializado"
+        int expiration "timestamp de expiracion"
     }
 
     jobs {
-        bigint id PK
-        varchar queue "255"
-        text payload
-        smallint attempts
-        int reserved_at
-        int available_at
-        int created_at
-    }
-
-    failed_jobs {
-        bigint id PK
-        varchar uuid UK "255"
-        text connection
-        text queue
-        text payload
-        text exception
-        timestamp failed_at
-    }
-
-    job_batches {
-        varchar id PK "255"
-        varchar name "255"
-        int total_jobs
-        int pending_jobs
-        int failed_jobs
-        text failed_job_ids
-        text options
-        int created_at
-        int finished_at
-    }
-
-    password_reset_tokens {
-        varchar email PK "255"
-        varchar token "255"
-        timestamp created_at
-    }
-
-    migrations {
-        int id PK
-        varchar migration "255"
-        int batch
+        bigint id PK "autoincremental - cola de trabajos"
+        varchar queue "255 - nombre de la cola"
+        text payload "trabajo serializado (JSON)"
+        smallint attempts "intentos realizados"
+        int available_at "timestamp de disponibilidad"
+        int created_at "timestamp de creacion"
     }
 ```
 
-### Indices clave en `queries`
+### Como se conectan las tablas
+
+**Relaciones principales (logicas, sin FK en BD):**
+
+| Relacion | Como se conecta | Por que |
+|----------|----------------|---------|
+| `students` → `queries` | `queries.student_id` = `students.id` | Cada consulta/practica pertenece a un estudiante. No tiene FK porque el historial se conserva aunque el estudiante sea eliminado |
+| `queries` → Dashboard | Via indices compuestos | Los 8 endpoints del dashboard filtran por `es_practica`, `programa`, `competencia`, `created_at` |
+| `sessions` → `users` | `sessions.user_id` = `users.id` | Laravel guarda sesiones web. `user_id` puede ser nulo (invitados) |
+| `personal_access_tokens` → Polimorfico | `tokenable_type` + `tokenable_id` | Sanctum permite tokens para `Student`, `User` y `Coordinator` desde una sola tabla |
+
+**Tablas de infraestructura (Laravel interno):**
+
+| Tabla | Funcion |
+|-------|---------|
+| `cache` / `cache_locks` | Cache de aplicacion (config, rutas, queries) |
+| `jobs` / `failed_jobs` / `job_batches` | Cola de trabajos asincronos |
+| `migrations` | Registro de migraciones ejecutadas |
+| `password_reset_tokens` | Recuperacion de contraseña (no usado actualmente) |
+
+**Indices clave en `queries`**
 
 | Indice | Columnas | Proposito |
 |--------|---------|-----------|
