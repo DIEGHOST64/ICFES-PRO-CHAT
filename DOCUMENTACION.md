@@ -32,89 +32,217 @@ graph TB
 
 ---
 
-## 2. Diagrama Entidad-Relacion (ERD)
+## 2. Diagrama Entidad-Relacion (ERD) - PostgreSQL
 
 ```mermaid
 erDiagram
     students ||--o{ queries : "realiza"
-    queries ||--o| query_cache : "cachea"
-    coordinators ||--o{ sessions : "gestiona"
+    coordinators ||--o{ personal_access_tokens : "autentica"
+    users ||--o{ personal_access_tokens : "autentica"
     
     students {
-        int id PK
-        string cedula UK
-        string nombre
-        string email
-        string password_hash
-        string programa
+        bigint id PK
+        varchar cedula UK "20"
+        varchar nombre "150"
+        varchar programa "100"
+        varchar password_hash "255"
         timestamp created_at
+        timestamp updated_at
     }
 
     coordinators {
-        int id PK
-        string email UK
-        string nombre
-        string password_hash
+        bigint id PK
+        varchar nombre "150"
+        varchar email UK "255"
+        varchar password "255"
         timestamp created_at
+        timestamp updated_at
+    }
+
+    users {
+        bigint id PK
+        varchar name "255"
+        varchar email UK "255"
+        timestamp email_verified_at
+        varchar password "255"
+        varchar remember_token "100"
+        timestamp created_at
+        timestamp updated_at
     }
 
     queries {
-        int id PK
-        int student_id FK
-        string student_nombre
-        string pregunta
-        string respuesta
-        string competencia
-        string programa
+        bigint id PK
+        bigint student_id FK
+        varchar student_hash "64"
+        varchar student_nombre "150"
+        varchar programa "100"
+        varchar competencia "100"
+        text pregunta
+        text respuesta
         boolean es_practica
         boolean acierto
-        string nivel_pregunta
-        string nivel_objetivo
-        string tipo_pregunta
+        varchar nivel_pregunta "20"
+        varchar nivel_objetivo "20"
+        varchar tipo_pregunta "40"
         int tiempo_respuesta_ms
         boolean calificacion
         timestamp created_at
-    }
-
-    query_cache {
-        int id PK
-        string cache_key UK
-        text preguntas_json
-        timestamp created_at
-        timestamp expires_at
+        timestamp updated_at
     }
 
     sessions {
-        int id PK
-        int coordinator_id FK
-        string token
-        timestamp last_activity
+        varchar id PK "255"
+        bigint user_id FK
+        varchar ip_address "45"
+        text user_agent
+        text payload
+        int last_activity
+    }
+
+    personal_access_tokens {
+        bigint id PK
+        varchar tokenable_type "255"
+        bigint tokenable_id
+        text name
+        varchar token UK "64"
+        text abilities
+        timestamp last_used_at
+        timestamp expires_at
         timestamp created_at
+        timestamp updated_at
+    }
+
+    cache {
+        varchar key PK "255"
+        text value
+        int expiration
+    }
+
+    cache_locks {
+        varchar key PK "255"
+        varchar owner "255"
+        int expiration
+    }
+
+    jobs {
+        bigint id PK
+        varchar queue "255"
+        text payload
+        smallint attempts
+        int reserved_at
+        int available_at
+        int created_at
+    }
+
+    failed_jobs {
+        bigint id PK
+        varchar uuid UK "255"
+        text connection
+        text queue
+        text payload
+        text exception
+        timestamp failed_at
+    }
+
+    job_batches {
+        varchar id PK "255"
+        varchar name "255"
+        int total_jobs
+        int pending_jobs
+        int failed_jobs
+        text failed_job_ids
+        text options
+        int created_at
+        int finished_at
+    }
+
+    password_reset_tokens {
+        varchar email PK "255"
+        varchar token "255"
+        timestamp created_at
+    }
+
+    migrations {
+        int id PK
+        varchar migration "255"
+        int batch
     }
 ```
 
+### Indices clave en `queries`
+
+| Indice | Columnas | Proposito |
+|--------|---------|-----------|
+| `queries_es_practica_programa_index` | es_practica, programa | Dashboard por programa |
+| `queries_es_practica_competencia_nivel_pregunta_index` | es_practica, competencia, nivel_pregunta | Distribucion por dificultad |
+| `queries_es_practica_competencia_nivel_objetivo_index` | es_practica, competencia, nivel_objetivo | Nivel adaptativo |
+| `queries_programa_competencia_es_practica_index` | programa, competencia, es_practica | Filtros combinados |
+| `queries_created_at_index` | created_at | Tendencias diarias |
+| `queries_programa_created_at_index` | programa, created_at | Tendencia por programa |
+
 ---
 
-## 3. ChromaDB - Estructura de Documentos
+## 3. ChromaDB - Coleccion `saberpro_docs`
+
+### Estructura de Documentos
+
+| Tipo | Cantidad | Formato | Origen |
+|------|---------|---------|--------|
+| `pregunta_generada` | ~1600 | JSON (Pregunta) | Gemini 2.5 Flash |
+| `pregunta` | 0 (eliminadas) | Texto plano | PDF ICFES curado |
+| `practica` | ~200 | Texto plano | PDFs ICFES 2019-2021 |
+| `ejemplo` | ~80 | Texto plano | PDFs ejemplos explicados |
+
+### Metadatos por tipo
+
+**pregunta_generada:**
+```json
+{
+    "modulo": "general",
+    "tipo": "pregunta_generada",
+    "competencia": "Razonamiento Cuantitativo",
+    "programa": "Ingenieria de Sistemas",
+    "tipo_ingles": "",
+    "nivel_cefr": "",
+    "nivel_dificultad": "intermedio",
+    "modulo_especifico": ""
+}
+```
+
+**Documento JSON (pregunta_generada):**
+```json
+{
+    "texto_base": "Un empresa registró... tabla Markdown...",
+    "enunciado": "¿Cuál fue el ingreso mensual promedio?",
+    "opciones": ["A. USD 13,000", "B. USD 12,500", "C. USD 11,500", "D. USD 12,000"],
+    "respuesta_correcta": "B. USD 12,500",
+    "explicacion": "$\\frac{75000}{6} = 12500$...",
+    "competencia": "Razonamiento Cuantitativo",
+    "programa": "Ingenieria de Sistemas",
+    "nivel_dificultad": "intermedio",
+    "bloque_id": "RC-1",
+    "orden_en_bloque": 1,
+    "preguntas_en_bloque": 2
+}
+```
+
+### Distribucion por Competencia y Dificultad
 
 ```mermaid
 graph LR
-    subgraph "Coleccion: saberpro_docs"
-        GENERADAS["pregunta_generada<br/>~1600 docs<br/>Formato JSON"]
-        CURADAS["pregunta / practica<br/>~400 docs<br/>Texto PDF extraido"]
-        EJEMPLOS["ejemplo<br/>~80 docs<br/>Preguntas explicadas ICFES"]
+    subgraph "RC (188)"
+        RCb["Basico: 80"] --> RC
+        RCi["Intermedio: 92"] --> RC
+        RCa["Avanzado: 16"] --> RC
     end
-
-    GENERADAS -->|"tipo: pregunta_generada"| META["Metadatos:<br/>competencia, programa,<br/>nivel_dificultad, modulo"]
-    CURADAS -->|"tipo: pregunta/practica"| METAC["Metadatos:<br/>competencia, programa,<br/>modulo, archivo_origen"]
-    
-    subgraph "Competencias"
-        RC["Razonamiento Cuantitativo<br/>180 preguntas"]
-        ESP["Especifica<br/>935 preguntas<br/>(8 programas)"]
-        ING["Ingles<br/>356 preguntas<br/>A2/B1"]
-        ESC["Comunicacion Escrita<br/>316 preguntas"]
-        CIU["Ciudadanas<br/>118 preguntas"]
-        LEC["Lectura Critica<br/>111 preguntas"]
+    subgraph "Especifica (935)"
+        ESPb["Basico: 176"] --> ESP
+        ESPi["Intermedio: 688"] --> ESP
+        ESPa["Avanzado: 71"] --> ESP
+    end
+    subgraph "Ingles (356)"
+        A2["A2: 306"] --> ING
+        B1["B1: 50"] --> ING
     end
 ```
 
