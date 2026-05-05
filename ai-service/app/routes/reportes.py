@@ -232,6 +232,7 @@ async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: 
         top_topics = await fetch_json(client, "/dashboard/top-topics", params, headers)
         practice_students = await fetch_json(client, "/dashboard/practice-students", params, headers)
         practice_competencies = await fetch_json(client, "/dashboard/practice-competencies", params, headers)
+        level_progression = await fetch_json(client, "/dashboard/level-progression", params, headers)
 
     return {
         "metrics":    metrics,
@@ -240,6 +241,7 @@ async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: 
         "top_topics": top_topics,
         "practice_students": practice_students,
         "practice_competencies": practice_competencies,
+        "level_progression": level_progression,
     }
 
 
@@ -283,6 +285,11 @@ async def export_excel(
             # Hoja 6: Rendimiento por competencia y programa
             df_practice_comp = pd.DataFrame(data["practice_competencies"])
             df_practice_comp.to_excel(writer, sheet_name="Practicas Competencia", index=False)
+
+            # Hoja 7: Progresion de Nivel
+            df_level = pd.DataFrame(data["level_progression"])
+            if not df_level.empty:
+                df_level.to_excel(writer, sheet_name="Progresion Nivel", index=False)
 
         output.seek(0)
         filename = f"reporte_saberpro_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
@@ -377,7 +384,23 @@ async def export_pdf(
         if not practice_students_rows:
             practice_students_rows = "<tr><td colspan='5'>No hay registros de prácticas para el filtro seleccionado.</td></tr>"
         if not practice_comp_rows:
-            practice_comp_rows = "<tr><td colspan='5'>No hay registros de prácticas para el filtro seleccionado.</td></tr>"
+            practice_comp_rows = "<tr><td colspan='5'>No hay registros de practicas para el filtro seleccionado.</td></tr>"
+
+        # Tabla de progresion de nivel
+        level_prog = data["level_progression"]
+        level_prog_rows = "".join([
+            (
+                f"<tr><td>{r.get('fecha', 'N/A')}</td>"
+                f"<td>{r.get('competencia', 'N/A')}</td>"
+                f"<td>{r.get('intentos', 0)}</td>"
+                f"<td>{r.get('aciertos', 0)}</td>"
+                f"<td>{r.get('tasa_acierto', 0)}%</td>"
+                f"<td>{r.get('nivel_promedio', 0):.1f}</td></tr>"
+            )
+            for r in level_prog
+        ])
+        if not level_prog_rows:
+            level_prog_rows = "<tr><td colspan='6'>No hay datos de progresion para el filtro seleccionado.</td></tr>"
 
         by_prog_top = by_prog[:8]
         bar_labels = [str(p.get("programa", "N/A")) for p in by_prog_top]
@@ -548,6 +571,13 @@ async def export_pdf(
 <table>
     <tr><th>Programa</th><th>Competencia</th><th>Intentos</th><th>Aciertos</th><th>Promedio</th></tr>
     {practice_comp_rows}
+</table>
+
+<h2>Progresion de Nivel por Competencia</h2>
+<p class="explain">Evolucion del nivel promedio a lo largo del tiempo. Basico=1, Intermedio=2, Avanzado=3 (A2=2, B1=3 para Ingles). Una tendencia ascendente indica mejora en el desempeno.</p>
+<table>
+    <tr><th>Fecha</th><th>Competencia</th><th>Intentos</th><th>Aciertos</th><th>Tasa Acierto</th><th>Nivel Promedio</th></tr>
+    {level_prog_rows}
 </table>
 
 <h2>Recomendaciones de interpretacion</h2>
