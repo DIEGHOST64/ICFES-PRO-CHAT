@@ -21,12 +21,17 @@ from app.services.gemini_client import (
     generate_admin_analytics_report,
     generate_practice_support,
 )
+from app.config.especificas_config import (
+    get_programa_config,
+    get_modulos_for_programa,
+)
+from app.config.rc_config import RC_TOPICS, RC_ESTRUCTURA_ICFES
 
 router = APIRouter()
 
 
 class Pregunta(BaseModel):
-    id: str
+    id: str = ""
     texto_base: str = ""
     enunciado: str
     opciones: list[str]
@@ -37,6 +42,7 @@ class Pregunta(BaseModel):
     tipo_ingles: str | None = None
     nivel_cefr: str | None = None
     nivel_dificultad: str | None = None
+    modulo_especifico: str | None = None
     bloque_id: str | None = None
     orden_en_bloque: int | None = None
     preguntas_en_bloque: int | None = None
@@ -98,6 +104,48 @@ ADMIN_CONTEXT_MARKERS = [
     "saber pro cuadernillo",
 ]
 
+AI_FILLER_MARKERS_ES = [
+    "aqui tienes tu pregunta",
+    "aqui tienes la pregunta",
+    "aqui esta tu pregunta",
+    "aqui esta la pregunta",
+    "te presento la pregunta",
+    "a continuacion te presento",
+    "a continuacion encontraras",
+    "te comparto esta pregunta",
+    "he generado esta pregunta",
+    "pregunta de practica para",
+    "pregunta de entrenamiento para",
+    "espero que esta pregunta",
+    "espero te sea util",
+    "espero te sirva",
+    "esta pregunta te ayudara",
+    "vamos con la siguiente",
+    "siguiente pregunta de",
+    "pasemos a la pregunta",
+    "continuamos con la pregunta",
+    "claro, aqui tienes",
+    "por supuesto, aqui esta",
+    "listo, aqui va",
+    "perfecto, aqui tienes",
+]
+
+AI_FILLER_MARKERS_EN = [
+    "here is your question",
+    "here is the question",
+    "here's your question",
+    "here's the question",
+    "i've generated this",
+    "i have generated this",
+    "this question will help",
+    "i hope this helps",
+    "let's move on to",
+    "next practice question",
+    "the following question",
+    "check out this question",
+    "try this question",
+]
+
 
 MOJIBAKE_REPLACEMENTS = {
     "ã¡": "a",
@@ -154,13 +202,15 @@ def _plain_text(value: str | None) -> str:
     return re.sub(r"\s+", " ", base)
 
 
-def _repair_text_encoding(value: str | None) -> str:
+def _repair_text_encoding(value: str | None, preserve_newlines: bool = False) -> str:
     text = str(value or "")
     if not text:
         return ""
     for bad, good in MOJIBAKE_REPLACEMENTS.items():
         text = text.replace(bad, good)
     text = text.replace("Â¿", "¿").replace("Â¡", "¡").replace("Â", "")
+    if preserve_newlines:
+        return re.sub(r"[ \t\r\f\v]+", " ", text).strip()
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -180,6 +230,7 @@ COMPETENCIA_KEYWORDS = {
     "Comunicación Escrita": ["comunicacion escrita", "escrita", "comunicacion"],
     "Inglés": ["ingles", "english"],
     "Ciudadanas": ["competencias ciudadanas", "ciudadanas", "ciudadana"],
+    "Específica": ["especifica", "especifico", "modulo especifico"],
 }
 
 
@@ -302,6 +353,90 @@ def _is_non_academic_text(value: str | None) -> bool:
         return True
 
     return False
+
+
+def _has_ai_filler(value: str | None) -> bool:
+    text = _plain_text(value)
+    if not text:
+        return False
+
+    combined = AI_FILLER_MARKERS_ES + AI_FILLER_MARKERS_EN
+    for marker in combined:
+        if _plain_text(marker) in text:
+            return True
+    return False
+
+
+def _strip_ai_filler(value: str) -> str:
+    stripped = value.strip()
+    if not stripped:
+        return stripped
+
+    lower = stripped.lower()
+
+    filler_prefixes = [
+        "aqui tienes tu pregunta de practica",
+        "aqui tienes tu pregunta",
+        "aqui tienes la pregunta",
+        "aqui esta tu pregunta de practica",
+        "aqui esta tu pregunta",
+        "aqui esta la pregunta",
+        "te presento la pregunta",
+        "a continuacion te presento",
+        "a continuacion encontraras",
+        "te comparto esta pregunta",
+        "he generado esta pregunta",
+        "claro, aqui tienes",
+        "por supuesto, aqui esta",
+        "listo, aqui va",
+        "perfecto, aqui tienes",
+        "here is your practice question",
+        "here is your question",
+        "here is the question",
+        "here's your practice question",
+        "here's your question",
+        "here's the question",
+        "i've generated this practice question",
+        "i have generated this practice question",
+        "check out this question",
+        "try this question",
+    ]
+
+    for prefix in filler_prefixes:
+        if lower.startswith(prefix):
+            cand = stripped[len(prefix):].strip()
+            if cand and cand[0] in ":。,.\n":
+                cand = cand[1:].strip()
+            if len(cand) > 10:
+                return cand
+
+    filler_suffixes = [
+        "espero que esta pregunta te sea util",
+        "espero te sea util esta pregunta",
+        "espero te sirva esta pregunta",
+        "espero que te sirva",
+        "espero que esta pregunta te ayude",
+        "i hope this question helps",
+        "i hope this helps you",
+    ]
+
+    for suffix in filler_suffixes:
+        if lower.endswith(suffix):
+            cand = stripped[:len(stripped) - len(suffix)].strip()
+            if cand.endswith("."):
+                cand = cand[:-1].strip()
+            if len(cand) > 10:
+                return cand
+
+    return stripped
+
+
+def _is_pure_ai_filler(value: str | None) -> bool:
+    text = (value or "").strip()
+    if not text:
+        return True
+    stripped = _strip_ai_filler(text)
+    return not stripped or len(stripped) < 15
 
 
 # Palabras comunes en español que no existen en inglés — usadas para detectar idioma.
@@ -544,8 +679,13 @@ def _build_batch_plan(total: int, max_per_batch: int = 10) -> list[int]:
     return plan
 
 
-def _repair_text_boundaries(raw_text: str, max_len: int = 1800) -> str:
-    text = re.sub(r"\s+", " ", _repair_text_encoding(raw_text)).strip()
+def _repair_text_boundaries(raw_text: str, max_len: int = 1800, preserve_newlines: bool = False) -> str:
+    encoded = _repair_text_encoding(raw_text, preserve_newlines=preserve_newlines)
+    if preserve_newlines:
+        text = re.sub(r"[ \t\r\f\v]+", " ", encoded).strip()
+    else:
+        text = re.sub(r"\s+", " ", encoded).strip()
+        
     if not text:
         return ""
 
@@ -579,9 +719,18 @@ def _repair_text_boundaries(raw_text: str, max_len: int = 1800) -> str:
     return text
 
 
-def _normalize_text_base_quality(raw_text: str, min_words: int = 30, max_words: int = 230) -> str:
-    text = _repair_text_boundaries(raw_text)
+def _normalize_text_base_quality(raw_text: str, min_words: int = 30, max_words: int = 230, preserve_newlines: bool = False) -> str:
+    # Auto-detect Markdown tables: if text has pipe chars with dashes, preserve newlines
+    has_table = bool(re.search(r'\|.*\n\s*\|?\s*-{2,}', raw_text)) if raw_text else False
+    text = _repair_text_boundaries(raw_text, preserve_newlines=preserve_newlines or has_table)
     if not text:
+        return ""
+    
+    # Ensure blank line before Markdown tables (required for proper rendering)
+    text = re.sub(r'([^\n])\n(\|[^\n]+\|\s*\n\s*\|?\s*-{2,})', r'\1\n\n\2', text)
+    
+    text = _strip_ai_filler(text)
+    if _is_pure_ai_filler(text):
         return ""
     if _is_non_academic_text(text):
         return ""
@@ -591,8 +740,9 @@ def _normalize_text_base_quality(raw_text: str, min_words: int = 30, max_words: 
         return ""
 
     if len(words) > max_words:
-        text = " ".join(words[:max_words]).strip()
-        text = _repair_text_boundaries(text)
+        # Avoid splitting mid-table by loosely preserving the split text logic
+        text_truncated = " ".join(words[:max_words]).strip()
+        text = _repair_text_boundaries(text_truncated, preserve_newlines=preserve_newlines)
 
     return text
 
@@ -1154,18 +1304,23 @@ def _normalize_generated_questions(
         explicacion = re.sub(r"\s+", " ", str(item.get("explicacion", "")).strip())
         competencia = str(item.get("competencia") or default_competencia).strip() or default_competencia
 
+        enunciado = _strip_ai_filler(enunciado)
+        if _is_pure_ai_filler(enunciado):
+            continue
+
         # Detectar si es pregunta cloze (part4/part7) antes de normalizar texto_base
         raw_tipo = _normalize_english_type(str(item.get("tipo_ingles", "")))
         is_cloze = raw_tipo in ("part4", "part7")
+        is_especifica = competencia.lower() in ("específica", "especifica", "especifico")
 
         raw_texto_base = str(item.get("texto_base", "")).strip()
         if is_cloze:
             # Para cloze, usar min_words más bajo para no descartar pasajes con huecos
-            texto_base = _normalize_text_base_quality(raw_texto_base, min_words=10)
+            texto_base = _normalize_text_base_quality(raw_texto_base, min_words=10, preserve_newlines=False)
             if not texto_base:
                 texto_base = raw_texto_base  # Preservar el original si normalización lo descarta
         else:
-            texto_base = _normalize_text_base_quality(raw_texto_base)
+            texto_base = _normalize_text_base_quality(raw_texto_base, preserve_newlines=is_especifica)
 
         if not enunciado:
             continue
@@ -1173,6 +1328,10 @@ def _normalize_generated_questions(
             texto_base = "Fragmento de entrenamiento ICFES seleccionado para resolver la pregunta."
         if not explicacion:
             explicacion = "La opción correcta está sustentada por el texto base y la competencia evaluada."
+
+        texto_base = _strip_ai_filler(texto_base)
+        if _is_pure_ai_filler(texto_base):
+            continue
 
         opciones_list = _coerce_options(item.get("opciones"))
         is_escrita = "escrita" in competencia.lower()
@@ -1481,6 +1640,73 @@ class ApoyoPreguntaRequest(BaseModel):
     explicacion: str = ""
 
 
+def _repair_latex_json(raw: str) -> str:
+    """
+    Gemini a veces genera LaTeX con barras simples (\\frac) dentro del JSON,
+    lo que rompe el parseo porque \\f, \\b, \\t son secuencias de escape JSON validas.
+    Esta funcion re-escapa las barras invertidas en formulas LaTeX.
+    """
+    text = raw
+    # Common LaTeX commands that break JSON: \f, \b, \t, \n, \r as first char
+    latex_commands = [
+        "frac", "binom", "sqrt", "times", "cdot", "Delta", "theta",
+        "alpha", "beta", "gamma", "pi", "sigma", "lambda", "mu",
+        "sum", "prod", "int", "infty", "partial", "nabla", "approx",
+        "Rightarrow", "Leftrightarrow", "longrightarrow", "text",
+        "textbf", "textit", "overline", "underline", "bar", "hat",
+        "pm", "div", "neq", "leq", "geq", "equiv", "sim", "propto",
+        "subseteq", "supseteq", "in", "notin", "forall", "exists",
+        "cup", "cap", "emptyset", "angle", "triangle",
+    ]
+    for cmd in latex_commands:
+        text = text.replace(f"\\{cmd}", f"\\\\{cmd}")
+    return text
+
+
+def _repair_json_control_chars(raw: str) -> str:
+    """
+    Gemini a veces inserta saltos de linea literales y otros caracteres de control
+    dentro de strings JSON, lo que rompe el parseo. Esta funcion escapa esos chars
+    solo cuando estan dentro de strings JSON (entre comillas no escapadas).
+    """
+    result = []
+    i = 0
+    in_string = False
+    escape_next = False
+    while i < len(raw):
+        ch = raw[i]
+        if escape_next:
+            result.append(ch)
+            escape_next = False
+            i += 1
+            continue
+        if ch == '\\':
+            result.append(ch)
+            escape_next = True
+            i += 1
+            continue
+        if ch == '"':
+            in_string = not in_string
+            result.append(ch)
+            i += 1
+            continue
+        if in_string and ch == '\n':
+            result.append('\\n')
+            i += 1
+            continue
+        if in_string and ch == '\r':
+            result.append('\\r')
+            i += 1
+            continue
+        if in_string and ch == '\t':
+            result.append('\\t')
+            i += 1
+            continue
+        result.append(ch)
+        i += 1
+    return ''.join(result)
+
+
 def _generate_questions_sync(fragments: list[str], cantidad: int,
                              competencia: str | None, programa: str, nivel_objetivo: str | None = None,
                              dificultad_objetivo: str | None = None,
@@ -1491,6 +1717,7 @@ def _generate_questions_sync(fragments: list[str], cantidad: int,
     """
     comp_label = competencia or "Entrenamiento General Saber Pro"
     is_escrita = "escrita" in comp_label.lower()
+    is_cuantitativo = "razonamiento" in comp_label.lower() and "cuantitativo" in comp_label.lower()
     
     if is_escrita:
         context = "[Modo Libre]: Genera un dilema original desafiante (ético, tecnología, laboral, política) para el ensayo."
@@ -1545,6 +1772,30 @@ def _generate_questions_sync(fragments: list[str], cantidad: int,
             "- En el campo 'texto_base', construye un DILEMA o SITUACIÓN CONTROVERSIAL de 2 o 3 párrafos (150-250 palabras). El dilema debe mostrar dos o más perspectivas conflictivas sobre un tema de interés público, académico o laboral.\n"
             "- En el campo 'enunciado', proporciona las instrucciones específicas sobre cómo estructurar el ensayo (ej. 'Escribe un texto argumentativo donde asumas una postura frente al dilema expuesto. Justifica tu respuesta...').\n"
         )
+    elif is_cuantitativo:
+        target_diff = _normalize_difficulty(dificultad_objetivo) or "intermedio"
+        extra_rules = (
+            "\nDISEÑO OBLIGATORIO PARA RAZONAMIENTO CUANTITATIVO (ESTILO SABER PRO):\n"
+            f"- Nivel de dificultad objetivo para esta tanda: {target_diff}.\n"
+            "- Al menos 80% de las preguntas deben coincidir con ese nivel; el resto puede variar para progresion.\n"
+            "- Cada pregunta debe incluir nivel_dificultad con uno de estos valores: basico | intermedio | avanzado.\n"
+            "*** REGLAS DE CONTENIDO MATEMATICO ***\n"
+            "- Las preguntas deben implicar ANALISIS NUMERICO, INTERPRETACION DE DATOS o RESOLUCION DE PROBLEMAS CUANTITATIVOS.\n"
+            "- Incluye CONTEXTO REAL: tasas, porcentajes, proporciones, tablas, graficos textuales, promedios, variacion, tendencias.\n"
+            "- SIEMPRE que uses formulas matematicas, representalas en NOTACION LaTeX valida dentro del texto (ej: $x = \\frac{a+b}{2}$, $\\Delta = b^2 - 4ac$).\n"
+            "- Para datos estructurados (tablas comparativas, encuestas, estadisticas), usa TABLAS MARKDOWN en el texto_base. Ejemplo:\n"
+            "  | Pais | PIB per capita | Crecimiento anual |\n"
+            "  |---|---|---|\n"
+            "  | Colombia | $6,500 USD | 3.2% |\n"
+            "- Las OPCIONES deben ser RESULTADOS NUMERICOS o INTERPRETACIONES CUANTITATIVAS (nunca definiciones teoricas sueltas).\n"
+            "- Cada pregunta debe exigir UN CALCULO, UNA COMPARACION o UNA INTERPRETACION de datos, no solo lectura literal.\n"
+            "- Los DISTRACTORES deben ser resultados plausibles pero incorrectos (errores tipicos de calculo, mala interpretacion de unidades).\n"
+            "- La EXPLICACION debe mostrar el procedimiento de resolucion paso a paso, con notacion LaTeX cuando aplique.\n"
+            "- texto_base: entre 80 y 200 palabras, debe presentar una situacion con datos suficientes para responder.\n"
+            "- Organiza la salida en mini-bloques: cada texto_base debe reutilizarse para 2 a 4 preguntas consecutivas.\n"
+            "- EVITA: preguntas puramente conceptuales sin calculo, enunciados triviales de memoria, definiciones sin aplicacion.\n"
+            "- EVITA: texto administrativo, encabezados de tipo 'Responde las preguntas...', instrucciones al estudiante en el texto_base.\n"
+        )
     else:
         target_diff = _normalize_difficulty(dificultad_objetivo) or "intermedio"
         extra_rules = (
@@ -1559,7 +1810,7 @@ def _generate_questions_sync(fragments: list[str], cantidad: int,
         )
 
     tipo_pregunta = "dilemas de ensayo libre" if is_escrita else "preguntas de selección múltiple"
-    
+
     if is_escrita:
         reglas_opciones = "- NO HAY OPCIONES. El estudiante escribirá un ensayo."
         formato = f'Formato: [{{"texto_base":"... (dilema extenso) ...","enunciado":"... (instrucciones del ensayo) ...","opciones":[],"respuesta_correcta":"","explicacion":"Se evaluará en base a la rúbrica oficial.","competencia":"{comp_label}","nivel_dificultad":"intermedio"}}]'
@@ -1579,9 +1830,13 @@ def _generate_questions_sync(fragments: list[str], cantidad: int,
         f"{reglas_opciones}\n"
         f"- NUNCA uses fragmentos administrativos/legales/editoriales (derechos, licencias).\n"
         f"- IGNORA COMPLETAMENTE nombres de directores, secretarias, oficinas asesoras, o créditos similares. Si los incluyes en la respuesta, el sistema fallará.\n"
+        f"- PROHIBIDO incluir frases conversacionales en los campos texto_base o enunciado (ej: 'Aquí tienes...', 'Te presento...', 'Espero que...'). Usa SOLO contenido académico.\n"
+        f"- NO uses encabezados tipo 'PREGUNTA 1', 'RESPONDE LAS PREGUNTAS...' ni instrucciones al estudiante en el texto_base.\n"
         f"- Si el fragmento principal es una tabla cruda de números o estadísticas (terremotos, habitantes), no la copies y pegues directamente como texto en las opciones de respuesta. Interpreta los datos y ponlos en una pregunta de análisis lógico.\n"
         f"- DEBES DEVOLVER UN JSON ESTRICTO VÁLIDO. NO USES SALTOS DE LÍNEA LITERALES dentro de los textos. Usa '\\n' explícitamente.\n"
         f"- MUY IMPORTANTE: Si necesitas usar comillas dentro de 'texto_base' o 'enunciado', USA COMILLAS SIMPLES (' '). NO USES COMILLAS DOBLES (\") dentro del texto o romperás el JSON.\n"
+        f"- CRITICO PARA LaTeX: ESCAPA TODAS las barras invertidas en formulas LaTeX. Ej: escribe \\\\frac en lugar de \\frac, \\\\Delta en lugar de \\Delta. Sin esto, el JSON sera invalido.\n"
+        f"- CRITICO PARA TABLAS: Si usas barras verticales | en el texto (tablas markdown), NO las dejes sueltas. Ponlas dentro de strings JSON normales.\n"
         f"- texto_base: debe ser extenso (2 o 3 párrafos), mostrando una situación o dilema claro, denso, ético o laboral.\n"
         f"{extra_rules}"
         f"- Devuelve ÚNICAMENTE un array JSON válido, sin markdown.\n\n"
@@ -1590,14 +1845,12 @@ def _generate_questions_sync(fragments: list[str], cantidad: int,
     model = get_gemini_quiz_model()
     response = model.generate_content(prompt)
     text = (response.text or "").strip()
-    # Limpiar bloque markdown si Gemini lo incluye
     if "```" in text:
         parts = text.split("```")
         text = parts[1] if len(parts) > 1 else parts[0]
         if text.startswith("json"):
             text = text[4:]
     text = text.strip()
-    # Extraer solo el array JSON (por si Gemini añade texto antes/después)
     start_idx = text.find("[")
     end_idx = text.rfind("]")
     if start_idx != -1 and end_idx != -1:
@@ -1615,10 +1868,35 @@ def _generate_questions_sync(fragments: list[str], cantidad: int,
     except Exception as e:
         print("[AI] Error decoding primary json from Gemini:", e, flush=True)
         try:
+            # Attempt 1.5: repair control characters
+            repaired_ctrl = _repair_json_control_chars(text)
+            parsed = json.loads(repaired_ctrl)
+            if isinstance(parsed, list):
+                return parsed
+            if isinstance(parsed, dict):
+                questions = parsed.get("preguntas")
+                if isinstance(questions, list):
+                    return questions
+        except Exception:
+            pass
+        try:
+            # Attempt 1.8: repair control chars + LaTeX combined
+            combined = _repair_latex_json(_repair_json_control_chars(text))
+            parsed = json.loads(combined)
+            if isinstance(parsed, list):
+                return parsed
+            if isinstance(parsed, dict):
+                questions = parsed.get("preguntas")
+                if isinstance(questions, list):
+                    return questions
+        except Exception:
+            pass
+        try:
+            # Attempt 2: unescape common JSON escaping mistakes
             unescaped = (
                 text
                 .replace('\\"', '"')
-                .replace('\\n', ' ')
+                .replace('\\n', '\\n')
                 .replace('\\[', '[')
                 .replace('\\]', ']')
                 .replace('\\{', '{')
@@ -1629,9 +1907,274 @@ def _generate_questions_sync(fragments: list[str], cantidad: int,
                 return parsed
             if isinstance(parsed, dict) and isinstance(parsed.get("preguntas"), list):
                 return parsed.get("preguntas")
-        except Exception:
-            return []
+        except Exception as e2:
+            print("[AI] Error decoding fallback json:", e2, flush=True)
+            try:
+                # Attempt 3: fix bare LaTeX backslashes that break JSON
+                repaired = _repair_latex_json(text)
+                parsed = json.loads(repaired)
+                if isinstance(parsed, list):
+                    return parsed
+                if isinstance(parsed, dict) and isinstance(parsed.get("preguntas"), list):
+                    return parsed.get("preguntas")
+            except Exception as e3:
+                print("[AI] Error decoding latex-fixed json:", e3, flush=True)
+                return []
     return []
+
+
+def _generate_specific_questions_sync(
+    cantidad: int, programa: str, modulo_config: dict,
+    dificultad_objetivo: str | None = None,
+) -> list[dict]:
+    """
+    Genera preguntas específicas por programa usando Gemini.
+    No necesita fragmentos de cuadernillo — la IA genera casos de estudio
+    basados en los temas configurados para cada módulo ICFES.
+    """
+    nombre_modulo = modulo_config["nombre"]
+    temas = modulo_config.get("temas", [])
+    tipo_preguntas = modulo_config.get("tipo_preguntas", "caso_tecnico")
+    requiere_tabla = modulo_config.get("requiere_tabla", False)
+    requiere_latex = modulo_config.get("requiere_latex", False)
+    ejemplo_tabla = modulo_config.get("ejemplo_tabla", "")
+    target_diff = _normalize_difficulty(dificultad_objetivo) or "intermedio"
+    temas_str = "\n".join(f"  - {t}" for t in temas)
+
+    tabla_instrucciones = ""
+    if requiere_tabla and ejemplo_tabla:
+        tabla_instrucciones = (
+            "\n- OBLIGATORIO: Al menos el 60% de las preguntas DEBEN incluir una tabla Markdown en el texto_base.\n"
+            "- La tabla debe presentar datos numéricos reales y coherentes que el estudiante debe analizar.\n"
+            "- NO uses imágenes — representa TODA la información como texto y tablas Markdown.\n"
+            f"- EJEMPLO DE TABLA:\n{ejemplo_tabla}\n"
+        )
+    elif requiere_tabla:
+        tabla_instrucciones = (
+            "\n- Incluye tablas Markdown con datos cuando el tema lo requiera (estadísticas, comparaciones, métricas).\n"
+            "- NO uses imágenes — representa TODA la información como texto y tablas Markdown.\n"
+        )
+
+    latex_instrucciones = ""
+    if requiere_latex:
+        latex_instrucciones = (
+            "\n- Si el tema requiere fórmulas matemáticas o de ingeniería, inclúyelas en notación LaTeX.\n"
+            "- Ejemplo: $V = IR$, $G(s) = \\frac{K}{s(s+1)}$\n"
+        )
+
+    all_questions = []
+    batched_cantidad = cantidad
+    batch_size = 8
+
+    model = get_gemini_quiz_model()
+    
+    while batched_cantidad > 0:
+        current_batch = min(batched_cantidad, batch_size)
+        prompt = (
+            f"Eres un diseñador experto de evaluaciones para Saber Pro, módulo específico '{nombre_modulo}'.\n"
+            f"Genera exactamente {current_batch} preguntas de selección múltiple para un estudiante de {programa}.\n\n"
+            f"MÓDULO: {nombre_modulo}\n"
+            f"PROGRAMA: {programa}\n"
+            f"TEMAS VÁLIDOS:\n{temas_str}\n\n"
+            f"REGLAS ESTRICTAS:\n"
+            f"- 4 opciones por pregunta (A, B, C, D). Solo UNA correcta.\n"
+            f"- texto_base: Un CASO DE ESTUDIO de 80-180 palabras que presente una situación profesional realista.\n"
+            f"- El caso debe ser específico del área de {programa}, no genérico.\n"
+            f"- enunciado: Pregunta que exija ANÁLISIS del caso (no memorización pura).\n"
+            f"- Las opciones deben ser plausibles y profesionalmente redactadas.\n"
+            f"- explicacion: Justificación técnica clara de 2-3 oraciones.\n"
+            f"- Nivel de dificultad: {target_diff}. Incluir campo nivel_dificultad.\n"
+            f"- competencia: DEBE ser exactamente 'Específica'.\n"
+            f"- Incluir campo modulo_especifico con el valor '{nombre_modulo}'.\n"
+            f"{tabla_instrucciones}"
+            f"{latex_instrucciones}"
+            f"- Evita preguntas triviales de definición pura; prioriza aplicación, análisis y toma de decisiones.\n"
+            f"- PROHIBIDO incluir frases conversacionales (ej: 'Aquí tienes...', 'Te presento...'). Solo contenido académico.\n"
+            f"- DEBES DEVOLVER UN JSON ESTRICTO VÁLIDO. NO USES saltos de línea literales; usa '\\n' para los saltos de línea en las tablas Markdown.\n"
+            f"- CRITICO PARA LaTeX: ESCAPA TODAS las barras invertidas. Ej: escribe \\\\frac en lugar de \\frac, \\\\Delta en lugar de \\Delta.\n"
+            f"- MUY IMPORTANTE: Si necesitas usar comillas dentro del texto, USA COMILLAS SIMPLES (' ').\n"
+            f"- Devuelve ÚNICAMENTE un array JSON válido, sin markdown ni texto adicional.\n\n"
+            f'Formato: [{{"texto_base":"...","enunciado":"...","opciones":["A. ...","B. ...","C. ...","D. ..."],'
+            f'"respuesta_correcta":"A. ...","explicacion":"...","competencia":"Específica",'
+            f'"modulo_especifico":"{nombre_modulo}","nivel_dificultad":"{target_diff}"}}]'
+        )
+
+        try:
+            response = model.generate_content(prompt)
+            text = (response.text or "").strip()
+
+            if "```" in text:
+                parts = text.split("```")
+                text = parts[1] if len(parts) > 1 else parts[0]
+                if text.startswith("json"):
+                    text = text[4:]
+            text = text.strip()
+
+            start_idx = text.find("[")
+            if start_idx != -1:
+                depth = 0
+                end_idx = -1
+                for i in range(start_idx, len(text)):
+                    if text[i] == '[':
+                        depth += 1
+                    elif text[i] == ']':
+                        depth -= 1
+                        if depth == 0:
+                            end_idx = i
+                            break
+                if end_idx != -1:
+                    text = text[start_idx:end_idx + 1]
+
+            parsed = []
+            try:
+                parsed = json.loads(text)
+            except Exception:
+                try:
+                    parsed = json.loads(_repair_json_control_chars(text))
+                except Exception:
+                    try:
+                        combined = _repair_latex_json(_repair_json_control_chars(text))
+                        parsed = json.loads(combined)
+                    except Exception:
+                        try:
+                            unescaped = text.replace('\\"', '"')
+                            parsed = json.loads(unescaped)
+                        except Exception:
+                            try:
+                                repaired = _repair_latex_json(text)
+                                parsed = json.loads(repaired)
+                            except Exception:
+                                pass
+
+            if isinstance(parsed, list):
+                all_questions.extend(parsed)
+        except Exception as e:
+            print(f"[Específicas Batch Gen] Error en batch de {current_batch}: {e}")
+            
+        batched_cantidad -= current_batch
+
+    return all_questions
+
+
+def _generate_rc_questions_sync(
+    cantidad: int, programa: str, dificultad_objetivo: str | None = None,
+) -> list[dict]:
+    """
+    Genera preguntas de Razonamiento Cuantitativo desde TEMAS ICFES estructurados,
+    sin depender de fragmentos PDF. Igual patrón que _generate_specific_questions_sync.
+    """
+    target_diff = _normalize_difficulty(dificultad_objetivo) or "intermedio"
+    temas_str = "\n".join(f"  - {t}" for t in RC_TOPICS)
+    componentes_str = "\n".join(f"  - {c}" for c in RC_ESTRUCTURA_ICFES.get("componentes", []))
+    contextos_str = "\n".join(f"  - {c}" for c in RC_ESTRUCTURA_ICFES.get("contextos", []))
+
+    all_questions = []
+    batched = cantidad
+    batch_size = 8
+    model = get_gemini_quiz_model()
+
+    while batched > 0:
+        current_batch = min(batched, batch_size)
+        prompt = (
+            f"Eres un diseñador experto de evaluaciones para la prueba Saber Pro (ICFES).\n"
+            f"Genera exactamente {current_batch} preguntas de Razonamiento Cuantitativo "
+            f"para un estudiante de {programa}.\n\n"
+            f"PROGRAMA: {programa}\n"
+            f"COMPETENCIA: Razonamiento Cuantitativo\n"
+            f"NIVEL OBJETIVO: {target_diff}\n\n"
+            f"TEMAS VÁLIDOS (elige diferentes temas para variedad):\n{temas_str}\n\n"
+            f"ESTRUCTURA ICFES — Cada pregunta debe evaluar uno o más de estos componentes:\n{componentes_str}\n\n"
+            f"CONTEXTOS ACEPTADOS:\n{contextos_str}\n\n"
+            f"REGLAS ESTRICTAS:\n"
+            f"- 4 opciones por pregunta (A, B, C, D). Solo UNA correcta.\n"
+            f"- texto_base: UN CASO NUMÉRICO de 80-200 palabras con datos reales y concretos.\n"
+            f"  Incluye contexto de aplicación profesional relevante al área de {programa}.\n"
+            f"- INCLUYE SIEMPRE al menos una tabla Markdown con datos numéricos en el texto_base.\n"
+            f"- Las OPCIONES deben ser RESULTADOS NUMÉRICOS o INTERPRETACIONES CUANTITATIVAS.\n"
+            f"  NUNCA definiciones teóricas sueltas ni conceptos sin cálculo.\n"
+            f"- Cada pregunta debe exigir UN CÁLCULO, UNA COMPARACIÓN o UNA INTERPRETACIÓN de datos numéricos.\n"
+            f"- Los DISTRACTORES deben ser resultados plausibles pero incorrectos\n"
+            f"  (errores típicos: mala interpretación de porcentajes, confusión media/mediana,\n"
+            f"   inversión de razón, olvido de unidades, error en orden de operaciones).\n"
+            f"- CRÍTICO: SIEMPRE representa fórmulas en LaTeX inline (ej: $x = \\\\frac{{a+b}}{{2}}$, $\\\\Delta = b^2 - 4ac$).\n"
+            f"- ESCAPA las barras invertidas: escribe \\\\frac no \\frac, \\\\Delta no \\Delta.\n"
+            f"- La EXPLICACIÓN debe mostrar el procedimiento paso a paso con notación LaTeX.\n"
+            f"- En la EXPLICACION, TODOS los numeros, fracciones, operadores y formulas DEBEN ir dentro de $...$.\n"
+            f"  Ejemplo: $50 \\\\text{{ lpm}} / 15 \\\\text{{ min}} = \\\\frac{{10}}{{3}} \\\\text{{ lpm/min}} \\\\approx 3.33$.\n"
+            f"- NUNCA escribas formulas matematicas sin los delimitadores $. Usa $...$ para inline y $$...$$ para display.\n"
+            f"- Nivel de dificultad: {target_diff}. Incluir campo nivel_dificultad con: basico | intermedio | avanzado.\n"
+            f"- competencia: 'Razonamiento Cuantitativo' (EXACTO).\n"
+            f"- Organiza en mini-bloques: cada texto_base se reutiliza para 2-4 preguntas consecutivas.\n"
+            f"- Campos bloque_id, orden_en_bloque y preguntas_en_bloque para mantener coherencia de bloque.\n"
+            f"- EVITA: definiciones sin cálculo, preguntas de memoria, enunciados sin datos numéricos.\n"
+            f"- PROHIBIDO: frases conversacionales (ej: 'Aquí tienes...', 'Te presento...'). Solo contenido académico.\n"
+            f"- PROHIBIDO: encabezados tipo 'PREGUNTA 1' o 'RESPONDE LAS PREGUNTAS...'.\n"
+            f"- MUY IMPORTANTE: Si necesitas usar comillas dentro del texto, USA COMILLAS SIMPLES (' ').\n"
+            f"- DEBES DEVOLVER UN JSON ESTRICTO VÁLIDO. Usa '\\\\n' para saltos de línea en tablas Markdown.\n"
+            f"- Devuelve ÚNICAMENTE un array JSON válido, sin markdown ni texto adicional.\n\n"
+            f'Formato: [{{"texto_base":"... (con tabla Markdown y datos) ...","enunciado":"...",'
+            f'"opciones":["A. ...","B. ...","C. ...","D. ..."],'
+            f'"respuesta_correcta":"A. ...","explicacion":"... (paso a paso con LaTeX) ...",'
+            f'"competencia":"Razonamiento Cuantitativo",'
+            f'"nivel_dificultad":"{target_diff}",'
+            f'"bloque_id":"string","orden_en_bloque":1,"preguntas_en_bloque":1}}]'
+        )
+
+        try:
+            response = model.generate_content(prompt)
+            text = (response.text or "").strip()
+
+            if "```" in text:
+                parts = text.split("```")
+                text = parts[1] if len(parts) > 1 else parts[0]
+                if text.startswith("json"):
+                    text = text[4:]
+            text = text.strip()
+
+            start_idx = text.find("[")
+            if start_idx != -1:
+                depth = 0
+                end_idx = -1
+                for i in range(start_idx, len(text)):
+                    if text[i] == '[':
+                        depth += 1
+                    elif text[i] == ']':
+                        depth -= 1
+                        if depth == 0:
+                            end_idx = i
+                            break
+                if end_idx != -1:
+                    text = text[start_idx:end_idx + 1]
+
+            parsed = []
+            try:
+                parsed = json.loads(text)
+            except Exception:
+                try:
+                    parsed = json.loads(_repair_json_control_chars(text))
+                except Exception:
+                    try:
+                        combined = _repair_latex_json(_repair_json_control_chars(text))
+                        parsed = json.loads(combined)
+                    except Exception:
+                        try:
+                            unescaped = text.replace('\\"', '"')
+                            parsed = json.loads(unescaped)
+                        except Exception:
+                            try:
+                                repaired = _repair_latex_json(text)
+                                parsed = json.loads(repaired)
+                            except Exception:
+                                pass
+
+            if isinstance(parsed, list):
+                all_questions.extend(parsed)
+        except Exception as e:
+            print(f"[RC Batch Gen] Error en batch de {current_batch}: {e}")
+
+        batched -= current_batch
+
+    return all_questions
 
 
 def _get_docs(collection, where: dict, limit: int = 200) -> tuple:
@@ -1912,8 +2455,10 @@ def _select_general_mix_from_bank(preguntas: list[Pregunta], cantidad: int) -> l
         take = target.get(comp, 0)
         if take <= 0:
             continue
-        selected.extend(buckets[comp][:take])
-        buckets[comp] = buckets[comp][take:]
+        bucket = buckets[comp]
+        random.shuffle(bucket)
+        selected.extend(bucket[:take])
+        buckets[comp] = bucket[take:]
 
     rest = []
     for comp in GENERAL_COMPETENCIAS_BASE:
@@ -1979,6 +2524,15 @@ def _get_curated_bank_questions(
     bank = _dedupe_preguntas_by_enunciado(bank, by_competencia=entrenamiento_general)
     if not bank:
         return []
+    
+    # Auto-wrap LaTeX in explicaciones for KaTeX rendering
+    for p in bank:
+        if p.explicacion and '$' not in p.explicacion:
+            expl = p.explicacion
+            expl = re.sub(r'(\\approx|\\times|\\div|\\frac\{[^}]+\}\{[^}]+\}|\\sqrt\{[^}]+\}|\\pm|\\cdot|\\leq|\\geq|\\Delta|\\sum|\\int|\\infty)', r'$\1$', expl)
+            expl = re.sub(r'(\d+(?:\.\d+)?)\s*(lpm|min|kg|USD|m|cm|km|g|horas?)', r'$\1 \\text{ \2}$', expl)
+            expl = re.sub(r'(\d+/\d+)', r'$\1$', expl)
+            p.explicacion = expl
 
     if entrenamiento_general:
         return _select_general_mix_from_bank(bank, cantidad)
@@ -2004,7 +2558,8 @@ def _almacenar_preguntas_db(collection, preguntas: list[Pregunta], modulo: str):
             "programa": p.programa or "",
             "tipo_ingles": p.tipo_ingles or "",
             "nivel_cefr": p.nivel_cefr or "",
-            "nivel_dificultad": p.nivel_dificultad or ""
+            "nivel_dificultad": p.nivel_dificultad or "",
+            "modulo_especifico": p.modulo_especifico or "",
         })
         ids.append(f"gen_ai_{timestamp}_{i}")
     try:
@@ -2066,6 +2621,95 @@ def _get_ai_bank_questions(collection, modulo: str, competencia: str | None, ent
         return [Pregunta(**b) for b in bank][:cantidad]
 
     return bank[:cantidad]
+
+
+async def _background_specific_miner(
+    programa: str, modulos_programa: list[dict],
+    dificultad_objetivo: str | None, cantidad: int,
+    modulo: str, cache_key: str,
+):
+    """Minero de fondo para preguntas específicas por programa."""
+    print(f"[Específica-Miner] Iniciando para {programa} ({len(modulos_programa)} módulos)...", flush=True)
+
+    collection = ChromaService.get_collection()
+    loop = asyncio.get_event_loop()
+    preguntas_per_modulo = max(5, 15 // len(modulos_programa))
+
+    tasks = []
+    for mod_config in modulos_programa:
+        tasks.append(
+            loop.run_in_executor(
+                None,
+                _generate_specific_questions_sync,
+                int(preguntas_per_modulo * 3),  # Oversampling
+                programa,
+                mod_config,
+                dificultad_objetivo,
+            )
+        )
+
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    all_raw: list[dict] = []
+    for result in results:
+        if isinstance(result, Exception):
+            print(f"[Específica-Miner] Error: {result}", flush=True)
+            continue
+        all_raw.extend(result)
+
+    normalized = _normalize_generated_questions(all_raw, "Específica", False, dificultad_objetivo)
+    normalized = _distribute_answer_letters(normalized)
+
+    preguntas: list[Pregunta] = []
+    for i, item in enumerate(normalized):
+        try:
+            opciones = _coerce_options(item.get("opciones", []))
+            if len(opciones) < 4:
+                continue
+            opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
+
+            texto_base = str(item.get("texto_base", "")).strip()
+            if not texto_base or len(texto_base) < 40:
+                continue
+            if _is_pure_ai_filler(texto_base):
+                continue
+
+            enunciado = re.sub(r"\s+", " ", str(item.get("enunciado", ""))).strip()
+            enunciado = _strip_ai_filler(enunciado)
+            if _is_pure_ai_filler(enunciado):
+                continue
+            if len(enunciado) < 28:
+                continue
+
+            respuesta_correcta = str(item.get("respuesta_correcta", "")).strip()
+            if respuesta_correcta not in opciones:
+                normalized_correct = re.sub(r"^[A-Da-d]\.\s*", "", respuesta_correcta).strip().lower()
+                matched = next((opt for opt in opciones if normalized_correct and normalized_correct in re.sub(r"^[A-Da-d]\.\s*", "", opt).strip().lower()), None)
+                respuesta_correcta = matched or opciones[0]
+
+            preguntas.append(Pregunta(
+                id=f"esp_bg_{int(time.time())}_{i}",
+                texto_base=texto_base,
+                enunciado=enunciado,
+                opciones=opciones,
+                respuesta_correcta=respuesta_correcta,
+                explicacion=str(item.get("explicacion", "")),
+                competencia="Específica",
+                programa=programa,
+                modulo_especifico=str(item.get("modulo_especifico", "")),
+                nivel_dificultad=_normalize_difficulty(str(item.get("nivel_dificultad", ""))) or "intermedio",
+            ))
+        except Exception:
+            continue
+
+    preguntas = _dedupe_preguntas_by_enunciado(preguntas)
+
+    if preguntas:
+        try:
+            _almacenar_preguntas_db(collection, preguntas, modulo)
+            print(f"[Específica-Miner] Almacenadas {len(preguntas)} preguntas para {programa}", flush=True)
+        except Exception as e:
+            print(f"[Específica-Miner] Error DB: {e}", flush=True)
+
 
 async def _background_question_miner(
     programa: str, competencia: str | None, nivel_objetivo: str | None,
@@ -2145,6 +2789,27 @@ async def _background_question_miner(
                     comp_raw = _balance_general_levels(comp_raw, target_count, dificultad_objetivo)
                 comp_raw = _apply_block_structure(comp_raw[:target_count], comp_name)
                 raw.extend(comp_raw[:target_count])
+                continue
+
+            # RC: generar desde temas ICFES, sin usar fragmentos PDF
+            if comp_name == "Razonamiento Cuantitativo":
+                try:
+                    rc_generated = await loop.run_in_executor(
+                        None,
+                        _generate_rc_questions_sync,
+                        target_count,
+                        programa,
+                        dificultad_objetivo,
+                    )
+                except Exception as e:
+                    print(f"[RC-Miner General] Error executor: {e}, usando sync", flush=True)
+                    rc_generated = _generate_rc_questions_sync(target_count, programa, dificultad_objetivo)
+                rc_raw = _normalize_generated_questions(rc_generated, comp_name, False, dificultad_objetivo)
+                for row in rc_raw:
+                    row["competencia"] = comp_name
+                rc_raw = _balance_general_levels(rc_raw, target_count, dificultad_objetivo)
+                rc_raw = _apply_block_structure(rc_raw[:target_count], comp_name)
+                raw.extend(rc_raw[:target_count])
                 continue
 
             desired_key = _normalize_comp_key(comp_name)
@@ -2239,100 +2904,131 @@ async def _background_question_miner(
             raw.extend(comp_raw[:target_count])
 
     else:
-        batch_jobs: list[str] = []
-        batch_tasks = []
-
-        # Oversample: Pedir a Gemini el triple de preguntas para tener un colchón contra los estrictos filtros
-        for batch_size in _build_batch_plan(int(cantidad * 3.0), max_per_batch=10):
-            sample_size = min(len(docs), max(batch_size * 3, 10))
-            indices = random.sample(range(len(docs)), sample_size)
-            fragments = _prepare_fragments(docs, indices, is_english=is_english)
-            if not fragments:
-                fragments = [docs[i] for i in indices]
-            batch_comp = str(comp_meta or competencia or "General")
-            if metas:
-                batch_comp = str(_meta_competencia(metas[indices[0]]) or batch_comp)
-
-            batch_jobs.append(batch_comp)
-            batch_tasks.append(
-                loop.run_in_executor(
-                    None,
-                    _generate_questions_sync,
-                    fragments,
-                    batch_size,
-                    competencia,
-                    programa,
-                    nivel_objetivo,
-                    dificultad_objetivo,
-                    False,
-                )
-            )
-
-        batch_results = await asyncio.gather(*batch_tasks, return_exceptions=True) if batch_tasks else []
-        for batch_comp, raw_batch in zip(batch_jobs, batch_results):
-            if isinstance(raw_batch, Exception):
-                continue
-            comp_meta = batch_comp or comp_meta
-            raw.extend(_normalize_generated_questions(raw_batch, batch_comp, is_english, dificultad_objetivo))
-
-        if len(raw) < cantidad:
-            # Oversample de emergencias
-            faltantes = int((cantidad - len(raw)) * 3.0)
-            sample_size = min(len(docs), max(faltantes * 3, 10))
-            indices = random.sample(range(len(docs)), sample_size)
-            fragments = _prepare_fragments(docs, indices, is_english=is_english)
-            if not fragments:
-                fragments = [docs[i] for i in indices]
+        # RC: generar desde temas ICFES, sin depender de fragmentos PDF
+        is_rc_competence = competencia and "razonamiento" in (competencia or "").lower() and "cuantitativo" in (competencia or "").lower()
+        if is_rc_competence:
             try:
-                raw_retry = await loop.run_in_executor(
+                rc_generated = await loop.run_in_executor(
                     None,
-                    _generate_questions_sync,
-                    fragments,
-                    faltantes,
-                    competencia,
+                    _generate_rc_questions_sync,
+                    int(cantidad * 3.0),  # Oversample
                     programa,
-                    nivel_objetivo,
                     dificultad_objetivo,
-                    False,
                 )
-                raw.extend(_normalize_generated_questions(raw_retry, str(comp_meta or competencia or "General"), is_english, dificultad_objetivo))
-            except Exception:
-                pass
-
-        if not raw:
-            fallback_size = min(len(docs), cantidad)
-            fallback_indices = random.sample(range(len(docs)), fallback_size)
-            fallback_raw: list[dict] = []
-            for idx in fallback_indices:
-                meta = metas[idx] if idx < len(metas) else {}
-                doc = docs[idx]
-                pregunta = _adaptar_a_pregunta(
-                    doc=doc,
-                    meta=meta,
-                    doc_id=f"fallback_{idx}",
-                    competencia=competencia,
-                    programa=programa,
+            except Exception as e:
+                print(f"[RC-Miner] Error en executor: {e}, usando sync directo", flush=True)
+                rc_generated = _generate_rc_questions_sync(int(cantidad * 3.0), programa, dificultad_objetivo)
+            
+            print(f"[RC-Miner] Gemini devolvio {len(rc_generated)} preguntas raw", flush=True)
+            normalized = _normalize_generated_questions(rc_generated, "Razonamiento Cuantitativo", False, dificultad_objetivo)
+            print(f"[RC-Miner] Despues de normalizar: {len(normalized)} preguntas", flush=True)
+            raw.extend(normalized)
+            print(f"[RC-Miner] Raw acumulado: {len(raw)} preguntas", flush=True)
+            if not raw and docs:
+                raw.extend(
+                    _build_deterministic_fallback_questions(
+                        docs=docs,
+                        cantidad=cantidad,
+                        competencia_label="Razonamiento Cuantitativo",
+                        is_english_session=False,
+                        dificultad_objetivo=dificultad_objetivo,
+                    )
                 )
-                fallback_raw.append({
-                    "texto_base": pregunta.texto_base or doc,
-                    "enunciado": pregunta.enunciado,
-                    "opciones": pregunta.opciones,
-                    "respuesta_correcta": pregunta.respuesta_correcta,
-                    "explicacion": pregunta.explicacion,
-                    "competencia": pregunta.competencia,
-                    "tipo_ingles": pregunta.tipo_ingles,
-                    "nivel_cefr": pregunta.nivel_cefr,
-                    "nivel_dificultad": pregunta.nivel_dificultad,
-                })
-            raw.extend(_normalize_generated_questions(fallback_raw, str(comp_meta or competencia or "General"), is_english, dificultad_objetivo))
-
-        if is_english:
-            raw = _balance_english_levels(raw, cantidad, nivel_objetivo)
-            raw = _balance_english_questions(raw, cantidad)
         else:
-            raw = _balance_general_levels(raw, cantidad, dificultad_objetivo)
+            batch_jobs: list[str] = []
+            batch_tasks = []
 
-        raw = _apply_block_structure(raw[:cantidad], str(comp_meta or competencia or "General"))
+            # Oversample: Pedir a Gemini el triple de preguntas para tener un colchón contra los estrictos filtros
+            for batch_size in _build_batch_plan(int(cantidad * 3.0), max_per_batch=10):
+                sample_size = min(len(docs), max(batch_size * 3, 10))
+                indices = random.sample(range(len(docs)), sample_size)
+                fragments = _prepare_fragments(docs, indices, is_english=is_english)
+                if not fragments:
+                    fragments = [docs[i] for i in indices]
+                batch_comp = str(comp_meta or competencia or "General")
+                if metas:
+                    batch_comp = str(_meta_competencia(metas[indices[0]]) or batch_comp)
+
+                batch_jobs.append(batch_comp)
+                batch_tasks.append(
+                    loop.run_in_executor(
+                        None,
+                        _generate_questions_sync,
+                        fragments,
+                        batch_size,
+                        competencia,
+                        programa,
+                        nivel_objetivo,
+                        dificultad_objetivo,
+                        False,
+                    )
+                )
+
+            batch_results = await asyncio.gather(*batch_tasks, return_exceptions=True) if batch_tasks else []
+            for batch_comp, raw_batch in zip(batch_jobs, batch_results):
+                if isinstance(raw_batch, Exception):
+                    continue
+                comp_meta = batch_comp or comp_meta
+                raw.extend(_normalize_generated_questions(raw_batch, batch_comp, is_english, dificultad_objetivo))
+
+            if len(raw) < cantidad:
+                # Oversample de emergencias
+                faltantes = int((cantidad - len(raw)) * 3.0)
+                sample_size = min(len(docs), max(faltantes * 3, 10))
+                indices = random.sample(range(len(docs)), sample_size)
+                fragments = _prepare_fragments(docs, indices, is_english=is_english)
+                if not fragments:
+                    fragments = [docs[i] for i in indices]
+                try:
+                    raw_retry = await loop.run_in_executor(
+                        None,
+                        _generate_questions_sync,
+                        fragments,
+                        faltantes,
+                        competencia,
+                        programa,
+                        nivel_objetivo,
+                        dificultad_objetivo,
+                        False,
+                    )
+                    raw.extend(_normalize_generated_questions(raw_retry, str(comp_meta or competencia or "General"), is_english, dificultad_objetivo))
+                except Exception:
+                    pass
+
+            if not raw:
+                fallback_size = min(len(docs), cantidad)
+                fallback_indices = random.sample(range(len(docs)), fallback_size)
+                fallback_raw: list[dict] = []
+                for idx in fallback_indices:
+                    meta = metas[idx] if idx < len(metas) else {}
+                    doc = docs[idx]
+                    pregunta = _adaptar_a_pregunta(
+                        doc=doc,
+                        meta=meta,
+                        doc_id=f"fallback_{idx}",
+                        competencia=competencia,
+                        programa=programa,
+                    )
+                    fallback_raw.append({
+                        "texto_base": pregunta.texto_base or doc,
+                        "enunciado": pregunta.enunciado,
+                        "opciones": pregunta.opciones,
+                        "respuesta_correcta": pregunta.respuesta_correcta,
+                        "explicacion": pregunta.explicacion,
+                        "competencia": pregunta.competencia,
+                        "tipo_ingles": pregunta.tipo_ingles,
+                        "nivel_cefr": pregunta.nivel_cefr,
+                        "nivel_dificultad": pregunta.nivel_dificultad,
+                    })
+                raw.extend(_normalize_generated_questions(fallback_raw, str(comp_meta or competencia or "General"), is_english, dificultad_objetivo))
+
+            if is_english:
+                raw = _balance_english_levels(raw, cantidad, nivel_objetivo)
+                raw = _balance_english_questions(raw, cantidad)
+            else:
+                raw = _balance_general_levels(raw, cantidad, dificultad_objetivo)
+
+            raw = _apply_block_structure(raw[:cantidad], str(comp_meta or competencia or "General"))
 
     if entrenamiento_general and len(raw) > cantidad:
         raw = raw[:cantidad]
@@ -2352,8 +3048,25 @@ async def _background_question_miner(
     raw = _dedupe_raw_questions(raw, by_competencia=entrenamiento_general)
     raw = _ensure_count(raw, cantidad)
     raw = _distribute_answer_letters(raw[:cantidad])
+    
+    # Auto-wrap LaTeX: ensure formulas are inside $...$ for KaTeX rendering
+    import re as _re_latex
+    for item in raw:
+        expl = str(item.get('explicacion', ''))
+        if expl and '$' not in expl:
+            # Wrap common LaTeX commands
+            expl = _re_latex.sub(r'(\\approx|\\times|\\div|\\frac\{[^}]+\}\{[^}]+\}|\\sqrt\{[^}]+\}|\\pm|\\cdot|\\leq|\\geq|\\Delta|\\sum|\\int|\\infty|\\text\{[^}]*\}|\\mathbf\{[^}]*\})', r'$\1$', expl)
+            # Wrap numbers with units
+            expl = _re_latex.sub(r'(\d+(?:\.\d+)?)\s*(lpm|min|kg|USD|m|cm|km|g|%|horas?)', r'$\1 \\text{ \2}$', expl)
+            # Wrap standalone formulas: 50/100 -> $50/100$
+            expl = _re_latex.sub(r'(\d+/\d+)', r'$\1$', expl)
+            item['explicacion'] = expl
+
+    comp_meta_final = str(comp_meta or competencia or "General")
+    print(f"[RC-Miner QC] Entrando a filtro calidad con {len(raw)} items para {comp_meta_final}", flush=True)
 
     preguntas = []
+    reject_reasons = {"opciones": 0, "texto_base": 0, "enunciado": 0, "filler": 0, "semantica": 0, "literal": 0, "idioma": 0, "ok": 0}
     for i, item in enumerate(raw[:cantidad]):
         try:
             raw_comp = _repair_text_encoding(str(item.get("competencia", comp_meta)))
@@ -2364,15 +3077,15 @@ async def _background_question_miner(
             is_escr = "escrita" in (item_comp or "General").lower()
             is_ingl = "ingl" in (item_comp or "General").lower()
             if is_escr:
-                if len(opciones) > 0: continue
+                if len(opciones) > 0: reject_reasons["opciones"] += 1; continue
             elif is_ingl:
-                if len(opciones) < 3: continue
+                if len(opciones) < 3: reject_reasons["opciones"] += 1; continue
                 opciones = [_clean_option_text(opciones[j], j) for j in range(len(opciones))]
-                if any(_is_placeholder_option(opt) for opt in opciones): continue
+                if any(_is_placeholder_option(opt) for opt in opciones): reject_reasons["opciones"] += 1; continue
             else:
-                if len(opciones) < 4: continue
+                if len(opciones) < 4: reject_reasons["opciones"] += 1; continue
                 opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
-                if any(_is_placeholder_option(opt) for opt in opciones): continue
+                if any(_is_placeholder_option(opt) for opt in opciones): reject_reasons["opciones"] += 1; continue
 
             # Respetar cloze con min_words bajo en segunda pasada
             item_tipo_ingles = _normalize_english_type(str(item.get("tipo_ingles", "")))
@@ -2390,6 +3103,9 @@ async def _background_question_miner(
             if not texto_base and item_tipo_ingles != "part3": # Part 3 is expected to be empty
                 continue
             if _is_non_academic_text(texto_base):
+                continue
+            texto_base = _strip_ai_filler(texto_base)
+            if _is_pure_ai_filler(texto_base):
                 continue
             # Safety net: limpiar marcadores de lectura Part 5/6
             if item_tipo_ingles in ("part5", "part6"):
@@ -2483,6 +3199,9 @@ async def _background_question_miner(
                     continue
 
                 enunciado = re.sub(r"\s+", " ", _repair_text_encoding(str(item.get("enunciado", ""))))
+                enunciado = _strip_ai_filler(enunciado)
+                if _is_pure_ai_filler(enunciado):
+                    continue
                 if len(enunciado) < 24 or len(enunciado) > 420:
                     continue
 
@@ -2580,6 +3299,9 @@ async def _background_question_miner(
                 try:
                     texto_base = _normalize_text_base_quality(str(item.get("texto_base", "")))
                     enunciado = re.sub(r"\s+", " ", _repair_text_encoding(str(item.get("enunciado", ""))))
+                    enunciado = _strip_ai_filler(enunciado)
+                    if _is_pure_ai_filler(enunciado):
+                        continue
                     if not texto_base or not enunciado:
                         continue
 
@@ -2600,7 +3322,6 @@ async def _background_question_miner(
                         if len(opciones) < 3: continue
                         opciones = [_clean_option_text(opciones[j], j) for j in range(len(opciones))]
                         if any(_is_placeholder_option(opt) for opt in opciones): continue
-                    else:
                         if len(opciones) < 4: continue
                         opciones = [_clean_option_text(opciones[j], j) for j in range(4)]
                         if any(_is_placeholder_option(opt) for opt in opciones): continue
@@ -2672,6 +3393,9 @@ async def _background_question_miner(
             try:
                 texto_base = _normalize_text_base_quality(str(item.get("texto_base", "")))
                 enunciado = re.sub(r"\s+", " ", _repair_text_encoding(str(item.get("enunciado", ""))))
+                enunciado = _strip_ai_filler(enunciado)
+                if _is_pure_ai_filler(enunciado):
+                    continue
                 if not texto_base or not enunciado:
                     continue
 
@@ -2787,11 +3511,19 @@ async def admin_analisis(payload: AdminAnalyticsRequest):
     }
 
 
-    if combined:
-        _almacenar_preguntas_db(collection, combined, modulo)
-    elif 'preguntas' in locals() and preguntas:
-        _almacenar_preguntas_db(collection, preguntas, modulo)
 
+def _shuffle_question_options(preguntas: list) -> list:
+    """Re-randomize correct answer position for each question before serving."""
+    import random as _random
+    for p in preguntas:
+        if hasattr(p, 'opciones') and hasattr(p, 'respuesta_correcta'):
+            opts = list(p.opciones)
+            correct = p.respuesta_correcta
+            if correct in opts:
+                _random.shuffle(opts)
+                p.opciones = opts
+                p.respuesta_correcta = correct  # Keep same correct answer text
+    return preguntas
 
 @router.get("", response_model=list[Pregunta])
 async def sugerencias(
@@ -2807,10 +3539,54 @@ async def sugerencias(
         return []
 
     competencia_clean = (competencia or "").strip()
-    entrenamiento_general = competencia is None or competencia_clean == "" or competencia_clean.lower() in ("todas", "todos", "general")
+    is_especifica = competencia_clean.lower() in ("específica", "especifica", "especifico", "específico")
+    entrenamiento_general = not is_especifica and (competencia is None or competencia_clean == "" or competencia_clean.lower() in ("todas", "todos", "general"))
     cantidad = max(5, min(cantidad, 30))
     if "escrita" in competencia_clean.lower():
         cantidad = 1
+
+    # ── Flujo especial para pruebas específicas por programa ──
+    if is_especifica:
+        modulos_programa = get_modulos_for_programa(programa)
+        if not modulos_programa:
+            return []
+
+        cache_key = _build_sugerencias_cache_key(
+            programa=programa, competencia="Específica",
+            nivel_objetivo=nivel_objetivo, dificultad_objetivo=dificultad_objetivo,
+            cantidad=cantidad,
+        )
+        cached = _get_cached_sugerencias(cache_key, cantidad)
+        if cached is not None:
+            random.shuffle(cached)
+            cached = _shuffle_question_options(cached)
+            return cached
+
+        modulo = get_modulo(programa, "Específica")
+
+        # 1. Intentar desde el banco de ChromaDB
+        ai_bank = _get_ai_bank_questions(collection, modulo, "Específica", False, cantidad, False)
+        if len(ai_bank) >= cantidad:
+            ai_bank = ai_bank[:cantidad]
+            random.shuffle(ai_bank)
+            ai_bank = _shuffle_question_options(ai_bank)
+            _set_cached_sugerencias(cache_key, ai_bank)
+            # Miner de fondo para reponer
+            background_tasks.add_task(
+                _background_specific_miner,
+                programa, modulos_programa, dificultad_objetivo, cantidad, modulo, cache_key
+            )
+            return ai_bank
+
+        # 2. Si no hay suficientes, devolver lo disponible + miner de fondo (no bloquear)
+        if ai_bank:
+            random.shuffle(ai_bank)
+            _set_cached_sugerencias(cache_key, ai_bank)
+        background_tasks.add_task(
+            _background_specific_miner,
+            programa, modulos_programa, dificultad_objetivo, cantidad, modulo, cache_key
+        )
+        return ai_bank
 
     cache_key = _build_sugerencias_cache_key(
         programa=programa,
@@ -2821,6 +3597,8 @@ async def sugerencias(
     )
     cached = _get_cached_sugerencias(cache_key, cantidad)
     if cached is not None:
+        random.shuffle(cached)
+        cached = _shuffle_question_options(cached)
         background_tasks.add_task(
             _background_question_miner,
             programa, competencia, nivel_objetivo, dificultad_objetivo, cantidad,
@@ -2832,10 +3610,34 @@ async def sugerencias(
     modulo = get_modulo(programa, None if entrenamiento_general else competencia)
     is_english = _is_english_competencia(competencia)
 
-    ai_bank = _get_ai_bank_questions(collection, modulo, competencia, entrenamiento_general, cantidad, is_english)
+    ai_bank = _get_ai_bank_questions(collection, modulo, competencia, entrenamiento_general, max(cantidad, 200), is_english)
     
     if len(ai_bank) >= cantidad:
-        ai_bank = ai_bank[:cantidad]
+        target_diff = _normalize_difficulty(dificultad_objetivo)
+        if target_diff and not is_english:
+            target_items = [p for p in ai_bank if _normalize_difficulty(str(p.nivel_dificultad or '')) == target_diff]
+            random.shuffle(target_items)
+            ai_bank = target_items[:cantidad]
+            if len(ai_bank) < cantidad:
+                print(f"[MINER] Solo {len(ai_bank)}/{cantidad} preguntas nivel {target_diff}. Generando mas (target + variedad)...", flush=True)
+                # Generate 2 at target difficulty + trigger specific miner for all levels
+                background_tasks.add_task(
+                    _background_question_miner,
+                    programa, competencia, nivel_objetivo, target_diff, max(2, cantidad - len(ai_bank)),
+                    entrenamiento_general, modulo, is_english, competencia or "General", cache_key
+                )
+                # Also generate at other levels to build up the bank
+                for alt_diff in ['basico', 'intermedio', 'avanzado']:
+                    if alt_diff != target_diff:
+                        background_tasks.add_task(
+                            _background_question_miner,
+                            programa, competencia, nivel_objetivo, alt_diff, 2,
+                            entrenamiento_general, modulo, is_english, competencia or "General", cache_key + f"_{alt_diff}"
+                        )
+        else:
+            ai_bank = ai_bank[:cantidad]
+        random.shuffle(ai_bank)
+        ai_bank = _shuffle_question_options(ai_bank)
         _set_cached_sugerencias(cache_key, ai_bank)
         background_tasks.add_task(
             _background_question_miner,
@@ -2848,6 +3650,7 @@ async def sugerencias(
     combined = _merge_seed_with_generated(ai_bank, preguntas_curadas, cantidad, entrenamiento_general)
     
     if len(combined) >= cantidad:
+        random.shuffle(combined)
         _set_cached_sugerencias(cache_key, combined)
         background_tasks.add_task(
             _background_question_miner,
@@ -2893,6 +3696,7 @@ async def sugerencias(
         combined = _merge_seed_with_generated(combined, fallback_preguntas, cantidad, entrenamiento_general)
     
     if combined:
+        random.shuffle(combined)
         _set_cached_sugerencias(cache_key, combined)
     
     background_tasks.add_task(

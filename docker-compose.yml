@@ -1,6 +1,37 @@
-version: '3.9'
+# ═══════════════════════════════════════════════════════════
+# ICFES Pro Chat — Stack Docker
+# ═══════════════════════════════════════════════════════════
+# Desarrollo:   docker compose up -d
+# Producción:   revisar sección PORTS antes de desplegar
+#               (cerrar 5432, 8000, 8080 al host si usas nginx)
+# ═══════════════════════════════════════════════════════════
 
 services:
+  # ─────────────────────────────────────────
+  # Cache y colas
+  # ─────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: icfes_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - icfes_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 64M
+          cpus: '0.1'
+
   # ─────────────────────────────────────────
   # Base de datos relacional
   # ─────────────────────────────────────────
@@ -15,7 +46,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Comentar en producción
     networks:
       - icfes_net
     healthcheck:
@@ -23,6 +54,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
 
   # ─────────────────────────────────────────
   # Base de datos vectorial
@@ -33,10 +72,21 @@ services:
     restart: unless-stopped
     volumes:
       - chroma_data:/chroma/chroma
-    ports:
-      - "8001:8000"
     networks:
       - icfes_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/v1/heartbeat || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
   # ─────────────────────────────────────────
   # Backend principal – Laravel 11
   # ─────────────────────────────────────────
@@ -49,6 +99,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      chromadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -57,12 +111,27 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       APP_KEY: ${APP_KEY}
       AI_SERVICE_URL: http://ai-service:8000
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     volumes:
       - ./backend:/var/www/html
     ports:
       - "8080:80"
     networks:
       - icfes_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
 
   # ─────────────────────────────────────────
   # Microservicio IA – FastAPI
@@ -74,7 +143,8 @@ services:
     container_name: icfes_ai
     restart: unless-stopped
     depends_on:
-      - chromadb
+      chromadb:
+        condition: service_healthy
     environment:
       CHROMA_HOST: chromadb
       CHROMA_PORT: 8000
@@ -88,6 +158,19 @@ services:
       - "8000:8000"
     networks:
       - icfes_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
 
   # ─────────────────────────────────────────
   # Frontend – React 18 + Nginx
@@ -104,10 +187,24 @@ services:
       - "3000:80"
     networks:
       - icfes_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 64M
+          cpus: '0.1'
 
 volumes:
   postgres_data:
   chroma_data:
+  redis_data:
 
 
 networks:

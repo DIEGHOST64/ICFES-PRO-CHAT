@@ -52,7 +52,7 @@ from sentence_transformers import SentenceTransformer
 
 # ── Configuración ────────────────────────────────────────
 CHROMA_HOST     = os.getenv("CHROMA_HOST", "localhost")
-CHROMA_PORT     = int(os.getenv("CHROMA_PORT", "8001"))
+CHROMA_PORT     = int(os.getenv("CHROMA_PORT", "8000"))
 COLLECTION_NAME = "saberpro_docs"
 CHUNK_SIZE      = 600
 CHUNK_OVERLAP   = 120

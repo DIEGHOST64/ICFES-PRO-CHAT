@@ -160,7 +160,7 @@ export const CoordinadorLoginPage: React.FC = () => {
                         }}>
                             <ShieldCheck size={12} /> ACCESO RESTRINGIDO
                         </div>
-                        <h2 style={{ fontSize: '26px', color: 'var(--text)', marginBottom: '4px', fontFamily: 'var(--font-heading)' }}>Panel Coordinador</h2>
+                        <h2 style={{ fontSize: '26px', color: 'var(--text)', marginBottom: '4px', fontFamily: 'var(--font-heading)' }}>Panel Gestor de Conocimiento</h2>
                         <p style={{ color: 'var(--text-hint)', fontSize: '13px' }}>Ingresa con tus credenciales institucionales.</p>
                     </div>
 
@@ -234,7 +234,7 @@ export const CoordinadorLoginPage: React.FC = () => {
                             style={{ fontSize: '13px', color: 'var(--text)', fontWeight: 600, cursor: 'pointer', background: 'none', border: 'none' }}
                         >
                             <BookOpen size={13} style={{ display: 'inline', marginRight: '4px' }} />
-                            Eres estudiante? Accede aqui
+                            Eres creador de oportunidades? Accede aqui
                         </button>
                     </div>
 

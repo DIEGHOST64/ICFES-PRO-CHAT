@@ -58,6 +58,7 @@ export interface Pregunta {
     tipo_ingles?: 'reading' | 'vocabulary' | 'grammar' | string;
     nivel_cefr?: 'A2' | 'B1' | string;
     nivel_dificultad?: 'basico' | 'intermedio' | 'avanzado' | string;
+    modulo_especifico?: string;
     bloque_id?: string;
     orden_en_bloque?: number;
     preguntas_en_bloque?: number;

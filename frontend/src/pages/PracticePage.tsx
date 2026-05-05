@@ -9,6 +9,10 @@ import { useGsapPageMotion } from '../hooks/useGsapPageMotion';
 import { InstitutionalLogo } from '../components/InstitutionalLogo';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
 
 const COMPETENCIAS = ['Lectura Crítica', 'Razonamiento Cuantitativo', 'Comunicación Escrita', 'Inglés', 'Ciudadanas', 'Específica'];
 
@@ -232,6 +236,19 @@ const renderTextWithLatex = (text: string): React.ReactNode => {
     });
 };
 
+const AcademicMarkdown: React.FC<{ content: string; suppressParagraphs?: boolean }> = ({ content, suppressParagraphs = false }) => {
+    return (
+        <div className={`academic-markdown ${suppressParagraphs ? 'inline-p' : ''}`}>
+            <ReactMarkdown
+                remarkPlugins={[remarkGfm, remarkMath]}
+                rehypePlugins={[rehypeKatex]}
+            >
+                {content}
+            </ReactMarkdown>
+        </div>
+    );
+};
+
 export const PracticePage: React.FC = () => {
     const pageRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
@@ -263,9 +280,10 @@ export const PracticePage: React.FC = () => {
     const [factY, setFactY] = useState(72);
     const [supportByQuestion, setSupportByQuestion] = useState<Record<string, PracticeSupport>>({});
     const [answerResults, setAnswerResults] = useState<Record<string, PracticeResult>>({});
-    const [adaptiveTarget, setAdaptiveTarget] = useState<'A2' | 'B1' | 'basico' | 'intermedio' | 'avanzado'>('intermedio');
+    const [adaptiveTarget, setAdaptiveTarget] = useState<'A2' | 'B1' | 'basico' | 'intermedio' | 'avanzado' | 'todas'>('intermedio');
     const [adaptiveAnswered, setAdaptiveAnswered] = useState(0);
     const [adaptiveCorrect, setAdaptiveCorrect] = useState(0);
+    const [selectedDifficulty, setSelectedDifficulty] = useState<'basico' | 'intermedio' | 'avanzado' | 'todas'>('todas');
     const [ensayoText, setEnsayoText] = useState('');
     const [evaluandoEnsayo, setEvaluandoEnsayo] = useState(false);
     const [ensayoResult, setEnsayoResult] = useState<any>(null);
@@ -397,7 +415,7 @@ export const PracticePage: React.FC = () => {
                 cantidad: sessionQuestionCount,
                 nivel_objetivo: isEnglishSession ? (adaptiveTarget === 'A2' || adaptiveTarget === 'B1' ? adaptiveTarget : 'A2') : undefined,
                 dificultad_objetivo: (!isEnglishSession && isGeneralSession)
-                    ? (adaptiveTarget === 'basico' || adaptiveTarget === 'intermedio' || adaptiveTarget === 'avanzado' ? adaptiveTarget : 'intermedio')
+                    ? (selectedDifficulty === 'todas' ? undefined : selectedDifficulty)
                     : undefined,
             });
             if (res.data.length === 0) { setError('No hay preguntas disponibles para esos filtros.'); }
@@ -980,6 +998,42 @@ export const PracticePage: React.FC = () => {
                         </div>
 
                         <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '10px', textAlign: 'center' }}>
+                            Dificultad
+                        </label>
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                            gap: '8px',
+                            marginBottom: 'var(--space-lg)',
+                        }}>
+                            {(['basico', 'intermedio', 'avanzado', 'todas'] as const).map((level) => {
+                                const active = selectedDifficulty === level;
+                                const colors: Record<string, string> = { basico: '#4caf50', intermedio: '#ff9800', avanzado: '#f44336', todas: '#6C5CE7' };
+                                const labels: Record<string, string> = { basico: 'Basico', intermedio: 'Intermedio', avanzado: 'Avanzado', todas: 'Todas' };
+                                return (
+                                    <button
+                                        key={level}
+                                        type="button"
+                                        onClick={() => setSelectedDifficulty(level)}
+                                        style={{
+                                            borderRadius: '12px',
+                                            border: active ? `1px solid ${colors[level]}` : '1px solid var(--border)',
+                                            background: active ? `${colors[level]}10` : '#ffffff',
+                                            padding: '10px 8px',
+                                            cursor: 'pointer',
+                                            fontWeight: 700,
+                                            fontSize: '12px',
+                                            color: active ? colors[level] : '#587083',
+                                            transition: 'var(--t-fast)',
+                                        }}
+                                    >
+                                        {labels[level]}
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '10px', textAlign: 'center' }}>
                             Elige la duracion de entrenamiento
                         </label>
 
@@ -1144,16 +1198,16 @@ export const PracticePage: React.FC = () => {
                                         <p style={{ fontSize: '11px', fontWeight: 700, color: isInferential ? 'var(--accent)' : 'var(--primary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                                             {isInferential ? '🔍 Texto de análisis' : '📄 Texto de referencia'}
                                         </p>
-                                        <div style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--text-muted)', fontStyle: 'italic', whiteSpace: 'pre-wrap' }}>
-                                            {renderTextWithLatex(cleanedBase)}
+                                        <div style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--text-muted)' }}>
+                                            <AcademicMarkdown content={cleanedBase} />
                                         </div>
                                         {qSupport?.mostrar_traduccion && qSupport?.texto_base_es && (
                                             <div style={{ marginTop: '10px', borderTop: '1px dashed var(--border)', paddingTop: '10px' }}>
                                                 <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--accent)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                                     Traduccion al espanol
                                                 </p>
-                                                <div style={{ fontSize: '14px', lineHeight: '1.7', color: 'var(--text)', whiteSpace: 'pre-wrap' }}>
-                                                    {renderTextWithLatex(qSupport.texto_base_es)}
+                                                <div style={{ fontSize: '14px', lineHeight: '1.7', color: 'var(--text)' }}>
+                                                    <AcademicMarkdown content={qSupport.texto_base_es} />
                                                 </div>
                                             </div>
                                         )}
@@ -1168,8 +1222,8 @@ export const PracticePage: React.FC = () => {
                                     {q.enunciado}
                                 </div>
                             ) : (
-                                <div style={{ fontSize: '16px', lineHeight: '1.65', fontWeight: 500, whiteSpace: 'pre-wrap', marginBottom: '16px' }}>
-                                    {renderTextWithLatex(q.enunciado)}
+                                <div style={{ fontSize: '16px', lineHeight: '1.65', fontWeight: 500, marginBottom: '16px' }}>
+                                    <AcademicMarkdown content={q.enunciado || ''} />
                                 </div>
                             )}
 
@@ -1226,7 +1280,7 @@ export const PracticePage: React.FC = () => {
                                                     <span>{renderTextWithLatex(parts.slice(1).join('[___]'))}</span>
                                                 </>
                                             ) : (
-                                                <span>{renderTextWithLatex(q.texto_base)}</span>
+                                                <span><AcademicMarkdown content={q.texto_base} suppressParagraphs={true} /></span>
                                             )}
                                         </div>
                                         <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '14px', display: 'flex', gap: '6px', alignItems: 'center' }}>
@@ -1242,8 +1296,8 @@ export const PracticePage: React.FC = () => {
                                     <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--accent)', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                         Pregunta en espanol
                                     </p>
-                                    <div style={{ fontSize: '15px', lineHeight: '1.6', color: 'var(--text)', whiteSpace: 'pre-wrap' }}>
-                                        {renderTextWithLatex(qSupport.enunciado_es)}
+                                    <div style={{ fontSize: '15px', lineHeight: '1.6', color: 'var(--text)' }}>
+                                        <AcademicMarkdown content={qSupport.enunciado_es} />
                                     </div>
                                 </div>
                             )}
@@ -1407,8 +1461,8 @@ export const PracticePage: React.FC = () => {
                                             : (qSupport?.mostrar_traduccion ? 'Incorrect / Incorrecto' : 'Incorrecto')}
                                     </strong>
                                 </div>
-                                <div style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--text-muted)', whiteSpace: 'pre-wrap' }}>
-                                    {renderTextWithLatex(q.explicacion)}
+                                <div style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--text-muted)' }}>
+                                    <AcademicMarkdown content={q.explicacion} />
                                 </div>
                                 {qSupport?.mostrar_traduccion && qSupport?.explicacion_es && qSupport?.explicacion_es !== q.explicacion && (
                                     <div style={{ marginTop: '10px', borderLeft: '3px solid var(--accent)', paddingLeft: '10px' }}>

@@ -192,7 +192,7 @@ export const LandingPage: React.FC = () => {
               <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'var(--primary-soft)', display: 'grid', placeItems: 'center', marginBottom: '12px' }}>
                 <GraduationCap size={24} color="var(--primary)" />
               </div>
-              <h3 style={{ fontSize: '24px', color: 'var(--text)', marginBottom: '6px', fontFamily: 'var(--font-heading)' }}>Eres Estudiante</h3>
+              <h3 style={{ fontSize: '24px', color: 'var(--text)', marginBottom: '6px', fontFamily: 'var(--font-heading)' }}>Eres Creador de Oportunidades</h3>
               <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '14px' }}>Practica, pregunta y recibe retroalimentación guiada para Saber Pro.</p>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--primary)', fontWeight: 700 }}>Entrar <ArrowRight size={15} /></span>
             </button>
@@ -221,7 +221,7 @@ export const LandingPage: React.FC = () => {
               <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'var(--accent-soft)', display: 'grid', placeItems: 'center', marginBottom: '12px' }}>
                 <BriefcaseBusiness size={24} color="var(--accent)" />
               </div>
-              <h3 style={{ fontSize: '24px', color: 'var(--text)', marginBottom: '6px', fontFamily: 'var(--font-heading)' }}>Eres Coordinador</h3>
+              <h3 style={{ fontSize: '24px', color: 'var(--text)', marginBottom: '6px', fontFamily: 'var(--font-heading)' }}>Eres Gestor de Conocimiento</h3>
               <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '14px' }}>Gestiona métricas, revisa progreso y acompaña decisiones académicas.</p>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--accent)', fontWeight: 700 }}>Entrar <ArrowRight size={15} /></span>
             </button>

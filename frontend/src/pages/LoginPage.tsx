@@ -7,14 +7,14 @@ import { useGsapPageMotion } from '../hooks/useGsapPageMotion';
 import { InstitutionalLogo } from '../components/InstitutionalLogo';
 
 const PROGRAMAS = [
-    'Ingeniería de Sistemas',
-    'Contaduría Pública',
     'Administración de Empresas',
-    'Derecho',
-    'Enfermería',
-    'Psicología',
-    'Ingeniería Ambiental',
-    'Trabajo Social',
+    'Contaduría Pública',
+    'Ingeniería de Sistemas y Computación',
+    'Ingeniería Electrónica',
+    'Ingeniería Agronómica',
+    'Zootecnia',
+    'Licenciatura en Ciencias Sociales',
+    'Licenciatura en Educación Física, Recreación y Deportes',
 ];
 
 export const LoginPage: React.FC = () => {
@@ -381,7 +381,7 @@ export const LoginPage: React.FC = () => {
 
                     <div style={{ textAlign: 'center', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
                         <Link to="/coordinador" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>
-                            Eres coordinador? Accede aqui
+                            Eres gestor de conocimiento? Accede aqui
                         </Link>
                     </div>
 

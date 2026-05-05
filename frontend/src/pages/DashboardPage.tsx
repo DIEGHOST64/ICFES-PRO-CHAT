@@ -1117,10 +1117,10 @@ export const DashboardPage: React.FC = () => {
                     marginBottom: 'var(--space-lg)',
                 }}>
                     <div data-motion="card"><KPICard icon={<MessageSquare size={18} />} label="Total de consultas realizadas" value={metricValues.totalConsultas} delay={0} /></div>
-                    <div data-motion="card"><KPICard icon={<Users size={18} />} label="Estudiantes unicos activos" value={metricValues.estudiantesUnicos} color="var(--accent)" delay={60} /></div>
+                    <div data-motion="card"><KPICard icon={<Users size={18} />} label="Creadores de oportunidades unicos activos" value={metricValues.estudiantesUnicos} color="var(--accent)" delay={60} /></div>
                     <div data-motion="card"><KPICard icon={<TrendingUp size={18} />} label="Consultas registradas hoy" value={metricValues.consultasHoy} color="var(--warning)" delay={120} /></div>
                     <div data-motion="card"><KPICard icon={<ThumbsUp size={18} />} label="Calificaciones positivas" value={metricValues.promedioPositivas} color="var(--primary)" suffix="%" delay={180} /></div>
-                    <div data-motion="card"><KPICard icon={<Users size={18} />} label="Total de estudiantes" value={metricValues.totalEstudiantes} delay={240} /></div>
+                    <div data-motion="card"><KPICard icon={<Users size={18} />} label="Total de creadores de oportunidades" value={metricValues.totalEstudiantes} delay={240} /></div>
                 </div>
 
                 <div key={`charts-${refreshTick}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-lg)', marginBottom: 'var(--space-lg)' }}>
@@ -1158,13 +1158,13 @@ export const DashboardPage: React.FC = () => {
                             style={{ width: '100%' }}
                         />
                         <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>
-                            {metricValues.estudiantesUnicos} de {metricValues.totalEstudiantes} estudiantes han usado el asistente con los filtros actuales.
+                            {metricValues.estudiantesUnicos} de {metricValues.totalEstudiantes} creadores de oportunidades han usado el asistente con los filtros actuales.
                         </p>
                     </div>
 
                     <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', animation: 'dash-slide-up 320ms ease both' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
-                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Ranking de Estudiantes (Practica)</h3>
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Ranking de Creadores de Oportunidades (Practica)</h3>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('ranking')}>Reset vista</button>
                         </div>
                         {topPracticeStudentsChart.labels.length === 0 ? (
@@ -1467,13 +1467,13 @@ export const DashboardPage: React.FC = () => {
 
                     <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)' }}>
                         <h3 style={{ fontSize: '15px', marginBottom: 'var(--space-md)', fontFamily: 'var(--font-heading)' }}>
-                            Puntaje por Estudiante (Práctica)
+                            Puntaje por Creador de Oportunidades (Práctica)
                         </h3>
                         <div style={{ overflowX: 'auto', maxHeight: '360px' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
                                 <thead>
                                     <tr style={{ borderBottom: '2px solid var(--border)' }}>
-                                        {['#', 'Estudiante', 'Programa', 'Intentos', 'Aciertos', 'Puntaje %'].map(h => (
+                                        {['#', 'Creador de Oportunidades', 'Programa', 'Intentos', 'Aciertos', 'Puntaje %'].map(h => (
                                             <th key={h} style={{ textAlign: 'left', padding: '10px 12px', fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                                         ))}
                                     </tr>

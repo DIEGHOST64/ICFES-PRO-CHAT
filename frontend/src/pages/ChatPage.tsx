@@ -10,6 +10,7 @@ import {
     Sun, Moon, LogOut, Loader2, ChevronDown, Trash2, FolderPlus, Plus, MessageSquarePlus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { aiAPI, queriesAPI } from '../api/client';
@@ -445,6 +446,7 @@ export const ChatPage: React.FC = () => {
     const skipNextFoldersPersistRef = useRef(false);
     const skipNextFolderMapPersistRef = useRef(false);
     const skipNextFolderChatsPersistRef = useRef(false);
+    const abortRef = useRef<AbortController | null>(null);
 
     const [messages, setMessages] = useState<ChatMessage[]>([buildWelcomeMessage(student?.nombre)]);
     const [input, setInput] = useState('');
@@ -539,7 +541,9 @@ export const ChatPage: React.FC = () => {
     }, [messages, loading]);
 
     useEffect(() => {
-        queriesAPI.history().then(r => setHistory(r.data)).catch(() => { });
+        queriesAPI.history().then(r => setHistory(r.data)).catch(() => {
+            toast.error('No se pudo cargar el historial');
+        });
     }, []);
 
     useEffect(() => {
@@ -800,12 +804,18 @@ export const ChatPage: React.FC = () => {
         let fullText = '';
         let fuentes: string[] = [];
 
+        abortRef.current?.abort();
+        const controller = new AbortController();
+        abortRef.current = controller;
+        const timeoutId = setTimeout(() => controller.abort(), 45000);
+
         try {
             const AI_URL = import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000';
             const res = await fetch(`${AI_URL}/consultar/stream`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pregunta, programa, nombre_estudiante: nombre, historial }),
+                signal: controller.signal,
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
@@ -856,8 +866,15 @@ export const ChatPage: React.FC = () => {
                     if (processSseLine(line.trim())) { reader.cancel(); break outer; }
                 }
             }
-        } catch {
-            fullText = fullText || 'Hubo un problema al procesar tu pregunta. Intenta de nuevo.';
+        } catch (err: any) {
+            if (err?.name === 'AbortError') {
+                fullText = fullText || 'La conexión se interrumpió. Intenta de nuevo.';
+            } else {
+                fullText = fullText || 'Hubo un problema al procesar tu pregunta. Intenta de nuevo.';
+            }
+        } finally {
+            clearTimeout(timeoutId);
+            if (abortRef.current === controller) abortRef.current = null;
         }
 
         let queryId: number | undefined;
@@ -883,7 +900,7 @@ export const ChatPage: React.FC = () => {
                     setHistoryFolderMap((prev) => ({ ...prev, [String(saveRes.data.id)]: activeWorkspaceFolderId }));
                 }
             } catch {
-                // No bloquear la UI por fallo de guardado.
+                toast.error('No se pudo guardar la consulta');
             }
         }
 
@@ -934,7 +951,9 @@ export const ChatPage: React.FC = () => {
     };
 
     const handleRate = async (queryId: number, util: boolean) => {
-        await queriesAPI.rate(queryId, util).catch(() => { });
+        await queriesAPI.rate(queryId, util).catch(() => {
+            toast.error('No se pudo guardar la calificación');
+        });
         setMessages(prev => prev.map(m =>
             m.queryId === queryId ? { ...m, rated: util } : m
         ));

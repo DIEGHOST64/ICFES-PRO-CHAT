@@ -569,3 +569,40 @@ h1,h2,h3,h4,h5,h6 {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
 }
+
+/* ── Academic Markdown Restyling ──────────────────────── */
+.academic-markdown {
+  width: 100%;
+}
+.academic-markdown.inline-p p {
+  display: inline;
+}
+.academic-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9em;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.academic-markdown thead tr {
+  background-color: var(--primary);
+  color: #ffffff;
+  text-align: left;
+}
+.academic-markdown th,
+.academic-markdown td {
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+}
+.academic-markdown tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+.academic-markdown tbody tr:nth-of-type(even) {
+  background-color: var(--surface-2);
+}
+.academic-markdown tbody tr:last-of-type {
+  border-bottom: 2px solid var(--primary);
+}

@@ -1,99 +1,93 @@
-# 🎓 Asistente Saber Pro
+# Asistente Saber Pro - ICFES
 
-Asistente virtual basado en IA (RAG) para la preparación de pruebas **Saber Pro** en la Universidad de Cundinamarca, sede Fusagasugá.
+Asistente virtual con IA (RAG + Gemini) para preparacion de pruebas **Saber Pro**. Universidad de Cundinamarca, sede Fusagasuga.
 
 ## Stack
 
-| Servicio | Tecnología | Puerto local |
-|---|---|---|
+| Servicio | Tecnologia | Puerto |
+|----------|-----------|--------|
 | Frontend | React 18 + Vite + TypeScript | 3000 |
-| Backend API | Laravel 11 (PHP 8.2) | 8080 |
-| Microservicio IA | FastAPI + Gemini 2.0 Flash + ChromaDB | 8000 |
-| Base de datos | PostgreSQL 15 | 5432 |
-| Vector DB | ChromaDB | 8001 |
+| Backend | Laravel 11 (PHP 8.2) | 8080 |
+| IA | FastAPI + Gemini 2.5 Flash + ChromaDB | 8000 |
+| DB | PostgreSQL 15 | 5432 |
+| Cache | Redis 7 | 6379 |
 
-## Inicio rápido
-
-### 1. Configurar variables de entorno
+## Inicio rapido
 
 ```bash
-# En la raíz del proyecto
-cp .env.example .env
-# Edita .env y agrega tu GEMINI_API_KEY y APP_KEY de Laravel
-```
-
-### 2. Levantar con Docker Compose
-
-```bash
-docker compose up --build -d
-```
-
-### 3. Ejecutar migraciones
-
-```bash
+cp .env.example .env              # Editar GEMINI_API_KEY
+docker compose up -d --build
 docker exec icfes_backend php artisan migrate --seed
 ```
 
-### 4. Acceder a la app
+**Acceso:** `http://localhost:3000`
 
-- **Estudiantes:** http://localhost:3000/login
-- **Coordinadores:** http://localhost:3000/coordinador
+| Rol | Usuario | Clave |
+|-----|---------|-------|
+| Creador de Oportunidades | 2026102 | demo123 |
+| Gestor de Conocimiento | coordinador@example.com | password |
 
----
+## Modulos
 
-## Desarrollo local (módulo a módulo)
+### Creador de Oportunidades (Estudiante)
+- Practica por competencia con **filtro de dificultad** (Basico/Intermedio/Avanzado/Todas)
+- **+2000 preguntas** generadas con IA, tablas Markdown y LaTeX
+- **Generacion automatica**: 2 preguntas nuevas por visita (background miner)
+- Apoyo visual y explicaciones paso a paso con KaTeX
+- Modo entrenamiento general y especifico por programa
 
-### Frontend (React)
-```bash
-cd frontend
-npm install
-npm run dev          # → http://localhost:5173
-```
+### Gestor de Conocimiento (Coordinador)
+- Dashboard con KPIs, graficos Plotly y tablas de rendimiento
+- **Informe estrategico IA** con hallazgos, riesgos y plan de accion
+- Exportacion Excel (6 hojas) y PDF con graficos SVG
+- Filtros por programa, fecha y presets (7/30/90 dias)
 
-### Backend (Laravel)
-```bash
-cd backend
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-php artisan serve --port=8080
-```
-
-### Microservicio IA (FastAPI)
-```bash
-# Primero levanta ChromaDB
-docker run -p 8001:8000 chromadb/chroma
-
-# Luego la IA
-cd ai-service
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-```
-
----
-
-## Indexar documentos ICFES
-
-Una vez tengas los documentos oficiales del ICFES en formato `.txt`:
+## Banco de preguntas
 
 ```bash
-# Desde dentro del contenedor ai-service, o con Python local:
-python -m app.scripts.indexar \
-  --directorio data/icfes_docs \
-  --programa "Ingeniería de Sistemas"
+# Regenerar Razonamiento Cuantitativo (~300 preguntas, 45 min)
+docker exec icfes_ai python app/scripts/pre_generar_rc_clean.py
 
-# Para preguntas de práctica (JSON):
-python -m app.scripts.indexar \
-  --preguntas data/preguntas/ing_sistemas.json \
-  --programa "Ingeniería de Sistemas"
+# Regenerar Especificas por programa
+docker exec icfes_ai python app/scripts/pre_generar_especificas.py
+
+# Ver conteo actual
+docker exec icfes_ai python -c "
+from app.services.chroma_client import ChromaService
+ChromaService.initialize()
+print(ChromaService.get_collection().count())
+"
 ```
 
----
+## Endpoints principales
+
+| Ruta | Descripcion |
+|------|-------------|
+| `/sugerencias` | Preguntas de practica (filtro por competencia, dificultad, nivel) |
+| `/sugerencias/apoyo-pregunta` | Explicacion y guia visual por pregunta |
+| `/sugerencias/datos-curiosos` | Datos curiosos del ICFES |
+| `/consultar` | Chat RAG con documentos ICFES |
+| `/consultar/guia-imagen` | Generacion de imagen guia |
+| `/reportes/excel` | Exportar dashboard a Excel |
+| `/reportes/pdf` | Exportar dashboard a PDF |
+| `/sugerencias/admin-analisis` | Informe estrategico IA para coordinacion |
+
+## Estructura del proyecto
+
+```
+ai-service/           # Microservicio IA (FastAPI)
+  app/
+    routes/           # sugerencias, consultar, reportes
+    services/         # Gemini, ChromaDB, mutator
+    config/           # Modulos especificos por programa
+    scripts/          # Pre-generacion de banco
+  data/               # PDFs ICFES para indexar
+backend/              # Laravel 11 (API + autenticacion)
+frontend/             # React 18 + Vite (PWA)
+data/                 # Documentos ICFES (PDFs)
+```
 
 ## Autores
 
-- Diego Hernán Guzmán Carrero
-- Leonardo Juan Felipe Mesa Blanco
-
-**Universidad de Cundinamarca — Sede Fusagasugá, 2026**
+Diego Hernan Guzman Carrero | Leonardo Juan Felipe Mesa Blanco
+**Universidad de Cundinamarca — 2026**

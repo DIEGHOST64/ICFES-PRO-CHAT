@@ -4,6 +4,7 @@
 # ── Entorno y secretos ───────────────────────────────────
 .env
 *.env.local
+backend/.env
 
 # ── Dependencias (se regeneran) ──────────────────────────
 backend/vendor/

@@ -6,6 +6,8 @@ use App\Http\Controllers\QueryController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/health', fn () => response()->json(['status' => 'ok', 'service' => 'backend']));
+
 // ─── Rutas públicas ─────────────────────────────────────
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class , 'registerStudent']); // RF-01, RF-02

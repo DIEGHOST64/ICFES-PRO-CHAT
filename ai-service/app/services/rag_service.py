@@ -26,6 +26,8 @@ PROGRAMA_MODULO: dict[str, str] = {
 COMPETENCIA_ESPECIFICA = "Específica"
 
 
+from app.config.especificas_config import get_programa_key
+
 def get_modulo(programa: str, competencia: str | None) -> str:
     """
     Determina el módulo ChromaDB a consultar:
@@ -33,6 +35,9 @@ def get_modulo(programa: str, competencia: str | None) -> str:
     - Cualquier otra competencia (Lectura Crítica, etc.) → 'general'
     """
     if competencia and competencia.strip() == COMPETENCIA_ESPECIFICA:
+        key = get_programa_key(programa)
+        if key and key in PROGRAMA_MODULO:
+            return PROGRAMA_MODULO[key]
         return PROGRAMA_MODULO.get(programa, programa.lower().replace(" ", "-"))
     return "general"
 

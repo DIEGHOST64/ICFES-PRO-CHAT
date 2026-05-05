@@ -181,6 +181,21 @@ def _looks_truncated(text: str) -> bool:
     return not t.endswith((".", "?", "!", "…"))
 
 
+async def get_ai_response(prompt: str, model_name: str = "gemini-2.5-flash", max_output_tokens: int = 3000, temperature: float = 0.7) -> str:
+    """Genera una respuesta directa con Gemini (sin pipeline RAG). Usado por mutador y generación."""
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY no configurada.")
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel(model_name, generation_config={
+        "max_output_tokens": max_output_tokens,
+        "temperature": temperature,
+    })
+    loop = asyncio.get_running_loop()
+    response = await loop.run_in_executor(None, model.generate_content, prompt)
+    return _extract_text(response)
+
+
 def _generate_sync(prompt: str) -> str:
     """Wrapper síncrono de Gemini para usar en thread pool."""
     model = get_gemini_model()
@@ -518,6 +533,13 @@ async def generate_practice_support(
         support["texto_base_es"] = str(data.get("texto_base_es") or "").strip()
         support["enunciado_es"] = str(data.get("enunciado_es") or "").strip()
         support["explicacion_es"] = str(data.get("explicacion_es") or "").strip()
+        
+        # Auto-wrap LaTeX in explicacion if missing $ delimiters
+        expl_es = support["explicacion_es"]
+        if expl_es and '$' not in expl_es:
+            import re as _re
+            expl_es = _re.sub(r'(\\approx|\\times|\\div|\\frac\{[^}]+\}\{[^}]+\}|\\sqrt\{[^}]+\}|\\pm|\\cdot|\\leq|\\geq|\\Delta|\\sum|\\int)', r'$\1$', expl_es)
+            support["explicacion_es"] = expl_es
         support["requiere_visual"] = bool(data.get("requiere_visual", False))
         support["visual_descripcion"] = str(data.get("visual_descripcion") or "").strip()
 

@@ -1,5 +1,6 @@
 import React, { lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { VisualMoodProvider } from './context/VisualMoodContext';
@@ -55,6 +56,7 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <VisualMoodProvider>
+            <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
             <AppRoutes />
           </VisualMoodProvider>
         </AuthProvider>
