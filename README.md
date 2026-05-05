@@ -59,6 +59,13 @@ print(ChromaService.get_collection().count())
 "
 ```
 
+## Documentacion
+
+- **[Documentacion tecnica completa](DOCUMENTACION.md)** — Diagramas C4, ERD, flujos, estados, endpoints
+- **[Swagger / OpenAPI](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/DIEGHOST64/ICFES-PRO-CHAT/main/swagger.json)** — Documentacion interactiva de la API (ver online)
+
+> Tambien disponible en `http://localhost:8000/docs` con el servidor corriendo.
+
 ## Endpoints principales
 
 | Ruta | Descripcion |

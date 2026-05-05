@@ -1,0 +1,450 @@
+# Documentacion Tecnica - Asistente Saber Pro ICFES
+
+## 1. Arquitectura del Sistema (C4 - Contenedores)
+
+```mermaid
+graph TB
+    subgraph "Usuarios"
+        CREADOR["Creador de Oportunidades<br/>(Estudiante)"] 
+        GESTOR["Gestor de Conocimiento<br/>(Coordinador)"]
+    end
+
+    subgraph "Servidor (Docker Compose)"
+        NGINX["Nginx :3000<br/>Reverse Proxy + Static"]
+        FRONT["React 18 + Vite<br/>Frontend PWA"]
+        BACK["Laravel 11 :8080<br/>API REST + Auth"]
+        AI["FastAPI :8000<br/>Microservicio IA<br/>Gemini 2.5 Flash"]
+        DB[("PostgreSQL 15 :5432<br/>Usuarios, Sesiones,<br/>Queries, Practicas")]
+        CHROMA[("ChromaDB :8001<br/>Vector DB<br/>+2000 embeddings")]
+        REDIS[("Redis 7 :6379<br/>Cache + Colas")]
+    end
+
+    CREADOR -->|"HTTP"| NGINX
+    GESTOR -->|"HTTP"| NGINX
+    NGINX -->|"/api/*"| BACK
+    NGINX -->|"/ai/*"| AI
+    NGINX -->|"Static"| FRONT
+    BACK -->|"SQL"| DB
+    BACK -->|"Cache"| REDIS
+    AI -->|"Embeddings"| CHROMA
+    AI -->|"Gemini API"| GEMINI["Google Gemini<br/>API Externa"]
+```
+
+---
+
+## 2. Diagrama Entidad-Relacion (ERD)
+
+```mermaid
+erDiagram
+    students ||--o{ queries : "realiza"
+    queries ||--o| query_cache : "cachea"
+    coordinators ||--o{ sessions : "gestiona"
+    
+    students {
+        int id PK
+        string cedula UK
+        string nombre
+        string email
+        string password_hash
+        string programa
+        timestamp created_at
+    }
+
+    coordinators {
+        int id PK
+        string email UK
+        string nombre
+        string password_hash
+        timestamp created_at
+    }
+
+    queries {
+        int id PK
+        int student_id FK
+        string student_nombre
+        string pregunta
+        string respuesta
+        string competencia
+        string programa
+        boolean es_practica
+        boolean acierto
+        string nivel_pregunta
+        string nivel_objetivo
+        string tipo_pregunta
+        int tiempo_respuesta_ms
+        boolean calificacion
+        timestamp created_at
+    }
+
+    query_cache {
+        int id PK
+        string cache_key UK
+        text preguntas_json
+        timestamp created_at
+        timestamp expires_at
+    }
+
+    sessions {
+        int id PK
+        int coordinator_id FK
+        string token
+        timestamp last_activity
+        timestamp created_at
+    }
+```
+
+---
+
+## 3. ChromaDB - Estructura de Documentos
+
+```mermaid
+graph LR
+    subgraph "Coleccion: saberpro_docs"
+        GENERADAS["pregunta_generada<br/>~1600 docs<br/>Formato JSON"]
+        CURADAS["pregunta / practica<br/>~400 docs<br/>Texto PDF extraido"]
+        EJEMPLOS["ejemplo<br/>~80 docs<br/>Preguntas explicadas ICFES"]
+    end
+
+    GENERADAS -->|"tipo: pregunta_generada"| META["Metadatos:<br/>competencia, programa,<br/>nivel_dificultad, modulo"]
+    CURADAS -->|"tipo: pregunta/practica"| METAC["Metadatos:<br/>competencia, programa,<br/>modulo, archivo_origen"]
+    
+    subgraph "Competencias"
+        RC["Razonamiento Cuantitativo<br/>180 preguntas"]
+        ESP["Especifica<br/>935 preguntas<br/>(8 programas)"]
+        ING["Ingles<br/>356 preguntas<br/>A2/B1"]
+        ESC["Comunicacion Escrita<br/>316 preguntas"]
+        CIU["Ciudadanas<br/>118 preguntas"]
+        LEC["Lectura Critica<br/>111 preguntas"]
+    end
+```
+
+---
+
+## 4. Flujo: Practica de Estudiante
+
+```mermaid
+sequenceDiagram
+    actor Creador
+    participant Frontend
+    participant AI as AI Service
+    participant Gemini
+    participant ChromaDB
+    participant Backend
+
+    Creador->>Frontend: Selecciona competencia + dificultad + duracion
+    Frontend->>AI: GET /sugerencias?competencia=RC&dificultad=basico&cantidad=15
+    AI->>AI: Verifica cache (24h TTL)
+    
+    alt Cache HIT
+        AI-->>Frontend: Preguntas cacheadas (shuffle + opciones aleatorias)
+    else Cache MISS
+        AI->>ChromaDB: Buscar preguntas (modulo + competencia + nivel)
+        ChromaDB-->>AI: Banco de preguntas
+        
+        alt Banco suficiente
+            AI->>AI: Filtrar 80% nivel objetivo + shuffle
+        else Banco insuficiente
+            AI->>AI: Generar en background (Gemini)
+        end
+        
+        AI->>AI: Guardar en cache
+        AI-->>Frontend: Preguntas
+    end
+
+    loop Por cada pregunta
+        Creador->>Frontend: Responde
+        Frontend->>AI: POST /apoyo-pregunta (explicacion)
+        AI->>Gemini: Generar explicacion + guia visual
+        Gemini-->>AI: Explicacion con LaTeX
+        AI-->>Frontend: Explicacion renderizada
+        
+        Frontend->>Backend: POST /api/queries (guardar respuesta)
+        Backend->>Backend: Registrar acierto, tiempo, nivel
+    end
+
+    Note over AI: Background miner: +2 preguntas al final
+```
+
+---
+
+## 5. Flujo: Background Miner (Generacion Automatica)
+
+```mermaid
+sequenceDiagram
+    participant Request as Practica Request
+    participant AI as AI Service
+    participant Gemini
+    participant ChromaDB
+
+    Request->>AI: GET /sugerencias
+    
+    Note over AI: Despues de responder, en background:
+    
+    AI->>AI: _background_question_miner()
+    AI->>Gemini: Generar 2 preguntas<br/>(nivel = dificultad_objetivo)
+    Gemini-->>AI: 6 preguntas raw (oversampling 3x)
+    
+    AI->>AI: Normalizar + filtrar calidad
+    Note over AI: Validar: opciones >= 4<br/>texto_base >= 40 chars<br/>enunciado >= 28 chars<br/>respuesta_correcta valida<br/>no filler text
+    
+    AI->>AI: Wrap LaTeX en $...$
+    AI->>AI: Preservar newlines para tablas
+    
+    AI->>ChromaDB: Almacenar 2 preguntas validadas
+    Note over ChromaDB: tipo: pregunta_generada<br/>con metadata completa
+    
+    Note over AI: Si no hay suficientes del nivel,<br/>genera tambien los otros 2 niveles
+```
+
+---
+
+## 6. Estado: Ciclo de Vida de una Pregunta
+
+```mermaid
+stateDiagram-v2
+    [*] --> Generacion: Gemini genera (6 raw)
+    Generacion --> Normalizacion: Oversampling procesado
+    Normalizacion --> Validacion: Filtros de calidad
+    
+    Validacion --> Almacenada: Pasa todos los filtros
+    Validacion --> Descartada: No pasa calidad
+    
+    Almacenada --> Cache: Servida por primera vez
+    Cache --> Mostrada: Entregada al estudiante
+    Mostrada --> Respondida: Estudiante contesta
+    
+    Respondida --> Registrada: Guardada en queries (Backend)
+    
+    Almacenada --> Reutilizada: Siguientes requests (24h cache)
+    
+    Descartada --> [*]
+    Registrada --> [*]
+```
+
+---
+
+## 7. Flujo: Informe Estrategico IA (Gestor)
+
+```mermaid
+sequenceDiagram
+    actor Gestor
+    participant Frontend
+    participant Backend
+    participant AI
+    participant Gemini
+
+    Gestor->>Frontend: Abre Dashboard, configura filtros
+    Frontend->>Backend: GET /dashboard/metrics?programa=X&fecha=Y
+    Frontend->>Backend: GET /dashboard/by-program
+    Frontend->>Backend: GET /dashboard/trend
+    Frontend->>Backend: GET /dashboard/practice-students
+    Frontend->>Backend: GET /dashboard/practice-competencies
+    Frontend->>Backend: GET /dashboard/level-progression
+    
+    Frontend->>Frontend: Renderiza KPIs + 7 graficos Plotly + 3 tablas
+
+    Gestor->>Frontend: Click "Generar analisis experto IA"
+    Frontend->>AI: POST /sugerencias/admin-analisis
+    Note over Frontend: Envia TODOS los datos del dashboard
+    
+    AI->>AI: Extraer metricas numericas
+    AI->>AI: Calcular: cobertura, tendencia,<br/>top programa, competencia mas debil
+    
+    AI->>Gemini: Prompt con datos estructurados
+    Gemini-->>AI: Informe JSON: contexto, hallazgos,<br/>riesgos, plan_7_dias, vacios
+    
+    AI-->>Frontend: Informe estructurado
+    
+    alt Gemini falla
+        AI->>AI: Fallback deterministico
+        AI-->>Frontend: Informe basado en datos crudos
+    end
+
+    Gestor->>Frontend: Exportar Excel / PDF
+    Frontend->>AI: GET /reportes/excel o /reportes/pdf
+    AI->>Backend: Recolecta datos de los 7 endpoints
+    AI-->>Frontend: Archivo descargable
+```
+
+---
+
+## 8. Estado: Nivel Adaptativo del Estudiante
+
+```mermaid
+stateDiagram-v2
+    [*] --> Intermedio: Nivel inicial por defecto
+    
+    Intermedio --> Avanzado: >= 80% aciertos en 3+ preguntas
+    Intermedio --> Basico: < 55% aciertos en 3+ preguntas
+    
+    Basico --> Intermedio: >= 55% aciertos en 3+ preguntas
+    Avanzado --> Intermedio: < 80% aciertos en 3+ preguntas
+    
+    note right of Intermedio: 80% preguntas del nivel<br/>20% variedad
+    note right of Avanzado: Solo 16 preguntas avanzadas RC<br/>Background miner genera mas
+    note right of Basico: 64 preguntas basicas RC
+```
+
+---
+
+## 9. Flujo: Indexacion de Documentos ICFES
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant CLI as Script indexar.py
+    participant PDF as PyMuPDF
+    participant Embed as SentenceTransformer
+    participant ChromaDB
+
+    Admin->>CLI: python indexar.py --directorio data/icfes_docs
+    CLI->>PDF: Extraer texto de PDFs
+    
+    loop Por cada PDF
+        PDF-->>CLI: Texto plano
+        CLI->>CLI: Chunking (parrafos de 500-800 chars)
+        CLI->>Embed: all-MiniLM-L6-v2 (384 dims)
+        Embed-->>CLI: Vector embedding
+        CLI->>ChromaDB: collection.add(doc, embedding, metadata)
+    end
+    
+    ChromaDB-->>CLI: Indexacion completa
+    
+    CLI->>CLI: Para JSON de preguntas:
+    CLI->>CLI: Parsear preguntas extraidas
+    CLI->>ChromaDB: Almacenar como tipo: practica
+```
+
+---
+
+## 10. Estructura de Directorios
+
+```
+ICFES-PRO-CHAT/
+├── docker-compose.yml              # 6 servicios orquestados
+├── .env                            # Variables de entorno (gitignored)
+├── .env.example                    # Template
+├── README.md
+├── DOCUMENTACION.md                # Este archivo
+├── swagger.json                    # OpenAPI 3.0 spec
+│
+├── frontend/                       # React 18 + Vite + TypeScript
+│   ├── Dockerfile
+│   ├── nginx.conf                  # Reverse proxy + WebSocket
+│   ├── package.json
+│   └── src/
+│       ├── api/client.ts           # Axios wrapper
+│       ├── pages/
+│       │   ├── LoginPage.tsx       # Login creador
+│       │   ├── CoordinadorLoginPage.tsx  # Login gestor
+│       │   ├── PracticePage.tsx    # Practica (core)
+│       │   ├── ChatPage.tsx        # Chat RAG ICFES
+│       │   ├── DashboardPage.tsx   # Panel gestor
+│       │   └── LandingPage.tsx     # Landing inicial
+│       ├── context/                # Auth + Theme
+│       └── types/                  # TypeScript interfaces
+│
+├── backend/                        # Laravel 11 + PHP 8.2
+│   ├── app/Controllers/
+│   │   ├── AuthController.php      # Login/Registro
+│   │   ├── QueryController.php     # Guardar consultas
+│   │   └── DashboardController.php # Metricas (8 endpoints)
+│   ├── database/migrations/
+│   └── routes/api.php
+│
+├── ai-service/                     # FastAPI + Gemini + ChromaDB
+│   ├── main.py                     # Entry point
+│   ├── app/
+│   │   ├── routes/
+│   │   │   ├── sugerencias.py      # Practica + admin (3700 LOC)
+│   │   │   ├── consultar.py        # Chat RAG
+│   │   │   └── reportes.py         # Excel + PDF
+│   │   ├── services/
+│   │   │   ├── gemini_client.py    # Gemini API wrapper
+│   │   │   ├── chroma_client.py    # ChromaDB singleton
+│   │   │   └── rag_service.py      # RAG pipeline
+│   │   ├── config/                 # Modulos por programa
+│   │   └── scripts/                # Pre-generacion
+│   │       ├── indexar.py          # Indexar PDFs
+│   │       ├── pre_generar_rc_clean.py
+│   │       ├── pre_generar_especificas.py
+│   │       ├── curar_preguntas_icfes.py
+│   │       └── extractor_json.py
+│   │
+└── data/                           # Documentos ICFES (PDFs)
+    └── icfes_docs/
+        ├── general/ejemplos/
+        ├── general/practica/
+        └── programas/
+```
+
+---
+
+## 11. Endpoints API
+
+| Metodo | Ruta | Auth | Descripcion |
+|--------|------|------|-------------|
+| POST | /api/auth/login | No | Login creador (cedula + clave) |
+| POST | /api/auth/register | No | Registro creador |
+| POST | /api/auth/coordinator/login | No | Login gestor |
+| GET | /sugerencias | No* | Preguntas de practica |
+| POST | /sugerencias/apoyo-pregunta | No* | Explicacion + guia visual |
+| POST | /sugerencias/datos-curiosos | No* | Datos curiosos ICFES |
+| POST | /sugerencias/admin-analisis | No* | Informe estrategico IA |
+| POST | /sugerencias/evaluar-ensayo | No* | Evaluar ensayo (Escrita) |
+| GET | /reportes/excel | No* | Exportar Excel |
+| GET | /reportes/pdf | No* | Exportar PDF |
+| POST | /consultar | No* | Chat RAG con documentos |
+| POST | /consultar/stream | No* | Chat RAG streaming |
+| POST | /consultar/guia-imagen | No* | Generar imagen guia |
+| GET | /dashboard/metrics | Gestor | KPIs del dashboard |
+| GET | /dashboard/by-program | Gestor | Consultas por programa |
+| GET | /dashboard/trend | Gestor | Tendencia diaria |
+| GET | /dashboard/top-topics | Gestor | Temas mas consultados |
+| GET | /dashboard/practice-students | Gestor | Ranking practica |
+| GET | /dashboard/practice-competencies | Gestor | Promedio por competencia |
+| GET | /dashboard/level-progression | Gestor | Evolucion de nivel |
+| GET | /dashboard/programs | Gestor | Lista de programas |
+
+*Endpoints IA: acceso directo desde frontend (no requieren auth Laravel)
+
+---
+
+## 12. Pipeline de Generacion de Preguntas
+
+```mermaid
+flowchart TB
+    A[Gemini 2.5 Flash] -->|"6 preguntas raw<br/>(oversampling 3x)"| B[Normalizacion]
+    B --> C{Filtros de Calidad}
+    C -->|"opciones < 4"| X[Descartada]
+    C -->|"texto_base < 40 chars"| X
+    C -->|"enunciado < 28 chars"| X
+    C -->|"sin respuesta correcta"| X
+    C -->|"filler text"| X
+    C -->|"PASA"| D[Wrap LaTeX en $...$]
+    D --> E[Preservar newlines tablas]
+    E --> F[Asignar nivel_dificultad]
+    F --> G[Almacenar en ChromaDB]
+    G --> H[Disponible para practica]
+```
+
+---
+
+## 13. Stack Tecnologico
+
+| Capa | Tecnologia | Version |
+|------|-----------|---------|
+| Frontend | React + Vite | 18 / 7 |
+| Lenguaje FE | TypeScript | 5.9 |
+| Estilos | CSS Modules + KaTeX | - |
+| Graficos | Plotly.js | 3.4 |
+| Backend API | Laravel | 11 |
+| Backend IA | FastAPI (Python) | 0.115 |
+| ORM | Eloquent / SQLAlchemy | - |
+| IA | Google Gemini | 2.5 Flash |
+| Embeddings | SentenceTransformers | all-MiniLM-L6-v2 |
+| Vector DB | ChromaDB | 0.5 |
+| Cache | Redis | 7 |
+| DB | PostgreSQL | 15 |
+| Infra | Docker Compose | 3.9 |
+| Proxy | Nginx (Alpine) | latest |
