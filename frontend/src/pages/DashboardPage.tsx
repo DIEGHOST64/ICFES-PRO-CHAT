@@ -18,85 +18,6 @@ import { useGsapPageMotion } from '../hooks/useGsapPageMotion';
 
 const COORD_WHITE_LOGO_SRC = '/assets/logo-blanco-coordinador.png';
 
-type AdminAIPlanItem = {
-    accion: string;
-    responsable: string;
-    kpi: string;
-    plazo: string;
-};
-
-type AdminAIDocument = {
-    contexto_general: string;
-    hallazgos_clave: string[];
-    riesgos_prioritarios: string[];
-    plan_7_dias: AdminAIPlanItem[];
-    vacios_de_dato: string[];
-    foco_solicitado?: string;
-};
-
-type AdminAIMeta = {
-    mode?: string;
-    latency_ms?: number | null;
-    context_volume?: {
-        metric_keys?: number;
-        list_blocks?: number;
-        total_rows?: number;
-    };
-    sections?: {
-        hallazgos?: number;
-        riesgos?: number;
-        plan?: number;
-        vacios?: number;
-    };
-};
-
-const normalizeAdminDocument = (raw: unknown): AdminAIDocument | null => {
-    if (!raw || typeof raw !== 'object') return null;
-    const source = raw as Record<string, unknown>;
-
-    const toLines = (value: unknown, max = 5): string[] => {
-        if (!Array.isArray(value)) return [];
-        const clean = value
-            .map(v => String(v || '').trim())
-            .filter(Boolean);
-        return clean.slice(0, max);
-    };
-
-    const toPlan = (value: unknown): AdminAIPlanItem[] => {
-        if (!Array.isArray(value)) return [];
-        const plan: AdminAIPlanItem[] = [];
-        for (const row of value) {
-            if (!row || typeof row !== 'object') continue;
-            const item = row as Record<string, unknown>;
-            const accion = String(item.accion || '').trim();
-            if (!accion) continue;
-            plan.push({
-                accion,
-                responsable: String(item.responsable || 'Coordinacion academica').trim(),
-                kpi: String(item.kpi || 'Definir KPI semanal').trim(),
-                plazo: String(item.plazo || '7 dias').trim(),
-            });
-            if (plan.length >= 5) break;
-        }
-        return plan;
-    };
-
-    const doc: AdminAIDocument = {
-        contexto_general: String(source.contexto_general || '').trim(),
-        hallazgos_clave: toLines(source.hallazgos_clave),
-        riesgos_prioritarios: toLines(source.riesgos_prioritarios),
-        plan_7_dias: toPlan(source.plan_7_dias),
-        vacios_de_dato: toLines(source.vacios_de_dato),
-        foco_solicitado: String(source.foco_solicitado || '').trim(),
-    };
-
-    if (!doc.contexto_general && !doc.hallazgos_clave.length && !doc.riesgos_prioritarios.length && !doc.plan_7_dias.length) {
-        return null;
-    }
-
-    return doc;
-};
-
 const adminChatMarkdownComponents = {
     p: ({ children }: { children?: React.ReactNode }) => <p style={{ margin: '0 0 8px 0' }}>{children}</p>,
     ul: ({ children }: { children?: React.ReactNode }) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px' }}>{children}</ul>,
@@ -188,72 +109,6 @@ const KPICard: React.FC<{ icon: React.ReactNode; label: string; value: number; c
     </div>
 );
 
-const DocumentBriefingView: React.FC<{ document: AdminAIDocument | null; fallback: string; placeholder: string }> = ({ document, fallback, placeholder }) => {
-    if (!document) {
-        const text = fallback.trim();
-        return (
-            <p style={{ whiteSpace: 'pre-wrap', fontSize: '14px', lineHeight: 1.65, color: 'var(--text)' }}>
-                {text || placeholder}
-            </p>
-        );
-    }
-
-    const SectionList: React.FC<{ title: string; items: string[] }> = ({ title, items }) => (
-        <section>
-            <h3 style={{ margin: 0, marginBottom: '8px', fontSize: '13px', fontWeight: 800, color: '#2f4f67', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
-                {title}
-            </h3>
-            {items.length === 0 ? (
-                <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-muted)' }}>Sin datos para esta seccion.</p>
-            ) : (
-                <ol style={{ margin: 0, paddingLeft: '20px', display: 'grid', gap: '8px' }}>
-                    {items.map((item, idx) => (
-                        <li key={`${title}-${idx}`} style={{ fontSize: '14px', lineHeight: 1.65, color: 'var(--text)' }}>{item}</li>
-                    ))}
-                </ol>
-            )}
-        </section>
-    );
-
-    return (
-        <article style={{ display: 'grid', gap: '14px', fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}>
-            <section>
-                <h3 style={{ margin: 0, marginBottom: '8px', fontSize: '13px', fontWeight: 800, color: '#2f4f67', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
-                    Contexto general
-                </h3>
-                <p style={{ margin: 0, fontSize: '15px', lineHeight: 1.72, color: 'var(--text)' }}>
-                    {document.contexto_general || 'Sin contexto generado.'}
-                </p>
-            </section>
-
-            <SectionList title="Hallazgos clave" items={document.hallazgos_clave} />
-            <SectionList title="Riesgos prioritarios" items={document.riesgos_prioritarios} />
-
-            <section>
-                <h3 style={{ margin: 0, marginBottom: '8px', fontSize: '13px', fontWeight: 800, color: '#2f4f67', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
-                    Plan de accion (7 dias)
-                </h3>
-                {document.plan_7_dias.length === 0 ? (
-                    <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-muted)' }}>Sin acciones propuestas.</p>
-                ) : (
-                    <div style={{ display: 'grid', gap: '10px' }}>
-                        {document.plan_7_dias.map((step, idx) => (
-                            <div key={`plan-${idx}`} style={{ borderLeft: '3px solid rgba(47,79,103,0.32)', paddingLeft: '10px', display: 'grid', gap: '4px' }}>
-                                <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.62, color: 'var(--text)' }}><strong>Accion:</strong> {step.accion}</p>
-                                <p style={{ margin: 0, fontSize: '13px', lineHeight: 1.58, color: 'var(--text-muted)' }}><strong>Responsable:</strong> {step.responsable}</p>
-                                <p style={{ margin: 0, fontSize: '13px', lineHeight: 1.58, color: 'var(--text-muted)' }}><strong>KPI:</strong> {step.kpi}</p>
-                                <p style={{ margin: 0, fontSize: '13px', lineHeight: 1.58, color: 'var(--text-muted)' }}><strong>Plazo:</strong> {step.plazo}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </section>
-
-            <SectionList title="Vacios de dato" items={document.vacios_de_dato} />
-        </article>
-    );
-};
-
 export const DashboardPage: React.FC = () => {
     const pageRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
@@ -280,13 +135,7 @@ export const DashboardPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [refreshTick, setRefreshTick] = useState(0);
     const [aiMode, setAiMode] = useState(true);
-    const [aiBriefing, setAiBriefing] = useState('');
-    const [aiDocument, setAiDocument] = useState<AdminAIDocument | null>(null);
-    const [aiMeta, setAiMeta] = useState<AdminAIMeta | null>(null);
-    const [aiQuestion, setAiQuestion] = useState('');
-    const [aiFocusType, setAiFocusType] = useState<'auto' | 'comparativa' | 'tendencia' | 'cobertura' | 'practicas'>('auto');
-    const [aiLoading, setAiLoading] = useState(false);
-    const [aiError, setAiError] = useState('');
+
     const [plotResetVersion, setPlotResetVersion] = useState<Record<string, number>>({});
     const [quickRange, setQuickRange] = useState<'7d' | '30d' | '90d' | ''>('');
     const [exportNotice, setExportNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -799,62 +648,7 @@ export const DashboardPage: React.FC = () => {
         };
     };
 
-    const askAdminAI = async (task: string): Promise<{ text: string; document: AdminAIDocument | null; meta: AdminAIMeta | null }> => {
-        setAiError('');
-        setAiLoading(true);
-        try {
-            const res = await aiAPI.adminAnalisis({
-                task,
-                analytics_context: buildAnalyticsContext(),
-            });
 
-            const answer = res?.data?.respuesta?.trim() || 'No se pudo generar respuesta en este momento.';
-            const rawDocument = res?.data?.documento;
-            const metaRaw = res?.data?.meta;
-            const document = normalizeAdminDocument(rawDocument);
-            const meta: AdminAIMeta | null = metaRaw && typeof metaRaw === 'object'
-                ? {
-                    mode: typeof metaRaw.mode === 'string' ? metaRaw.mode : undefined,
-                    latency_ms: typeof metaRaw.latency_ms === 'number' ? metaRaw.latency_ms : null,
-                    context_volume: typeof metaRaw.context_volume === 'object' ? metaRaw.context_volume : undefined,
-                    sections: typeof metaRaw.sections === 'object' ? metaRaw.sections : undefined,
-                }
-                : null;
-            return { text: answer, document, meta };
-        } catch {
-            setAiError('No fue posible consultar el modo IA ahora. Intenta de nuevo.');
-            return { text: '', document: null, meta: null };
-        } finally {
-            setAiLoading(false);
-        }
-    };
-
-    const generateAIBriefing = async () => {
-        const customFocus = aiQuestion.trim();
-        const focusLabels: Record<'auto' | 'comparativa' | 'tendencia' | 'cobertura' | 'practicas', string> = {
-            auto: 'Automatico segun datos disponibles',
-            comparativa: 'Comparativa por programas (incluye Sistemas vs otros)',
-            tendencia: 'Tendencia temporal de uso y variaciones',
-            cobertura: 'Cobertura, adopcion y alcance estudiantil',
-            practicas: 'Resultados de practicas y entrenamientos',
-        };
-
-        const taskParts = [
-            'Genera un informe ejecutivo experto para coordinacion academica.',
-            'Usa todo el analytics_context enviado (no solo una muestra) y cruza metricas, programas, tendencia, temas, practicas y evolucion de nivel.',
-            `Tipo de enfoque prioritario: ${focusLabels[aiFocusType]}.`,
-            customFocus ? `Detalle adicional del usuario: ${customFocus}.` : 'Si no hay detalle adicional, usa el enfoque seleccionado y los datos disponibles.',
-            'Responde en formato de resumen, alertas y acciones de 7 dias.',
-        ];
-
-        const task = taskParts.join(' ');
-        const result = await askAdminAI(task);
-        if (result.text) {
-            setAiBriefing(result.text);
-            setAiDocument(result.document);
-            setAiMeta(result.meta);
-        }
-    };
 
     return (
         <div ref={pageRef} style={{
@@ -1174,113 +968,7 @@ export const DashboardPage: React.FC = () => {
                             </div>
                         </div>
                     </section>
-                    {/* Modo IA Estrategico */}
-                    <section data-motion="panel" className="animate-fade-up" style={{
-                        marginBottom: 'var(--space-lg)',
-                        borderRadius: 'var(--radius-lg)',
-                        border: '1px solid var(--border)',
-                        boxShadow: 'var(--shadow-md)',
-                        background: 'var(--grad-card)',
-                        padding: '16px',
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                            <h2 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <Brain size={16} color="var(--accent)" /> Modo IA Estratégico
-                            </h2>
-                            <button
-                                className="btn"
-                                onClick={generateAIBriefing}
-                                disabled={aiLoading || dataLoading}
-                                style={{
-                                    minWidth: '220px',
-                                    justifyContent: 'center',
-                                    color: '#fff',
-                                    fontWeight: 800,
-                                    background: 'linear-gradient(120deg, #2f4c61 0%, #3e6a5a 100%)',
-                                    boxShadow: '0 12px 24px rgba(43, 72, 92, 0.26)',
-                                    border: '1px solid rgba(255,255,255,0.22)',
-                                }}
-                            >
-                                {aiLoading ? <Loader2 size={15} style={{ animation: 'spin 1s linear infinite' }} /> : <Brain size={15} />}
-                                Generar analisis experto IA
-                            </button>
-                        </div>
 
-                        <div style={{ display: 'grid', gap: 'var(--space-md)', gridTemplateColumns: '1.1fr 0.9fr' }}>
-                            <div style={{
-                                border: '1px solid var(--border)',
-                                borderRadius: 'var(--radius-md)',
-                                padding: '12px',
-                                background: 'var(--surface)',
-                                minHeight: '140px',
-                            }}>
-                                <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px' }}>Briefing ejecutivo</p>
-                                {aiMeta && (
-                                    <p style={{
-                                        marginTop: '-2px',
-                                        marginBottom: '8px',
-                                        fontSize: '11px',
-                                        color: 'var(--text-hint)',
-                                        lineHeight: 1.45,
-                                    }}>
-                                        Analisis: {aiMeta.mode || 'hibrido'} · Datos procesados: {aiMeta.context_volume?.total_rows ?? 0} registros en {aiMeta.context_volume?.list_blocks ?? 0} bloques · Latencia: {typeof aiMeta.latency_ms === 'number' ? `${aiMeta.latency_ms} ms` : 's/d'}
-                                    </p>
-                                )}
-                                <DocumentBriefingView document={aiDocument} fallback={aiBriefing} placeholder={'Pulsa "Generar analisis experto IA" para obtener el informe estrategico.'} />
-                            </div>
-
-                            <div style={{
-                                border: '1px solid var(--border)',
-                                borderRadius: 'var(--radius-md)',
-                                padding: '12px',
-                                background: 'var(--surface)',
-                            }}>
-                                <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px' }}>Enfoque del informe (opcional)</p>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '10px' }}>
-                                    {([
-                                        { id: 'auto', label: 'Auto' },
-                                        { id: 'comparativa', label: 'Comparativa' },
-                                        { id: 'tendencia', label: 'Tendencia' },
-                                        { id: 'cobertura', label: 'Cobertura' },
-                                        { id: 'practicas', label: 'Practicas' },
-                                    ] as const).map(option => (
-                                        <button
-                                            key={option.id}
-                                            type="button"
-                                            onClick={() => setAiFocusType(option.id)}
-                                            disabled={aiLoading || dataLoading}
-                                            style={{
-                                                borderRadius: '999px',
-                                                border: aiFocusType === option.id ? '1px solid rgba(62,106,90,0.45)' : '1px solid var(--border)',
-                                                background: aiFocusType === option.id ? 'rgba(120, 182, 151, 0.16)' : 'var(--surface-2)',
-                                                color: aiFocusType === option.id ? '#2f5d4e' : 'var(--text-muted)',
-                                                fontWeight: 700,
-                                                fontSize: '11px',
-                                                padding: '5px 10px',
-                                                cursor: aiLoading || dataLoading ? 'not-allowed' : 'pointer',
-                                            }}
-                                        >
-                                            {option.label}
-                                        </button>
-                                    ))}
-                                </div>
-                                <textarea
-                                    className="input"
-                                    style={{ minHeight: '80px', resize: 'vertical', marginBottom: '8px' }}
-                                    placeholder="Ej: comparacion de Sistemas vs resto de programas y acciones prioritarias"
-                                    value={aiQuestion}
-                                    onChange={e => setAiQuestion(e.target.value)}
-                                    disabled={aiLoading || dataLoading}
-                                />
-                                <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.45 }}>
-                                    Usa el boton "Generar analisis experto IA" para producir el informe.
-                                    El selector define la prioridad del analisis y el texto agrega detalle fino.
-                                </p>
-                            </div>
-                        </div>
-
-                        {aiError && <p style={{ marginTop: '10px', color: 'var(--danger)', fontSize: '12px' }}>{aiError}</p>}
-                    </section>
                     </>
                 )}
 
