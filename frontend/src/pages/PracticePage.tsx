@@ -275,6 +275,8 @@ export const PracticePage: React.FC = () => {
     const factSwapTimeoutRef = useRef<number | null>(null);
     const factsPoolRef = useRef<string[]>([]);
     const factIndexRef = useRef(0);
+    const questionStartRef = useRef<number>(Date.now());  // Timer oculto para medir tiempo de respuesta
+    const ensayoTimerRef = useRef<number>(0);  // Timer para ensayos
     const [factVisible, setFactVisible] = useState(false);
     const [factX, setFactX] = useState(50);
     const [factY, setFactY] = useState(72);
@@ -480,7 +482,7 @@ export const PracticePage: React.FC = () => {
             competencia: q.competencia,
             pregunta: q.enunciado,
             respuesta: `Respuesta elegida: ${opcion}\nRespuesta correcta: ${q.respuesta_correcta}\n${q.explicacion}`,
-            tiempo_respuesta_ms: 0,
+            tiempo_respuesta_ms: Math.round(Date.now() - questionStartRef.current),
             es_practica: true,
             acierto: correcta,
             nivel_objetivo: adaptiveTarget,
@@ -493,6 +495,7 @@ export const PracticePage: React.FC = () => {
         if (current + 1 >= preguntas.length) { setDone(true); return; }
         setSelected(null); setRevealed(false); setCurrent(c => c + 1);
         setEnsayoText(''); setEnsayoResult(null);
+        questionStartRef.current = Date.now();  // Reiniciar timer oculto
     };
 
     const handleContinueFragment = () => {
@@ -518,7 +521,9 @@ export const PracticePage: React.FC = () => {
                 programa: student!.programa,
                 pregunta: 'SIMULACRO_ESCRITURA',
                 competencia: q?.competencia || 'Comunicación Escrita',
-                acierto: true
+                acierto: true,
+                es_practica: true,
+                tiempo_respuesta_ms: ensayoTimerRef.current ? Math.round(Date.now() - ensayoTimerRef.current) : 0,
             }).catch(() => {});
             
         } catch (err) {
@@ -1380,6 +1385,7 @@ export const PracticePage: React.FC = () => {
                                         <textarea
                                             value={ensayoText}
                                             onChange={e => setEnsayoText(e.target.value)}
+                                            onFocus={() => { ensayoTimerRef.current = Date.now(); }}
                                             placeholder="Por ejemplo: En mi opinión, la problemática plantea que..."
                                             disabled={evaluandoEnsayo || revealed}
                                             style={{
