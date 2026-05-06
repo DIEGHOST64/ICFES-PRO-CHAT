@@ -151,19 +151,15 @@ async def admin_chat(payload: AdminChatRequest):
             ctx += f"{m.get('total_estudiantes','?')} total estudiantes.\n"
         
         if data.get("by_program"):
-            ctx += "\nPor Programa:\n"
-            for p in data["by_program"][:10]:
-                ctx += f"  - {p.get('programa','?')}: {p.get('total',0)}\n"
-        
-        if data.get("practice_students"):
-            ctx += "\nTop estudiantes practica:\n"
-            for s in data["practice_students"][:5]:
-                ctx += f"  - {s.get('estudiante','?')}: {s.get('puntaje_promedio',0)}% ({s.get('aciertos',0)}/{s.get('intentos',0)})\n"
-        
+            ctx += "\nTODOS LOS PROGRAMAS:\n"
+            for p in data["by_program"]:
+                ctx += f"  - {p.get('programa','?')}: {p.get('total',0)} consultas\n"
+
         if data.get("practice_competencies"):
-            ctx += "\nPromedio por competencia:\n"
-            for c in data["practice_competencies"][:10]:
-                ctx += f"  - {c.get('competencia','?')}: {c.get('promedio_competencia',0)}%\n"
+            ctx += "\nTODAS LAS COMPETENCIAS:\n"
+            for c in data["practice_competencies"]:
+                ctx += f"  - {c.get('competencia','?')} ({c.get('programa','?')}): "
+                ctx += f"{c.get('promedio_competencia',0)}% ({c.get('aciertos',0)}/{c.get('intentos',0)})\n"
         
         if data.get("difficulty_distribution"):
             ctx += "\nDistribucion por dificultad:\n"
@@ -184,7 +180,7 @@ async def admin_chat(payload: AdminChatRequest):
             "Si preguntan por un estudiante o programa, busca en el contexto. "
             "Usa Markdown para estructurar respuestas largas. Max 300 palabras. "
             "Si no hay datos suficientes, dilo con honestidad.\n\n"
-            f"{ctx[:4000]}\n\n"
+            f"{ctx[:8000]}\n\n"
             f"=== HISTORIAL ===\n{hist}\n\n"
             f"=== PREGUNTA ===\n{pregunta}\n"
         )
