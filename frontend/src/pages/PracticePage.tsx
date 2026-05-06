@@ -520,10 +520,12 @@ export const PracticePage: React.FC = () => {
             queriesAPI.save({
                 programa: student!.programa,
                 pregunta: 'SIMULACRO_ESCRITURA',
+                respuesta: `Puntaje: ${res.data.puntaje}/300 - Nivel: ${res.data.nivel || 'N/A'}`,
                 competencia: q?.competencia || 'Comunicación Escrita',
                 acierto: true,
                 es_practica: true,
                 tiempo_respuesta_ms: ensayoTimerRef.current ? Math.round(Date.now() - ensayoTimerRef.current) : 0,
+                nivel_pregunta: 'intermedio',
             }).catch(() => {});
             
         } catch (err) {
