@@ -140,34 +140,56 @@ async def admin_chat(payload: AdminChatRequest):
         data = payload.dashboard_data
         pregunta = payload.pregunta
         
+        # Normalize: frontend sends Spanish names, backend expects English
+        metrics    = data.get("metricas") or data.get("metrics") or {}
+        by_program = data.get("programas") or data.get("by_program") or []
+        trend      = data.get("tendencia") or data.get("trend") or []
+        practice_students = data.get("resultados_practicas") or data.get("practice_students") or []
+        practice_comp = data.get("promedio_competencias") or data.get("practice_competencies") or []
+        level_prog = data.get("evolucion_nivel") or data.get("level_progression") or []
+        difficulty = data.get("distribucion_dificultad") or data.get("difficulty_distribution") or []
+        english    = data.get("desglose_ingles") or data.get("english_parts") or []
+        filtros    = data.get("filtros") or {}
+        
         ctx = "=== DATOS DEL DASHBOARD ===\n\n"
         
-        if data.get("metrics"):
-            m = data["metrics"]
-            ctx += f"Metricas: {m.get('total_consultas','?')} consultas totales, "
-            ctx += f"{m.get('estudiantes_unicos','?')} estudiantes unicos, "
-            ctx += f"{m.get('consultas_hoy','?')} consultas hoy, "
-            ctx += f"{m.get('promedio_positivas','?')} positivas, "
-            ctx += f"{m.get('total_estudiantes','?')} total estudiantes.\n"
+        if metrics:
+            ctx += (
+                f"Metricas: {metrics.get('totalConsultas', metrics.get('total_consultas','?'))} consultas totales, "
+                f"{metrics.get('estudiantesUnicos', metrics.get('estudiantes_unicos','?'))} estudiantes unicos, "
+                f"{metrics.get('consultasHoy', metrics.get('consultas_hoy','?'))} consultas hoy, "
+                f"{metrics.get('promedioPositivas', metrics.get('promedio_positivas','?'))} positivas, "
+                f"{metrics.get('totalEstudiantes', metrics.get('total_estudiantes','?'))} total estudiantes.\n"
+            )
         
-        if data.get("by_program"):
+        if filtros:
+            ctx += f"\nFiltros activos: programa={filtros.get('programa','Todos')}, "
+            ctx += f"desde={filtros.get('fecha_inicio','-')}, hasta={filtros.get('fecha_fin','-')}\n"
+        
+        if by_program and isinstance(by_program, list) and len(by_program) > 0:
             ctx += "\nTODOS LOS PROGRAMAS:\n"
-            for p in data["by_program"]:
+            for p in by_program[:20]:
                 ctx += f"  - {p.get('programa','?')}: {p.get('total',0)} consultas\n"
-
-        if data.get("practice_competencies"):
-            ctx += "\nTODAS LAS COMPETENCIAS:\n"
-            for c in data["practice_competencies"]:
+        
+        if practice_students and isinstance(practice_students, list) and len(practice_students) > 0:
+            ctx += f"\nTODOS LOS ESTUDIANTES ({len(practice_students)} total):\n"
+            for s in practice_students[:50]:
+                ctx += f"  - {s.get('estudiante','?')} ({s.get('programa','?')}): "
+                ctx += f"{s.get('puntaje_promedio',0)}% - {s.get('aciertos',0)}/{s.get('intentos',0)} aciertos\n"
+        
+        if practice_comp and isinstance(practice_comp, list) and len(practice_comp) > 0:
+            ctx += f"\nCOMPETENCIAS ({len(practice_comp)} total):\n"
+            for c in practice_comp[:30]:
                 ctx += f"  - {c.get('competencia','?')} ({c.get('programa','?')}): "
                 ctx += f"{c.get('promedio_competencia',0)}% ({c.get('aciertos',0)}/{c.get('intentos',0)})\n"
         
-        if data.get("difficulty_distribution"):
-            ctx += "\nDistribucion por dificultad:\n"
-            for d in data["difficulty_distribution"]:
+        if difficulty and isinstance(difficulty, list) and len(difficulty) > 0:
+            ctx += "\nDISTRIBUCION POR DIFICULTAD:\n"
+            for d in difficulty[:20]:
                 ctx += f"  - {d.get('competencia','?')} [{d.get('nivel_pregunta','?')}]: {d.get('total',0)}\n"
         
-        if data.get("level_progression"):
-            ctx += f"\nProgresion de nivel: {len(data['level_progression'])} registros.\n"
+        if level_prog and isinstance(level_prog, list):
+            ctx += f"\nProgresion de nivel: {len(level_prog)} registros\n"
         
         hist = ""
         for msg in payload.historial[-6:]:
