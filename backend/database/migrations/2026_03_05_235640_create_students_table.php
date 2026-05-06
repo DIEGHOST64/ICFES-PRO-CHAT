@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('cedula', 20)->unique();
             $table->string('nombre', 150);
             $table->string('programa', 100);
+            $table->string('email', 255)->nullable();
             // Hash bcrypt de (cedula + clave_secreta) — RF-02
             $table->string('password_hash');
             $table->timestamps();
