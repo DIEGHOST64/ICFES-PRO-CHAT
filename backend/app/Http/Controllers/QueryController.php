@@ -29,6 +29,14 @@ class QueryController extends Controller
 
         $student = $request->user(); // Autenticado con Sanctum
 
+        // El estudiante demo (123456789) no guarda métricas reales
+        if ($student->cedula === '123456789') {
+            return response()->json([
+                'id' => 0,
+                'message' => 'Modo demo — consulta no almacenada.',
+            ], 200);
+        }
+
         // RF-11: Anonimización — hash del ID del estudiante con sal fija del proyecto
         $studentHash = hash('sha256', 'icfes_salt_' . $student->id);
 
