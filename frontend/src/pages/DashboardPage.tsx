@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import {
     Users, MessageSquare, TrendingUp, ThumbsUp, Filter,
-    BarChart2, Sun, Moon, LogOut, Brain, Loader2, CalendarDays, RotateCcw, CheckCircle2, AlertTriangle, X, FileSpreadsheet, FileText
+    BarChart2, Sun, Moon, LogOut, Brain, Loader2, CalendarDays, RotateCcw, CheckCircle2, AlertTriangle, X, FileSpreadsheet, FileText,
+    PieChart, Activity, Gauge, Clock, Award
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Plot from 'react-plotly.js';
@@ -123,7 +124,10 @@ const KPICard: React.FC<{ icon: React.ReactNode; label: string; value: number; c
         background: 'var(--grad-card)',
         boxShadow: 'var(--shadow-md)',
         animation: `dash-pop 380ms ease ${delay}ms both`,
-    }}>
+        transition: 'transform 200ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1), border-color 200ms ease',
+    }}
+    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.015)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
+    onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
             <div style={{ color: color ?? 'var(--primary)', background: 'var(--primary-glow)', padding: '8px', borderRadius: 'var(--radius-md)' }}>{icon}</div>
             <span style={{
@@ -1034,26 +1038,27 @@ export const DashboardPage: React.FC = () => {
                     background: isDark
                         ? 'linear-gradient(140deg, rgba(24,24,27,0.92) 0%, rgba(32,40,52,0.88) 100%)'
                         : 'linear-gradient(140deg, rgba(255,255,255,0.98) 0%, rgba(241,248,255,0.95) 100%)',
-                    padding: '18px',
+                    padding: '16px',
                     animation: 'dash-slide-up 280ms ease both',
                     position: 'relative',
                     overflow: 'hidden',
                 }}>
                     <div style={{
                         position: 'absolute',
-                        right: '-42px',
-                        top: '-42px',
-                        width: '160px',
-                        height: '160px',
+                        right: '-30px',
+                        top: '-30px',
+                        width: '120px',
+                        height: '120px',
                         borderRadius: '999px',
                         background: isDark
-                            ? 'radial-gradient(circle, rgba(80,140,175,0.26) 0%, rgba(80,140,175,0) 70%)'
-                            : 'radial-gradient(circle, rgba(113,172,214,0.28) 0%, rgba(113,172,214,0) 72%)',
+                            ? 'radial-gradient(circle, rgba(80,140,175,0.2) 0%, rgba(80,140,175,0) 70%)'
+                            : 'radial-gradient(circle, rgba(113,172,214,0.2) 0%, rgba(113,172,214,0) 72%)',
                         animation: 'dash-soft-pulse 3.4s ease-in-out infinite',
                         pointerEvents: 'none',
                     }} />
-
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-md)', marginBottom: '12px', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
+                    <div style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-md)', marginBottom: '10px', flexWrap: 'wrap', position: 'relative', zIndex: 1
+                    }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <span style={{
                                 width: '32px',
@@ -1198,10 +1203,14 @@ export const DashboardPage: React.FC = () => {
                     <div data-motion="card"><KPICard icon={<Users size={18} />} label="Total de creadores de oportunidades" value={metricValues.totalEstudiantes} delay={240} /></div>
                 </div>
 
-                <div key={`charts-${refreshTick}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-lg)', marginBottom: 'var(--space-lg)' }}>
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', animation: 'dash-slide-up 300ms ease both' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
+                <div key={`charts-${refreshTick}`} className="dash-chart-grid" style={{ marginBottom: 'var(--space-lg)' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <Gauge size={17} color="var(--primary)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Cobertura de Adopcion</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Porcentaje de creadores que han interactuado con el asistente.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('adoption')}>Reset vista</button>
                         </div>
                         <Plot
@@ -1237,9 +1246,13 @@ export const DashboardPage: React.FC = () => {
                         </p>
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', animation: 'dash-slide-up 320ms ease both' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <Award size={17} color="var(--accent)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Ranking de Creadores de Oportunidades (Practica)</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Top de creadores por puntaje promedio en practicas.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('ranking')}>Reset vista</button>
                         </div>
                         {topPracticeStudentsChart.labels.length === 0 ? (
@@ -1277,9 +1290,13 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', animation: 'dash-slide-up 340ms ease both', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <BarChart2 size={17} color="var(--primary)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Consultas por Programa</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Distribucion de consultas academicas por programa.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('programs')}>Reset vista</button>
                         </div>
                         <Plot
@@ -1312,9 +1329,13 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', animation: 'dash-slide-up 420ms ease both', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <TrendingUp size={17} color="var(--primary)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Tendencia de Uso</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Evolucion temporal de consultas en el periodo seleccionado.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('trend')}>Reset vista</button>
                         </div>
                         <Plot
@@ -1350,14 +1371,16 @@ export const DashboardPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div data-motion="panel" key={`table-${refreshTick}`} className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', animation: 'dash-slide-up 500ms ease both' }}>
-                    <h3 style={{ fontSize: '15px', marginBottom: 'var(--space-md)', fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <BarChart2 size={16} color="var(--primary)" /> Temas más Consultados
-                    </h3>
+                <div data-motion="panel" key={`table-${refreshTick}`} className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                        <BarChart2 size={17} color="var(--primary)" />
+                        <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Temas mas Consultados</h3>
+                    </div>
+                    <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Ranking de competencias mas populares entre los creadores de oportunidades.</p>
                     <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '680px' }}>
                             <thead>
-                                <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                                <tr style={{ borderBottom: '2px solid var(--tabler-header-border, var(--border-h))', background: 'var(--surface-2)' }}>
                                     {['#', 'Competencia', 'Programa', 'Consultas'].map(h => (
                                         <th key={h} style={{ textAlign: 'left', padding: '10px 12px', fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                                     ))}
@@ -1372,9 +1395,10 @@ export const DashboardPage: React.FC = () => {
                                             borderBottom: '1px solid var(--border)',
                                             transition: 'var(--t-fast)',
                                             animation: `dash-row-in 260ms ease ${Math.min(i * 45, 320)}ms both`,
+                                            background: i % 2 === 0 ? 'transparent' : 'var(--surface-2)',
                                         }}
-                                        onMouseOver={e => (e.currentTarget.style.background = 'var(--surface-2)')}
-                                        onMouseOut={e => (e.currentTarget.style.background = 'transparent')}
+                                        onMouseOver={e => (e.currentTarget.style.background = 'var(--surface-3)')}
+                                        onMouseOut={e => (e.currentTarget.style.background = i % 2 === 0 ? 'transparent' : 'var(--surface-2)')}
                                     >
                                         <td style={{ padding: '10px 12px', fontSize: '13px', color: 'var(--text-muted)' }}>{i + 1}</td>
                                         <td style={{ padding: '10px 12px', fontSize: '14px', fontWeight: 500, whiteSpace: 'normal', overflowWrap: 'anywhere' }}>{t.competencia}</td>
@@ -1396,12 +1420,14 @@ export const DashboardPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-lg)', marginTop: 'var(--space-lg)' }}>
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
-                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>
-                                Evolución por Competencia - Generales (Práctica)
-                            </h3>
+                <div className="dash-chart-grid" style={{ marginTop: 'var(--space-lg)' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <TrendingUp size={17} color="var(--primary)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Evolucion por Competencia - Generales (Practica)</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Progresion de nivel promedio en competencias generales a lo largo del tiempo.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('general-cards-all')}>Reset vista</button>
                         </div>
                         {levelProgressCharts.generalCards.length === 0 ? (
@@ -1452,11 +1478,13 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
-                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>
-                                Evolución por Competencia - Inglés (Práctica)
-                            </h3>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <Activity size={17} color="var(--accent)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Evolucion por Competencia - Ingles (Practica)</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Progresion de nivel CEFR en competencias de ingles a lo largo del tiempo.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('english-cards-all')}>Reset vista</button>
                         </div>
                         {levelProgressCharts.englishCards.length === 0 ? (
@@ -1507,11 +1535,13 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
-                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>
-                                Distribucion por Dificultad (Practica)
-                            </h3>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <PieChart size={17} color="var(--primary)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Distribucion por Dificultad (Practica)</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Cantidad de preguntas por competencia segun nivel de dificultad.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('difficulty')}>Reset vista</button>
                         </div>
                         {difficultyDistributionChart.traces.length === 0 ? (
@@ -1540,11 +1570,13 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
-                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>
-                                Ingles — Desglose por Tipo de Pregunta
-                            </h3>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <FileText size={17} color="var(--accent)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Ingles — Desglose por Tipo de Pregunta</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Tasa de acierto y volumen por tipo de pregunta en la seccion de ingles.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('english-parts')}>Reset vista</button>
                         </div>
                         {englishPartsChart.labels.length === 0 ? (
@@ -1579,11 +1611,13 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
-                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>
-                                Tiempo de Respuesta Promedio (segundos)
-                            </h3>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <Clock size={17} color="var(--primary)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Tiempo de Respuesta Promedio (segundos)</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Comparativa de tiempo de respuesta entre aciertos y errores por competencia.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('response-time')}>Reset vista</button>
                         </div>
                         {responseTimeChart.traces.length === 0 ? (
@@ -1612,11 +1646,13 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
-                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>
-                                Comparativa por Programa y Competencia (Práctica)
-                            </h3>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <BarChart2 size={17} color="var(--accent)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Comparativa por Programa y Competencia (Practica)</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Promedio de aciertos por programa y competencia en practicas.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('comparison')}>Reset vista</button>
                         </div>
                         {practiceComparisonChart.traces.length === 0 ? (
@@ -1645,14 +1681,16 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)' }}>
-                        <h3 style={{ fontSize: '15px', marginBottom: 'var(--space-md)', fontFamily: 'var(--font-heading)' }}>
-                            Puntaje por Creador de Oportunidades (Práctica)
-                        </h3>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <Users size={17} color="var(--primary)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Puntaje por Creador de Oportunidades (Practica)</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Detalle individual de intentos, aciertos y puntaje promedio por creador.</p>
                         <div style={{ overflowX: 'auto', maxHeight: '360px' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
                                 <thead>
-                                    <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                                    <tr style={{ borderBottom: '2px solid var(--tabler-header-border, var(--border-h))', background: 'var(--surface-2)' }}>
                                         {['#', 'Creador de Oportunidades', 'Programa', 'Intentos', 'Aciertos', 'Puntaje %'].map(h => (
                                             <th key={h} style={{ textAlign: 'left', padding: '10px 12px', fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                                         ))}
@@ -1660,7 +1698,7 @@ export const DashboardPage: React.FC = () => {
                                 </thead>
                                 <tbody>
                                     {practiceStudents.slice(0, 60).map((row, i) => (
-                                        <tr key={`${row.student_hash}-${i}`} style={{ borderBottom: '1px solid var(--border)' }}>
+                                        <tr key={`${row.student_hash}-${i}`} style={{ borderBottom: '1px solid var(--border)', background: i % 2 === 0 ? 'transparent' : 'var(--surface-2)' }}>
                                             <td style={{ padding: '10px 12px', fontSize: '13px', color: 'var(--text-muted)' }}>{i + 1}</td>
                                             <td style={{ padding: '10px 12px', fontSize: '13px', fontWeight: 500 }}>{row.estudiante}</td>
                                             <td style={{ padding: '10px 12px' }}><span className="badge badge-primary" style={{ fontSize: '11px' }}>{row.programa}</span></td>
@@ -1681,14 +1719,16 @@ export const DashboardPage: React.FC = () => {
                         </div>
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)' }}>
-                        <h3 style={{ fontSize: '15px', marginBottom: 'var(--space-md)', fontFamily: 'var(--font-heading)' }}>
-                            Promedio por Competencia y Programa
-                        </h3>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <ThumbsUp size={17} color="var(--accent)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Promedio por Competencia y Programa</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Desglose de intentos, aciertos y promedio por competencia en cada programa.</p>
                         <div style={{ overflowX: 'auto', maxHeight: '360px' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
                                 <thead>
-                                    <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                                    <tr style={{ borderBottom: '2px solid var(--tabler-header-border, var(--border-h))', background: 'var(--surface-2)' }}>
                                         {['#', 'Programa', 'Competencia', 'Intentos', 'Aciertos', 'Promedio %'].map(h => (
                                             <th key={h} style={{ textAlign: 'left', padding: '10px 12px', fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                                         ))}
@@ -1696,7 +1736,7 @@ export const DashboardPage: React.FC = () => {
                                 </thead>
                                 <tbody>
                                     {practiceCompetencies.slice(0, 80).map((row, i) => (
-                                        <tr key={`${row.programa}-${row.competencia}-${i}`} style={{ borderBottom: '1px solid var(--border)' }}>
+                                        <tr key={`${row.programa}-${row.competencia}-${i}`} style={{ borderBottom: '1px solid var(--border)', background: i % 2 === 0 ? 'transparent' : 'var(--surface-2)' }}>
                                             <td style={{ padding: '10px 12px', fontSize: '13px', color: 'var(--text-muted)' }}>{i + 1}</td>
                                             <td style={{ padding: '10px 12px' }}><span className="badge badge-primary" style={{ fontSize: '11px' }}>{row.programa}</span></td>
                                             <td style={{ padding: '10px 12px', fontSize: '13px', fontWeight: 500 }}>{row.competencia}</td>
@@ -1801,6 +1841,23 @@ export const DashboardPage: React.FC = () => {
                         transition-duration: 0.01ms !important;
                         scroll-behavior: auto !important;
                     }
+                }
+                .dash-chart-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 16px;
+                }
+                @media (max-width: 768px) {
+                    .dash-chart-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+                .dash-card-section {
+                    padding: 16px;
+                    border: 1px solid var(--border);
+                    background: var(--grad-card);
+                    box-shadow: var(--shadow-md);
+                    border-radius: var(--radius-lg);
                 }
             `}</style>
         </div>

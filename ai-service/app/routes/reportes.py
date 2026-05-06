@@ -422,8 +422,8 @@ async def export_pdf(
                 f"<td>{r.get('competencia', 'N/A')}</td>"
                 f"<td>{r.get('intentos', 0)}</td>"
                 f"<td>{r.get('aciertos', 0)}</td>"
-                f"<td>{r.get('tasa_acierto', 0)}%</td>"
-                f"<td>{r.get('nivel_promedio', 0):.1f}</td></tr>"
+                f"<td>{_to_number(r.get('tasa_acierto', 0)):.1f}%</td>"
+                f"<td>{_to_number(r.get('nivel_promedio', 0)):.1f}</td></tr>"
             )
             for r in level_prog
         ])
