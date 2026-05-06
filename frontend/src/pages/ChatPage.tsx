@@ -775,7 +775,7 @@ export const ChatPage: React.FC = () => {
         const programa = student?.programa || 'General';
         const nombre = student?.nombre?.split(' ')[0] || '';
         const historial = messages
-            .filter(m => !m.streaming)
+            .filter(m => !m.streaming && m.id !== 'welcome')
             .slice(-6)
             .map(m => ({ role: m.role, content: m.content }));
 
