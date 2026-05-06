@@ -120,4 +120,76 @@ async def guia_imagen(body: GuiaImagenRequest):
             "guide_steps": aids.get("guide_steps", []),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generando guía visual: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error generando guia visual: {str(e)}")
+
+
+# ======================================================================
+# Chat del Gestor de Conocimiento
+# ======================================================================
+class AdminChatRequest(BaseModel):
+    pregunta: str = Field(..., min_length=1, max_length=2000)
+    dashboard_data: dict = Field(default_factory=dict)
+    historial: list[dict] = Field(default_factory=list)
+
+@router.post("/admin-chat")
+async def admin_chat(payload: AdminChatRequest):
+    """Chat IA con acceso a todos los datos del dashboard para el gestor."""
+    try:
+        from app.services.gemini_client import get_gemini_model
+        model = get_gemini_model()
+        data = payload.dashboard_data
+        pregunta = payload.pregunta
+        
+        ctx = "=== DATOS DEL DASHBOARD ===\n\n"
+        
+        if data.get("metrics"):
+            m = data["metrics"]
+            ctx += f"Metricas: {m.get('total_consultas','?')} consultas totales, "
+            ctx += f"{m.get('estudiantes_unicos','?')} estudiantes unicos, "
+            ctx += f"{m.get('consultas_hoy','?')} consultas hoy, "
+            ctx += f"{m.get('promedio_positivas','?')} positivas, "
+            ctx += f"{m.get('total_estudiantes','?')} total estudiantes.\n"
+        
+        if data.get("by_program"):
+            ctx += "\nPor Programa:\n"
+            for p in data["by_program"][:10]:
+                ctx += f"  - {p.get('programa','?')}: {p.get('total',0)}\n"
+        
+        if data.get("practice_students"):
+            ctx += "\nTop estudiantes practica:\n"
+            for s in data["practice_students"][:5]:
+                ctx += f"  - {s.get('estudiante','?')}: {s.get('puntaje_promedio',0)}% ({s.get('aciertos',0)}/{s.get('intentos',0)})\n"
+        
+        if data.get("practice_competencies"):
+            ctx += "\nPromedio por competencia:\n"
+            for c in data["practice_competencies"][:10]:
+                ctx += f"  - {c.get('competencia','?')}: {c.get('promedio_competencia',0)}%\n"
+        
+        if data.get("difficulty_distribution"):
+            ctx += "\nDistribucion por dificultad:\n"
+            for d in data["difficulty_distribution"]:
+                ctx += f"  - {d.get('competencia','?')} [{d.get('nivel_pregunta','?')}]: {d.get('total',0)}\n"
+        
+        if data.get("level_progression"):
+            ctx += f"\nProgresion de nivel: {len(data['level_progression'])} registros.\n"
+        
+        hist = ""
+        for msg in payload.historial[-6:]:
+            role = "Gestor" if msg.get("role") == "user" else "IA"
+            hist += f"{role}: {msg.get('content','')}\n"
+        
+        prompt = (
+            "Eres un consultor academico con acceso total a los datos del dashboard Saber Pro. "
+            "Responde de forma conversacional, directa y basada en DATOS REALES. "
+            "Si preguntan por un estudiante o programa, busca en el contexto. "
+            "Usa Markdown para estructurar respuestas largas. Max 300 palabras. "
+            "Si no hay datos suficientes, dilo con honestidad.\n\n"
+            f"{ctx[:4000]}\n\n"
+            f"=== HISTORIAL ===\n{hist}\n\n"
+            f"=== PREGUNTA ===\n{pregunta}\n"
+        )
+        
+        resp = model.generate_content(prompt)
+        return {"respuesta": (resp.text or "").strip()}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error en chat admin: {str(e)}")

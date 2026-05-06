@@ -65,6 +65,8 @@ export const aiAPI = {
         axios.post(`${import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'}/sugerencias/evaluar-ensayo`, data),
     adminAnalisis: (data: { task: string; analytics_context: Record<string, unknown> }) =>
         axios.post(`${import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'}/sugerencias/admin-analisis`, data),
+    adminChat: (data: { pregunta: string; dashboard_data: Record<string, unknown>; historial: {role: string; content: string}[] }) =>
+        axios.post(`${import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'}/consultar/admin-chat`, data),
     exportExcel: (params: Record<string, string>) => {
         const token = localStorage.getItem('sp_token');
         return axios.get(`${import.meta.env.VITE_AI_URL ?? 'http://127.0.0.1:8000'}/reportes/excel`, {

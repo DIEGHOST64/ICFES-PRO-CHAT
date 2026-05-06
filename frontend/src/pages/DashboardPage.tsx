@@ -1,8 +1,12 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import {
     Users, MessageSquare, TrendingUp, ThumbsUp, Filter,
     BarChart2, Sun, Moon, LogOut, Brain, Loader2, CalendarDays, RotateCcw, CheckCircle2, AlertTriangle, X, FileSpreadsheet, FileText,
-    PieChart, Activity, Gauge, Clock, Award
+    PieChart, Activity, Gauge, Clock, Award, Send, MessageSquarePlus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Plot from 'react-plotly.js';
@@ -92,6 +96,34 @@ const normalizeAdminDocument = (raw: unknown): AdminAIDocument | null => {
 
     return doc;
 };
+
+const adminChatMarkdownComponents = {
+    p: ({ children }: { children?: React.ReactNode }) => <p style={{ margin: '0 0 8px 0' }}>{children}</p>,
+    ul: ({ children }: { children?: React.ReactNode }) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px' }}>{children}</ul>,
+    ol: ({ children }: { children?: React.ReactNode }) => <ol style={{ margin: '0 0 8px 0', paddingLeft: '20px' }}>{children}</ol>,
+    li: ({ children }: { children?: React.ReactNode }) => <li style={{ marginBottom: '4px' }}>{children}</li>,
+    strong: ({ children }: { children?: React.ReactNode }) => <strong style={{ fontWeight: 700 }}>{children}</strong>,
+    em: ({ children }: { children?: React.ReactNode }) => <em style={{ fontStyle: 'italic' }}>{children}</em>,
+    code: ({ children }: { children?: React.ReactNode }) => (
+        <code style={{ background: 'rgba(15, 23, 42, 0.08)', borderRadius: '6px', padding: '1px 6px', fontSize: '13px' }}>
+            {children}
+        </code>
+    ),
+    pre: ({ children }: { children?: React.ReactNode }) => (
+        <pre style={{
+            margin: '0 0 8px 0',
+            overflowX: 'auto',
+            background: 'rgba(15, 23, 42, 0.08)',
+            borderRadius: '8px',
+            padding: '10px',
+            fontSize: '13px',
+        }}>
+            {children}
+        </pre>
+    ),
+} as const;
+
+type AdminChatMessage = { role: 'user' | 'assistant'; content: string };
 
 const AnimatedNumber: React.FC<{ value: number; suffix?: string; duration?: number }> = ({ value, suffix = '', duration = 900 }) => {
     const [display, setDisplay] = useState(0);
@@ -258,6 +290,13 @@ export const DashboardPage: React.FC = () => {
     const [plotResetVersion, setPlotResetVersion] = useState<Record<string, number>>({});
     const [quickRange, setQuickRange] = useState<'7d' | '30d' | '90d' | ''>('');
     const [exportNotice, setExportNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+    const [chatMessages, setChatMessages] = useState<AdminChatMessage[]>([{
+        role: 'assistant',
+        content: 'Hola, soy tu consultor de datos. Preguntame sobre metricas, programas, estudiantes o cualquier dato del dashboard.',
+    }]);
+    const [chatInput, setChatInput] = useState('');
+    const [chatLoading, setChatLoading] = useState(false);
+    const chatBottomRef = useRef<HTMLDivElement>(null);
 
     const headerParticles = useMemo(() => (
         Array.from({ length: 20 }).map((_, i) => ({
@@ -365,6 +404,49 @@ export const DashboardPage: React.FC = () => {
     };
 
     useEffect(() => { loadData(); }, [progFilter, dateFrom, dateTo]);
+
+    useEffect(() => {
+        chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [chatMessages, chatLoading]);
+
+    const clearAdminChat = () => {
+        setChatMessages([{
+            role: 'assistant',
+            content: 'Hola, soy tu consultor de datos. Preguntame sobre metricas, programas, estudiantes o cualquier dato del dashboard.',
+        }]);
+    };
+
+    const handleAdminChatSend = async () => {
+        if (!chatInput.trim() || chatLoading) return;
+        const pregunta = chatInput.trim();
+        setChatInput('');
+        setChatLoading(true);
+
+        const userMsg: AdminChatMessage = { role: 'user', content: pregunta };
+        const updatedHistory = [...chatMessages, userMsg];
+        setChatMessages(updatedHistory);
+
+        try {
+            const res = await aiAPI.adminChat({
+                pregunta,
+                dashboard_data: buildAnalyticsContext(),
+                historial: updatedHistory.map(m => ({ role: m.role, content: m.content })),
+            });
+            const respuesta = res?.data?.respuesta?.trim() || 'No se pudo generar respuesta en este momento.';
+            setChatMessages(prev => [...prev, { role: 'assistant', content: respuesta }]);
+        } catch {
+            setChatMessages(prev => [...prev, { role: 'assistant', content: 'Error al consultar el chat. Intenta de nuevo.' }]);
+        } finally {
+            setChatLoading(false);
+        }
+    };
+
+    const handleChatKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleAdminChatSend();
+        }
+    };
 
     const downloadBlob = (blob: Blob, filename: string) => {
         const url = URL.createObjectURL(blob);
@@ -922,6 +1004,177 @@ export const DashboardPage: React.FC = () => {
                 )}
 
                 {aiMode && (
+                    <>
+                    {/* ── Admin Chat Panel ── */}
+                    <section data-motion="panel" className="animate-fade-up" style={{
+                        marginBottom: 'var(--space-lg)',
+                        borderRadius: 'var(--radius-lg)',
+                        border: '1px solid var(--border)',
+                        boxShadow: 'var(--shadow-md)',
+                        background: 'var(--grad-card)',
+                        padding: '16px',
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                            <h2 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <MessageSquare size={16} color="var(--accent)" /> Consultor de Datos IA
+                            </h2>
+                            <button
+                                className="btn btn-secondary"
+                                onClick={clearAdminChat}
+                                disabled={chatLoading}
+                                style={{ gap: '6px', fontSize: '12px' }}
+                            >
+                                <MessageSquarePlus size={14} /> Nueva conversacion
+                            </button>
+                        </div>
+
+                        <div style={{
+                            border: '1px solid var(--border)',
+                            borderRadius: 'var(--radius-md)',
+                            background: 'var(--surface)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '380px',
+                        }}>
+                            <div style={{
+                                flex: 1,
+                                overflowY: 'auto',
+                                padding: '12px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '10px',
+                            }}>
+                                {chatMessages.map((msg, idx) => {
+                                    const isUser = msg.role === 'user';
+                                    return (
+                                        <div key={idx} style={{
+                                            display: 'flex',
+                                            flexDirection: isUser ? 'row-reverse' : 'row',
+                                            gap: '8px',
+                                            alignItems: 'flex-end',
+                                        }}>
+                                            {!isUser && (
+                                                <div style={{
+                                                    width: '28px',
+                                                    height: '28px',
+                                                    borderRadius: 'var(--radius-full)',
+                                                    background: 'linear-gradient(120deg, #2f4c61, #3e6a5a)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexShrink: 0,
+                                                }}>
+                                                    <Brain size={13} color="#fff" />
+                                                </div>
+                                            )}
+                                            <div style={{ maxWidth: '78%' }}>
+                                                <div style={{
+                                                    padding: '10px 14px',
+                                                    borderRadius: isUser
+                                                        ? 'var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg)'
+                                                        : 'var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm)',
+                                                    background: isUser ? 'linear-gradient(120deg, #2f4c61, #3e6a5a)' : 'rgba(30,40,55,0.92)',
+                                                    color: isUser ? '#fff' : '#e0e8ef',
+                                                    border: isUser ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                                                    fontSize: '13px',
+                                                    lineHeight: '1.55',
+                                                    wordBreak: 'break-word',
+                                                }}>
+                                                    {isUser ? (
+                                                        msg.content
+                                                    ) : (
+                                                        <ReactMarkdown
+                                                            remarkPlugins={[remarkGfm, remarkMath]}
+                                                            rehypePlugins={[rehypeKatex]}
+                                                            components={adminChatMarkdownComponents}
+                                                        >
+                                                            {msg.content || ''}
+                                                        </ReactMarkdown>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                                {chatLoading && (
+                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
+                                        <div style={{
+                                            width: '28px',
+                                            height: '28px',
+                                            borderRadius: 'var(--radius-full)',
+                                            background: 'linear-gradient(120deg, #2f4c61, #3e6a5a)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexShrink: 0,
+                                        }}>
+                                            <Brain size={13} color="#fff" />
+                                        </div>
+                                        <div style={{
+                                            background: 'rgba(30,40,55,0.92)',
+                                            border: '1px solid rgba(255,255,255,0.08)',
+                                            borderRadius: 'var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm)',
+                                            padding: '10px 14px',
+                                            display: 'flex',
+                                            gap: '5px',
+                                            alignItems: 'center',
+                                        }}>
+                                            {[0, 1, 2].map(i => <span key={i} className="typing-dot" style={{ animationDelay: `${i * 0.16}s` }} />)}
+                                        </div>
+                                    </div>
+                                )}
+                                <div ref={chatBottomRef} />
+                            </div>
+
+                            <div style={{
+                                borderTop: '1px solid var(--border)',
+                                padding: '8px 10px',
+                                display: 'flex',
+                                gap: '8px',
+                                alignItems: 'flex-end',
+                            }}>
+                                <textarea
+                                    className="input"
+                                    value={chatInput}
+                                    onChange={e => setChatInput(e.target.value)}
+                                    onKeyDown={handleChatKeyDown}
+                                    placeholder="Pregunta sobre metricas, programas, estudiantes..."
+                                    disabled={chatLoading}
+                                    style={{
+                                        flex: 1,
+                                        minHeight: '38px',
+                                        maxHeight: '100px',
+                                        resize: 'none',
+                                        fontSize: '13px',
+                                        lineHeight: '1.45',
+                                    }}
+                                    rows={1}
+                                />
+                                <button
+                                    className="btn"
+                                    onClick={handleAdminChatSend}
+                                    disabled={chatLoading || !chatInput.trim()}
+                                    style={{
+                                        height: '38px',
+                                        width: '38px',
+                                        padding: 0,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        background: 'linear-gradient(120deg, #2f4c61, #3e6a5a)',
+                                        color: '#fff',
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        borderRadius: 'var(--radius-md)',
+                                        opacity: chatLoading || !chatInput.trim() ? 0.5 : 1,
+                                        cursor: chatLoading || !chatInput.trim() ? 'not-allowed' : 'pointer',
+                                    }}
+                                >
+                                    {chatLoading ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Send size={15} />}
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                    {/* Modo IA Estrategico */}
                     <section data-motion="panel" className="animate-fade-up" style={{
                         marginBottom: 'var(--space-lg)',
                         borderRadius: 'var(--radius-lg)',
@@ -1028,6 +1281,7 @@ export const DashboardPage: React.FC = () => {
 
                         {aiError && <p style={{ marginTop: '10px', color: 'var(--danger)', fontSize: '12px' }}>{aiError}</p>}
                     </section>
+                    </>
                 )}
 
                 <section data-motion="panel" key={`filters-${refreshTick}`} className="animate-fade-up dashboard-filters-panel" style={{
