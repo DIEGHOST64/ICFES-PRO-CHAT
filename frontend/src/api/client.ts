@@ -41,7 +41,7 @@ export default api;
 // ── Endpoints tipados ──────────────────────────────────
 
 export const authAPI = {
-    registerStudent: (data: { cedula: string; nombre: string; programa: string; clave_secreta: string }) =>
+    registerStudent: (data: { cedula: string; nombre: string; programa: string; clave_secreta: string; email: string }) =>
         api.post('/auth/register', data),
     loginStudent: (data: { cedula: string; clave_secreta: string }) =>
         api.post('/auth/login', data),

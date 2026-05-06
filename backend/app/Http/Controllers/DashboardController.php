@@ -132,15 +132,18 @@ class DashboardController extends Controller
 
         $q = $this->excludeCoordinatorRecords($q);
 
-        $rows = $q->select(
-            'programa',
-            DB::raw("COALESCE(NULLIF(student_nombre, ''), CONCAT('Estudiante ', SUBSTRING(student_hash, 1, 8))) as estudiante"),
-            'student_hash',
+        $rows = $q->join('students', 'queries.student_id', '=', 'students.id')
+            ->select(
+            'queries.programa',
+            DB::raw("COALESCE(NULLIF(queries.student_nombre, ''), CONCAT('Estudiante ', SUBSTRING(queries.student_hash, 1, 8))) as estudiante"),
+            'queries.student_hash',
+            'students.cedula',
+            'students.email',
             DB::raw('COUNT(*) as intentos'),
-            DB::raw('SUM(CASE WHEN acierto = true THEN 1 ELSE 0 END) as aciertos'),
-            DB::raw('ROUND(AVG(CASE WHEN acierto = true THEN 1 ELSE 0 END) * 100, 1) as puntaje_promedio')
+            DB::raw('SUM(CASE WHEN queries.acierto = true THEN 1 ELSE 0 END) as aciertos'),
+            DB::raw('ROUND(AVG(CASE WHEN queries.acierto = true THEN 1 ELSE 0 END) * 100, 1) as puntaje_promedio')
         )
-            ->groupBy('programa', 'student_hash', 'student_nombre')
+            ->groupBy('queries.programa', 'queries.student_hash', 'queries.student_nombre', 'students.cedula', 'students.email')
             ->orderByDesc('puntaje_promedio')
             ->limit(200)
             ->get();

@@ -174,7 +174,14 @@ async def admin_chat(payload: AdminChatRequest):
         if practice_students and isinstance(practice_students, list) and len(practice_students) > 0:
             ctx += f"\nTODOS LOS ESTUDIANTES ({len(practice_students)} total):\n"
             for s in practice_students[:50]:
-                ctx += f"  - {s.get('estudiante','?')} ({s.get('programa','?')}): "
+                ctx += f"  - {s.get('estudiante','?')}"
+                cedula = s.get('cedula')
+                email = s.get('email')
+                if cedula:
+                    ctx += f" [CC: {cedula}]"
+                if email:
+                    ctx += f" [{email}]"
+                ctx += f" ({s.get('programa','?')}): "
                 ctx += f"{s.get('puntaje_promedio',0)}% - {s.get('aciertos',0)}/{s.get('intentos',0)} aciertos\n"
         
         if practice_comp and isinstance(practice_comp, list) and len(practice_comp) > 0:

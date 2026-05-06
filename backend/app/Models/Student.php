@@ -12,6 +12,7 @@ class Student extends Authenticatable
     protected $fillable = [
         'cedula',
         'nombre',
+        'email',
         'programa',
         'password_hash',
     ];

@@ -32,6 +32,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'cedula' => 'required|string|max:20|unique:students,cedula',
             'nombre' => 'required|string|max:150',
+            'email' => 'required|email|max:255',
             'programa' => 'required|string|max:100',
             'clave_secreta' => 'required|string|max:1', // 1 carácter — RF-01
         ]);
@@ -48,6 +49,7 @@ class AuthController extends Controller
         $student = Student::create([
             'cedula' => $request->cedula,
             'nombre' => $request->nombre,
+            'email' => $request->email,
             'programa' => $request->programa,
             'password_hash' => $passwordHash,
         ]);

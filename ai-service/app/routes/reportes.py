@@ -178,6 +178,80 @@ def build_gauge_svg(title: str, value: float, max_value: float = 100.0) -> str:
         return f"data:image/svg+xml;base64,{encoded}"
 
 
+def build_grouped_bar_chart_svg(title: str, labels: list[str], series: list[tuple[str, list[float], str]]) -> str:
+    """Genera un grafico de barras agrupadas SVG."""
+    if not labels or not series or all(len(s[1]) == 0 for s in series):
+        return ""
+
+    width = 860
+    height = 300
+    padding_top = 38
+    padding_right = 20
+    padding_bottom = 72
+    padding_left = 46
+    chart_w = width - padding_left - padding_right
+    chart_h = height - padding_top - padding_bottom
+
+    all_values = [v for s in series for v in s[1]]
+    max_v = max(all_values) if all_values else 1.0
+    if max_v <= 0:
+        max_v = 1.0
+
+    n = len(labels)
+    n_series = len(series)
+    group_gap = 12
+    bar_gap = 3
+    total_groups_w = chart_w - group_gap * (n + 1)
+    group_w = total_groups_w / max(n, 1)
+    bar_w = max(6, (group_w - bar_gap * (n_series - 1)) / max(n_series, 1))
+
+    bars = []
+    texts = []
+    for i, label in enumerate(labels):
+        group_x = padding_left + group_gap + i * (group_w + group_gap)
+        xlabels_el = f"<text x='{group_x + group_w / 2:.1f}' y='{padding_top + chart_h + bar_gap + 14:.1f}' text-anchor='middle' font-size='9' fill='#374151'>{html.escape(str(label)[:14])}</text>"
+        texts.append(xlabels_el)
+        for si, (sname, svalues, scolor) in enumerate(series):
+            if i >= len(svalues):
+                continue
+            value = max(0.0, _to_number(svalues[i]))
+            bar_h = (value / max_v) * chart_h
+            x = group_x + si * (bar_w + bar_gap)
+            y = padding_top + chart_h - bar_h
+            bars.append(
+                f"<rect x='{x:.1f}' y='{y:.1f}' width='{bar_w:.1f}' height='{bar_h:.1f}' rx='2' fill='{scolor}' />"
+            )
+
+    # Leyenda
+    legend_y = height - 16
+    legend_html = ""
+    lx = padding_left
+    for si, (sname, _, scolor) in enumerate(series):
+        legend_html += f"<rect x='{lx}' y='{legend_y - 10}' width='12' height='10' rx='2' fill='{scolor}' />"
+        legend_html += f"<text x='{lx + 16}' y='{legend_y - 1}' font-size='10' fill='#374151'>{html.escape(sname)}</text>"
+        lx += 90
+
+    grid = []
+    for t in [0, 0.25, 0.5, 0.75, 1.0]:
+        gy = padding_top + chart_h - (chart_h * t)
+        gv = max_v * t
+        grid.append(f"<line x1='{padding_left}' y1='{gy:.1f}' x2='{padding_left + chart_w}' y2='{gy:.1f}' stroke='#E5E7EB' stroke-width='1' />")
+        grid.append(f"<text x='{padding_left - 6}' y='{gy + 4:.1f}' text-anchor='end' font-size='10' fill='#6B7280'>{int(round(gv))}</text>")
+
+    svg = f"""
+<svg viewBox='0 0 {width} {height}' width='100%' xmlns='http://www.w3.org/2000/svg'>
+  <rect x='0' y='0' width='{width}' height='{height}' fill='#FFFFFF' rx='8' />
+  <text x='{padding_left}' y='22' font-size='14' font-weight='700' fill='#111827'>{html.escape(title)}</text>
+  {''.join(grid)}
+  {''.join(bars)}
+  {''.join(texts)}
+  {legend_html}
+</svg>
+"""
+    encoded = base64.b64encode(svg.encode("utf-8")).decode("ascii")
+    return f"data:image/svg+xml;base64,{encoded}"
+
+
 async def fetch_logo_data_uri() -> str:
     """Obtiene el logo institucional y lo codifica como data URI para incrustarlo en el PDF."""
     logo_urls = [
@@ -430,6 +504,98 @@ async def export_pdf(
         if not level_prog_rows:
             level_prog_rows = "<tr><td colspan='6'>No hay datos de progresion para el filtro seleccionado.</td></tr>"
 
+        # Tabla de distribucion por dificultad
+        difficulty_dist = data["difficulty_distribution"]
+        difficulty_rows = "".join([
+            (
+                f"<tr><td>{d.get('competencia', 'N/A')}</td>"
+                f"<td>{d.get('nivel_pregunta', 'N/A')}</td>"
+                f"<td>{d.get('total', 0)}</td></tr>"
+            )
+            for d in difficulty_dist
+        ])
+        if not difficulty_rows:
+            difficulty_rows = "<tr><td colspan='3'>Sin datos de distribucion por dificultad.</td></tr>"
+
+        # Grafico de dificultad: barras por competencia sumando total
+        diff_comp_map = {}
+        for d in difficulty_dist:
+            comp = d.get("competencia", "N/A")
+            diff_comp_map[comp] = diff_comp_map.get(comp, 0) + d.get("total", 0)
+        diff_labels = list(diff_comp_map.keys())
+        diff_values = list(diff_comp_map.values())
+        difficulty_chart = build_bar_chart_svg("Total preguntas por competencia (Practica)", diff_labels, diff_values, color="#F59E0B")
+        difficulty_chart_html = f"<img src='{difficulty_chart}' class='chart-image' alt='Distribucion por dificultad' />" if difficulty_chart else ""
+
+        # Tabla de ingles por tipo
+        english_parts = data["english_parts"]
+        english_rows = "".join([
+            (
+                f"<tr><td>{ep.get('tipo_pregunta', 'N/A')}</td>"
+                f"<td>{ep.get('total', 0)}</td>"
+                f"<td>{_to_number(ep.get('tasa_acierto', 0)):.1f}%</td></tr>"
+            )
+            for ep in english_parts
+        ])
+        if not english_rows:
+            english_rows = "<tr><td colspan='3'>Sin datos de ingles por tipo.</td></tr>"
+
+        eng_labels = [str(ep.get("tipo_pregunta", "N/A")) for ep in english_parts]
+        eng_values = [_to_number(ep.get("tasa_acierto", 0)) for ep in english_parts]
+        english_chart = build_bar_chart_svg("Tasa de acierto por tipo de pregunta (Ingles)", eng_labels, eng_values, color="#059669")
+        english_chart_html = f"<img src='{english_chart}' class='chart-image' alt='Ingles por tipo de pregunta' />" if english_chart else ""
+
+        # Tabla de tiempo de respuesta
+        response_time = data["response_time"]
+        response_rows = "".join([
+            (
+                f"<tr><td>{rt.get('competencia', 'N/A')}</td>"
+                f"<td>{rt.get('tipo', 'N/A')}</td>"
+                f"<td>{_to_number(rt.get('tiempo_promedio', 0), 0):.1f}s</td>"
+                f"<td>{rt.get('total', 0)}</td></tr>"
+            )
+            for rt in response_time
+        ])
+        if not response_rows:
+            response_rows = "<tr><td colspan='4'>Sin datos de tiempo de respuesta.</td></tr>"
+
+        # Grafico de tiempo de respuesta: promedio correcto vs incorrecto por competencia
+        rt_comp_map = {}
+        for rt in response_time:
+            comp = rt.get("competencia", "N/A")
+            tipo = rt.get("tipo", "N/A")
+            if comp not in rt_comp_map:
+                rt_comp_map[comp] = {}
+            rt_comp_map[comp][tipo] = _to_number(rt.get("tiempo_promedio", 0), 0)
+        rt_labels = sorted(rt_comp_map.keys())
+        rt_correct_values = [rt_comp_map[c].get("correcto", 0) for c in rt_labels]
+        rt_incorrect_values = [rt_comp_map[c].get("incorrecto", 0) for c in rt_labels]
+        response_chart_html = ""
+        if rt_labels:
+            response_chart = build_grouped_bar_chart_svg(
+                "Tiempo de respuesta por competencia (segundos)",
+                rt_labels,
+                [("Aciertos", rt_correct_values, "#059669"), ("Errores", rt_incorrect_values, "#DC2626")]
+            )
+            response_chart_html = f"<img src='{response_chart}' class='chart-image' alt='Tiempo de respuesta' />" if response_chart else ""
+
+        # Resumen de calificaciones
+        ratings = data["ratings"]
+        ratings_summary = ""
+        if isinstance(ratings, dict):
+            likes = ratings.get("likes", ratings.get("positivas", 0))
+            dislikes = ratings.get("dislikes", ratings.get("negativas", 0))
+            neutrals = ratings.get("neutrals", ratings.get("neutras", 0))
+            total_r = likes + dislikes + neutrals
+            ratings_summary = (
+                f"<div class='metrics'>"
+                f"<div class='metric-card'><div class='metric-value'>{likes}</div><div class='metric-label'>Positivas</div></div>"
+                f"<div class='metric-card'><div class='metric-value'>{neutrals}</div><div class='metric-label'>Neutras</div></div>"
+                f"<div class='metric-card'><div class='metric-value'>{dislikes}</div><div class='metric-label'>Negativas</div></div>"
+                f"<div class='metric-card'><div class='metric-value'>{total_r}</div><div class='metric-label'>Total Calificaciones</div></div>"
+                f"</div>"
+            )
+
         by_prog_top = by_prog[:8]
         bar_labels = [str(p.get("programa", "N/A")) for p in by_prog_top]
         bar_values = [_to_number(p.get("total", 0)) for p in by_prog_top]
@@ -607,6 +773,34 @@ async def export_pdf(
     <tr><th>Fecha</th><th>Competencia</th><th>Intentos</th><th>Aciertos</th><th>Tasa Acierto</th><th>Nivel Promedio</th></tr>
     {level_prog_rows}
 </table>
+
+<h2>Distribucion por Dificultad (Practica)</h2>
+<p class="explain">Cantidad de preguntas respondidas por competencia segun el nivel de dificultad. Permite identificar si los estudiantes practican mas en niveles basicos o avanzados.</p>
+{difficulty_chart_html}
+<table>
+    <tr><th>Competencia</th><th>Nivel Pregunta</th><th>Total</th></tr>
+    {difficulty_rows}
+</table>
+
+<h2>Ingles — Desglose por Tipo de Pregunta</h2>
+<p class="explain">Tasa de acierto y volumen por tipo de pregunta en la seccion de ingles (Parte 1 a 7). Ayuda a detectar fortalezas y debilidades especificas en cada tipo de ejercicio.</p>
+{english_chart_html}
+<table>
+    <tr><th>Tipo de Pregunta</th><th>Total</th><th>Tasa de Acierto</th></tr>
+    {english_rows}
+</table>
+
+<h2>Tiempo de Respuesta Promedio (segundos)</h2>
+<p class="explain">Comparativa de tiempo promedio de respuesta entre aciertos y errores por competencia. Tiempos muy altos en errores pueden indicar inseguridad o falta de dominio del tema.</p>
+{response_chart_html}
+<table>
+    <tr><th>Competencia</th><th>Tipo</th><th>Tiempo Promedio</th><th>Total</th></tr>
+    {response_rows}
+</table>
+
+<h2>Calificaciones de Respuestas</h2>
+<p class="explain">Resumen de calificaciones otorgadas por los estudiantes a las respuestas del asistente. Un alto porcentaje de negativas indica necesidad de mejorar la calidad de las respuestas generadas.</p>
+{ratings_summary}
 
 <h2>Recomendaciones de interpretacion</h2>
 <ul class="guide">

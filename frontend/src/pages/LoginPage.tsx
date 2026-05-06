@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { GraduationCap, User, Lock, Eye, EyeOff, Loader2, Compass, ArrowRight } from 'lucide-react';
+import { GraduationCap, User, Lock, Eye, EyeOff, Loader2, Compass, ArrowRight, Mail } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../api/client';
 import { useGsapPageMotion } from '../hooks/useGsapPageMotion';
@@ -36,6 +36,7 @@ export const LoginPage: React.FC = () => {
     // Register state
     const [regCedula, setRegCedula] = useState('');
     const [regNombre, setRegNombre] = useState('');
+    const [regEmail, setRegEmail] = useState('');
     const [regPrograma, setRegPrograma] = useState('');
     const [regClave, setRegClave] = useState('');
 
@@ -78,7 +79,7 @@ export const LoginPage: React.FC = () => {
         setLoading(true); setError('');
         try {
             const res = await authAPI.registerStudent({
-                cedula: regCedula, nombre: regNombre,
+                cedula: regCedula, nombre: regNombre, email: regEmail,
                 programa: regPrograma, clave_secreta: regClave,
             });
             loginStudent(res.data.token, res.data.student);
@@ -342,6 +343,14 @@ export const LoginPage: React.FC = () => {
                                     </div>
                                 </div>
                             ))}
+
+                            <div style={{ marginBottom: '12px' }}>
+                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px', color: 'var(--text-muted)' }}>Correo electronico</label>
+                                <div style={{ position: 'relative' }}>
+                                    <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-hint)' }}><Mail size={15} /></span>
+                                    <input className="input" style={{ paddingLeft: '38px' }} type="email" placeholder="tu@correo.com" value={regEmail} onChange={e => setRegEmail(e.target.value)} required />
+                                </div>
+                            </div>
 
                             <div style={{ marginBottom: '12px' }}>
                                 <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px', color: 'var(--text-muted)' }}>Programa academico</label>

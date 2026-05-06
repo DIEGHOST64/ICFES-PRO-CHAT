@@ -656,8 +656,6 @@ export const DashboardPage: React.FC = () => {
             background: 'var(--grad-hero)',
             backgroundSize: '150% 150%',
             animation: 'dash-bg-shift 16s ease-in-out infinite',
-            display: 'flex',
-            flexDirection: 'column',
         }}>
             <header style={{
                 background: 'linear-gradient(180deg, #2a3e4d 0%, #1f313e 100%)',
@@ -1362,14 +1360,14 @@ export const DashboardPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="dash-chart-grid" style={{ marginTop: 'var(--space-lg)' }}>
-                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: 'var(--space-lg)' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', width: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                             <TrendingUp size={17} color="var(--primary)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Evolucion por Competencia - Generales (Practica)</h3>
                         </div>
                         <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Progresion de nivel promedio en competencias generales a lo largo del tiempo.</p>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+                        <div style={{ display: 'flex', marginBottom: '8px' }}>
                             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('general-cards-all')}>Reset vista</button>
                         </div>
                         {levelProgressCharts.generalCards.length === 0 ? (
@@ -1377,7 +1375,7 @@ export const DashboardPage: React.FC = () => {
                                 Aún no hay suficientes datos de nivel para competencias generales.
                             </p>
                         ) : (
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '12px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '12px', justifyContent: 'center' }}>
                                 {levelProgressCharts.generalCards.map(card => (
                                     <div key={`general-${card.competencia}`} style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '10px', background: 'var(--surface)' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
@@ -1420,7 +1418,7 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', width: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                             <Activity size={17} color="var(--accent)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Evolucion por Competencia - Ingles (Practica)</h3>
@@ -1434,7 +1432,7 @@ export const DashboardPage: React.FC = () => {
                                 Aún no hay suficientes datos de nivel para Inglés.
                             </p>
                         ) : (
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '12px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '12px', justifyContent: 'center' }}>
                                 {levelProgressCharts.englishCards.map(card => (
                                     <div key={`english-${card.competencia}`} style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '10px', background: 'var(--surface)' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
@@ -1477,7 +1475,7 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', width: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                             <PieChart size={17} color="var(--primary)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Distribucion por Dificultad (Practica)</h3>
@@ -1512,7 +1510,7 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', width: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                             <FileText size={17} color="var(--accent)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Ingles — Desglose por Tipo de Pregunta</h3>
@@ -1553,7 +1551,7 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', width: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                             <Clock size={17} color="var(--primary)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Tiempo de Respuesta Promedio (segundos)</h3>
@@ -1588,7 +1586,7 @@ export const DashboardPage: React.FC = () => {
                         )}
                     </div>
 
-                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', width: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                             <BarChart2 size={17} color="var(--accent)" />
                             <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Comparativa por Programa y Competencia (Practica)</h3>
