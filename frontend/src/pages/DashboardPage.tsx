@@ -1800,6 +1800,14 @@ export const DashboardPage: React.FC = () => {
                     background: var(--grad-card);
                     box-shadow: var(--shadow-md);
                     border-radius: var(--radius-lg);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .dash-chart-wrapper {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
                 }
             `}</style>
         </div>
