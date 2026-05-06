@@ -910,22 +910,22 @@ export const PracticePage: React.FC = () => {
             <div data-motion="headline" style={{ maxWidth: '100%', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                 {/* Header */}
                 <div data-motion="panel" className="animate-fade-up" style={{ marginBottom: 'var(--space-xl)' }}>
-                    <div style={{ position: 'relative', minHeight: '84px', maxWidth: '100%', margin: '0 auto', padding: '0 8px' }}>
+                    <div className="practice-header-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', minHeight: '56px', maxWidth: '100%', margin: '0 auto', padding: '0 8px' }}>
                         <button
                             className="btn-icon"
                             onClick={() => navigate('/chat')}
                             aria-label="Volver al chat"
-                            style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', width: '44px', height: '44px' }}
+                            style={{ width: '44px', height: '44px', flexShrink: 0 }}
                         >
                             <ArrowLeft size={20} />
                         </button>
 
-                        <div style={{ textAlign: 'center' }}>
-                            <h1 style={{ fontSize: '30px', lineHeight: 1.1 }}>Ascenso Pro · Práctica</h1>
-                            <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>{student?.programa} · Entrenamiento guiado</p>
+                        <div style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
+                            <h1 className="practice-title" style={{ fontSize: 'clamp(18px, 5vw, 30px)', lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Ascenso Pro · Práctica</h1>
+                            <p className="practice-subtitle" style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>{student?.programa} · Entrenamiento guiado</p>
                         </div>
 
-                        <div style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)' }}>
+                        <div className="practice-logo" style={{ flexShrink: 0 }}>
                             <InstitutionalLogo size={100} />
                         </div>
                     </div>
@@ -1007,10 +1007,10 @@ export const PracticePage: React.FC = () => {
                         <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '10px', textAlign: 'center' }}>
                             Dificultad
                         </label>
-                        <div style={{
+                        <div className="practice-session-grid" style={{
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-                            gap: '8px',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                            gap: '10px',
                             marginBottom: 'var(--space-lg)',
                         }}>
                             {(['basico', 'intermedio', 'avanzado', 'todas'] as const).map((level) => {
@@ -1044,7 +1044,7 @@ export const PracticePage: React.FC = () => {
                             Elige la duracion de entrenamiento
                         </label>
 
-                        <div style={{
+                        <div className="practice-session-grid" style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
                             gap: '10px',
@@ -1536,6 +1536,15 @@ export const PracticePage: React.FC = () => {
                     0% { transform: scale(0.86); }
                     40% { transform: scale(1.04); }
                     100% { transform: scale(1); }
+                }
+                @media (max-width: 600px) {
+                    .practice-logo { display: none !important; }
+                    .practice-title { font-size: 20px !important; white-space: normal !important; }
+                    .practice-subtitle { font-size: 12px !important; }
+                    .practice-header-row { gap: 8px !important; padding: 0 4px !important; }
+                }
+                @media (max-width: 480px) {
+                    .practice-session-grid { grid-template-columns: 1fr 1fr !important; }
                 }
             `}</style>
         </div>

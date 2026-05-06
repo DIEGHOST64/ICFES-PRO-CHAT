@@ -7,7 +7,7 @@ import rehypeKatex from 'rehype-katex';
 import { Barbell, ClockCounterClockwise } from '@phosphor-icons/react';
 import {
     Send, ThumbsUp, ThumbsDown, Brain,
-    Sun, Moon, LogOut, Loader2, ChevronDown, Trash2, FolderPlus, Plus, MessageSquarePlus
+    Sun, Moon, LogOut, Loader2, ChevronDown, Trash2, FolderPlus, Plus, MessageSquarePlus, Menu, X
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -461,6 +461,7 @@ export const ChatPage: React.FC = () => {
     const [activeWorkspaceFolderId, setActiveWorkspaceFolderId] = useState<string | null>(null);
     const [activeFolderChatId, setActiveFolderChatId] = useState<string | null>(null);
     const [practiceTransitioning, setPracticeTransitioning] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const quickPrompts = useMemo(() => buildPersonalizedPrompts(history), [history]);
     const chatHistoryOnly = useMemo(() => history.filter((q) => !q.es_practica), [history]);
@@ -988,7 +989,7 @@ export const ChatPage: React.FC = () => {
             background: 'transparent',
             overflow: 'hidden',
         }}>
-            <aside data-motion="panel" className="glass-panel" style={{
+            <aside data-motion="panel" className={`glass-panel chat-sidebar ${sidebarOpen ? 'sidebar-open' : ''}`} style={{
                 background: 'var(--surface)',
                 color: 'var(--text)',
                 padding: '20px 16px',
@@ -998,6 +999,7 @@ export const ChatPage: React.FC = () => {
                 borderRight: '1px solid var(--border)',
                 position: 'relative',
                 overflow: 'hidden',
+                zIndex: 30,
             }}>
                 <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
                     {sidebarParticles.map((p, i) => (
@@ -1380,6 +1382,9 @@ export const ChatPage: React.FC = () => {
                 }}>
                     <div>
                         <h2 style={{ fontSize: '18px', fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <button className="btn-icon sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Menú" style={{ display: 'none', width: '36px', height: '36px', borderColor: 'var(--border)', background: 'var(--surface)' }}>
+                                {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
+                            </button>
                             <Brain size={15} color="#3e6f62" /> Chat de Aprendizaje
                         </h2>
                         <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{student?.programa} · Modo motivación ON</p>
@@ -1660,10 +1665,22 @@ export const ChatPage: React.FC = () => {
                     100% { transform: translate3d(12px, -18px, 0) scale(1.18); opacity: 1; }
                 }
                 @media (max-width: 1024px) {
-                    aside { width: 260px !important; }
+                    .chat-sidebar { width: 260px !important; }
                 }
-                @media (max-width: 900px) {
-                    aside { display: none !important; }
+                @media (max-width: 768px) {
+                    .chat-sidebar {
+                        position: fixed !important;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        width: 280px !important;
+                        transform: translateX(-100%);
+                        transition: transform 0.25s ease;
+                        box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+                    }
+                    .chat-sidebar.sidebar-open { transform: translateX(0); }
+                    main { margin-left: 0 !important; }
+                    .sidebar-toggle { display: flex !important; }
                 }
                 .history-filter-chip:hover {
                     transform: translateY(-1px);
