@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Plot from 'react-plotly.js';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { coordinatorAPI, aiAPI } from '../api/client';
+import api, { coordinatorAPI, aiAPI } from '../api/client';
 import type { DashboardMetrics, ChartDataPoint, PracticeStudentMetric, PracticeCompetenceMetric, LevelProgressPoint } from '../types';
 import { useGsapPageMotion } from '../hooks/useGsapPageMotion';
 
@@ -231,6 +231,9 @@ export const DashboardPage: React.FC = () => {
     const [practiceStudents, setPracticeStudents] = useState<PracticeStudentMetric[]>([]);
     const [practiceCompetencies, setPracticeCompetencies] = useState<PracticeCompetenceMetric[]>([]);
     const [levelProgression, setLevelProgression] = useState<LevelProgressPoint[]>([]);
+    const [difficultyDist, setDifficultyDist] = useState<Array<{ competencia: string; nivel_pregunta: string; total: number; tasa_acierto: number }>>([]);
+    const [englishParts, setEnglishParts] = useState<Array<{ tipo_pregunta: string; total: number; estudiantes: number; tasa_acierto: number; tiempo_promedio_seg: number }>>([]);
+    const [responseTime, setResponseTime] = useState<Array<{ competencia: string; tiempo_promedio_seg: number; tiempo_acierto_seg: number; tiempo_error_seg: number; total: number }>>([]);
     const [programs, setPrograms] = useState<string[]>([]);
     const [progFilter, setProgFilter] = useState('');
     const [dateFrom, setDateFrom] = useState('');
@@ -324,7 +327,7 @@ export const DashboardPage: React.FC = () => {
         setError(null);
         try {
             const params = { programa: progFilter, fecha_inicio: dateFrom, fecha_fin: dateTo };
-            const [m, bp, tr, tp, ps, pc, lp, pr] = await Promise.all([
+            const [m, bp, tr, tp, ps, pc, lp, pr, dd, ep, rt] = await Promise.all([
                 coordinatorAPI.metrics(params),
                 coordinatorAPI.byProgram(params),
                 coordinatorAPI.trend(params),
@@ -333,6 +336,9 @@ export const DashboardPage: React.FC = () => {
                 coordinatorAPI.practiceCompetencies(params),
                 coordinatorAPI.levelProgression(params),
                 coordinatorAPI.programs(),
+                api.get('/dashboard/difficulty-distribution', { params }),
+                api.get('/dashboard/english-parts', { params }),
+                api.get('/dashboard/response-time', { params }),
             ]);
             setMetrics(m.data);
             setByProgram(bp.data);
@@ -342,6 +348,9 @@ export const DashboardPage: React.FC = () => {
             setPracticeCompetencies(pc.data);
             setLevelProgression(lp.data);
             setPrograms(pr.data);
+            setDifficultyDist(dd.data ?? []);
+            setEnglishParts(ep.data ?? []);
+            setResponseTime(rt.data ?? []);
         } catch (e: unknown) {
             const msg = (e as { response?: { data?: { message?: string } } })?.response?.data?.message;
             setError(msg || 'Error cargando datos del dashboard. Verifica tu sesión.');
@@ -608,6 +617,66 @@ export const DashboardPage: React.FC = () => {
         };
     }, [levelProgression]);
 
+    const difficultyDistributionChart = useMemo(() => {
+        if (!difficultyDist.length) return { competencias: [] as string[], traces: [] as object[] };
+
+        const competencias = Array.from(new Set(difficultyDist.map(d => d.competencia))).sort((a, b) => a.localeCompare(b));
+        const niveles = ['basico', 'intermedio', 'avanzado'] as const;
+        const colors: Record<string, string> = { basico: '#22c55e', intermedio: '#f97316', avanzado: '#ef4444' };
+
+        const traces = niveles.map(nivel => ({
+            type: 'bar',
+            name: nivel.charAt(0).toUpperCase() + nivel.slice(1),
+            x: competencias,
+            y: competencias.map(comp => {
+                const row = difficultyDist.find(d => d.competencia === comp && d.nivel_pregunta === nivel);
+                return row ? row.total : 0;
+            }),
+            marker: { color: colors[nivel], opacity: 0.85 },
+            hovertemplate: '<b>%{x}</b><br>' + nivel + ': %{y}<extra></extra>',
+        }));
+
+        return { competencias, traces };
+    }, [difficultyDist]);
+
+    const englishPartsChart = useMemo(() => {
+        if (!englishParts.length) return { labels: [] as string[], tasaAcierto: [] as number[], totals: [] as number[] };
+
+        const sorted = [...englishParts].sort((a, b) => a.tipo_pregunta.localeCompare(b.tipo_pregunta));
+
+        return {
+            labels: sorted.map(e => e.tipo_pregunta),
+            tasaAcierto: sorted.map(e => Number(e.tasa_acierto ?? 0)),
+            totals: sorted.map(e => Number(e.total ?? 0)),
+        };
+    }, [englishParts]);
+
+    const responseTimeChart = useMemo(() => {
+        if (!responseTime.length) return { competencias: [] as string[], traces: [] as object[] };
+
+        const competencias = responseTime.map(d => d.competencia);
+
+        const correctoTrace = {
+            type: 'bar',
+            name: 'Correcto',
+            x: competencias,
+            y: responseTime.map(d => Number(d.tiempo_acierto_seg ?? 0)),
+            marker: { color: '#22c55e', opacity: 0.85 },
+            hovertemplate: '<b>%{x}</b><br>Correcto: %{y:.1f}s<extra></extra>',
+        };
+
+        const incorrectoTrace = {
+            type: 'bar',
+            name: 'Incorrecto',
+            x: competencias,
+            y: responseTime.map(d => Number(d.tiempo_error_seg ?? 0)),
+            marker: { color: '#ef4444', opacity: 0.85 },
+            hovertemplate: '<b>%{x}</b><br>Incorrecto: %{y:.1f}s<extra></extra>',
+        };
+
+        return { competencias, traces: [correctoTrace, incorrectoTrace] };
+    }, [responseTime]);
+
     const buildAnalyticsContext = () => {
         return {
             _contexto: {
@@ -627,6 +696,9 @@ export const DashboardPage: React.FC = () => {
             resultados_practicas: practiceStudents,
             promedio_competencias: practiceCompetencies,
             evolucion_nivel: levelProgression,
+            distribucion_dificultad: difficultyDist,
+            desglose_ingles: englishParts,
+            tiempo_respuesta: responseTime,
             cobertura_dataset: {
                 total_programas: byProgram.length,
                 total_puntos_tendencia: trend.length,
@@ -634,6 +706,9 @@ export const DashboardPage: React.FC = () => {
                 total_registros_practica: practiceStudents.length,
                 total_competencias_practica: practiceCompetencies.length,
                 total_puntos_nivel: levelProgression.length,
+                total_dificultades: difficultyDist.length,
+                total_partes_ingles: englishParts.length,
+                total_tiempos: responseTime.length,
             },
         };
     };
@@ -1429,6 +1504,111 @@ export const DashboardPage: React.FC = () => {
                                     </div>
                                 ))}
                             </div>
+                        )}
+                    </div>
+
+                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>
+                                Distribucion por Dificultad (Practica)
+                            </h3>
+                            <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('difficulty')}>Reset vista</button>
+                        </div>
+                        {difficultyDistributionChart.traces.length === 0 ? (
+                            <p style={{ margin: 0, color: 'var(--text-hint)', fontSize: '13px' }}>
+                                Sin datos de distribucion por dificultad.
+                            </p>
+                        ) : (
+                            <Plot
+                                key={getPlotKey('difficulty')}
+                                data={difficultyDistributionChart.traces as any}
+                                layout={{
+                                    barmode: 'stack',
+                                    paper_bgcolor: plotBg,
+                                    plot_bgcolor: plotBg,
+                                    font: { color: plotFont, size: 12 },
+                                    margin: { t: 12, b: 70, l: 42, r: 10 },
+                                    height: 380,
+                                    dragmode: 'pan',
+                                    xaxis: { gridcolor: plotGrid, automargin: true, tickangle: -18, title: { text: 'Competencia' } },
+                                    yaxis: { gridcolor: plotGrid, title: { text: 'Total Preguntas' } },
+                                    legend: { orientation: 'h', y: 1.14, x: 0 },
+                                }}
+                                config={interactivePlotConfig}
+                                style={{ width: '100%' }}
+                            />
+                        )}
+                    </div>
+
+                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>
+                                Ingles — Desglose por Tipo de Pregunta
+                            </h3>
+                            <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('english-parts')}>Reset vista</button>
+                        </div>
+                        {englishPartsChart.labels.length === 0 ? (
+                            <p style={{ margin: 0, color: 'var(--text-hint)', fontSize: '13px' }}>
+                                Sin datos de desglose por tipo de pregunta en Ingles.
+                            </p>
+                        ) : (
+                            <Plot
+                                key={getPlotKey('english-parts')}
+                                data={[{
+                                    type: 'bar',
+                                    x: englishPartsChart.labels,
+                                    y: englishPartsChart.tasaAcierto,
+                                    text: englishPartsChart.totals.map(t => `Total: ${t}`),
+                                    textposition: 'outside',
+                                    marker: { color: isDark ? '#8ec5a8' : '#3f7f66', opacity: 0.88 },
+                                    hovertemplate: '<b>%{x}</b><br>Tasa Acierto: %{y:.1f}%<br>%{text}<extra></extra>',
+                                }]}
+                                layout={{
+                                    paper_bgcolor: plotBg,
+                                    plot_bgcolor: plotBg,
+                                    font: { color: plotFont, size: 12 },
+                                    margin: { t: 12, b: 70, l: 50, r: 10 },
+                                    height: 360,
+                                    dragmode: 'pan',
+                                    xaxis: { gridcolor: plotGrid, automargin: true, tickangle: -18, title: { text: 'Tipo de Pregunta' } },
+                                    yaxis: { gridcolor: plotGrid, range: [0, 100], title: { text: 'Tasa de Acierto %' } },
+                                }}
+                                config={interactivePlotConfig}
+                                style={{ width: '100%' }}
+                            />
+                        )}
+                    </div>
+
+                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', gridColumn: '1 / -1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: 'var(--space-md)' }}>
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>
+                                Tiempo de Respuesta Promedio (segundos)
+                            </h3>
+                            <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('response-time')}>Reset vista</button>
+                        </div>
+                        {responseTimeChart.traces.length === 0 ? (
+                            <p style={{ margin: 0, color: 'var(--text-hint)', fontSize: '13px' }}>
+                                Sin datos de tiempo de respuesta.
+                            </p>
+                        ) : (
+                            <Plot
+                                key={getPlotKey('response-time')}
+                                data={responseTimeChart.traces as any}
+                                layout={{
+                                    barmode: 'group',
+                                    paper_bgcolor: plotBg,
+                                    plot_bgcolor: plotBg,
+                                    font: { color: plotFont, size: 12 },
+                                    margin: { t: 12, b: 70, l: 50, r: 10 },
+                                    height: 360,
+                                    dragmode: 'pan',
+                                    xaxis: { gridcolor: plotGrid, automargin: true, tickangle: -18, title: { text: 'Competencia' } },
+                                    yaxis: { gridcolor: plotGrid, title: { text: 'Tiempo (segundos)' } },
+                                    legend: { orientation: 'h', y: 1.14, x: 0 },
+                                }}
+                                config={interactivePlotConfig}
+                                style={{ width: '100%' }}
+                            />
                         )}
                     </div>
 
