@@ -186,7 +186,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "3000:80"
+      - "80:80"
     networks:
       - icfes_net
     healthcheck:
