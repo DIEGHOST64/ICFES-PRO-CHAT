@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Coordinator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,26 +15,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        \App\Models\Student::updateOrCreate(
+            ['cedula' => '123456789'],
+            [
+                'nombre' => 'Estudiante Demo',
+                'email' => 'estudiante@saberpro.edu.co',
+                'programa' => 'Ingeniería de Sistemas',
+                'password_hash' => bcrypt('1234567891'),
+            ]
+        );
 
-        User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
-
-        \App\Models\Student::create([
-            'cedula' => '123456789',
-            'nombre' => 'Estudiante Demo',
-            'programa' => 'Ingeniería de Sistemas',
-            'password_hash' => bcrypt('123456789123456789'),
-        ]);
-
-        // Crear coordinador por defecto
-        Coordinator::create([
-            'nombre' => 'Coordinador Demo',
-            'email' => 'coordinador@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        \App\Models\Coordinator::updateOrCreate(
+            ['email' => 'coordinador@saberpro.edu.co'],
+            [
+                'nombre' => 'Gestor Demo',
+                'password' => bcrypt('admin123'),
+            ]
+        );
     }
 }
