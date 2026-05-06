@@ -744,7 +744,7 @@ export const DashboardPage: React.FC = () => {
                 )}
             </header>
 
-            <div style={{ flex: 1, padding: 'var(--space-xl)', maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
+            <div style={{ padding: '20px', maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
                 {exportNotice && (
                     <div style={{
                         marginBottom: 'var(--space-md)',
