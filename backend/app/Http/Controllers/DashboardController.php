@@ -256,7 +256,7 @@ class DashboardController extends Controller
                 DB::raw('ROUND(AVG(CASE WHEN NOT acierto THEN tiempo_respuesta_ms ELSE NULL END) / 1000, 1) as tiempo_error_seg'),
                 DB::raw('COUNT(*) as total')
             )
-            ->whereNotNull('tiempo_respuesta_ms')
+            ->where('tiempo_respuesta_ms', '>', 0)
             ->groupBy('competencia')
             ->orderBy('tiempo_promedio_seg', 'desc')
             ->get();

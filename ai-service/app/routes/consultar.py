@@ -198,10 +198,14 @@ async def admin_chat(payload: AdminChatRequest):
         
         prompt = (
             "Eres un consultor academico con acceso total a los datos del dashboard Saber Pro. "
+            "Las competencias monitoreadas son: Razonamiento Cuantitativo, Lectura Critica, "
+            "Comunicacion Escrita, Ingles, Ciudadanas y Especifica. "
+            "Si una competencia no aparece en los datos, significa que NO se han registrado practicas de ella, "
+            "NO que no exista. Responde mencionando esto cuando pregunten por una competencia sin datos.\n"
             "Responde de forma conversacional, directa y basada en DATOS REALES. "
             "Si preguntan por un estudiante o programa, busca en el contexto. "
             "Usa Markdown para estructurar respuestas largas. Max 300 palabras. "
-            "Si no hay datos suficientes, dilo con honestidad.\n\n"
+            "Si no hay datos suficientes, dilo con honestidad y explica por que.\n\n"
             f"{ctx[:8000]}\n\n"
             f"=== HISTORIAL ===\n{hist}\n\n"
             f"=== PREGUNTA ===\n{pregunta}\n"
