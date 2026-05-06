@@ -62,6 +62,7 @@ erDiagram
         bigint id PK "autoincremental"
         varchar cedula UK "20 - identificador unico del estudiante"
         varchar nombre "150 - nombre completo"
+        varchar email "255 - correo electronico del estudiante (nullable)"
         varchar programa "100 - carrera academica"
         varchar password_hash "255 - bcrypt hash"
     }
@@ -84,7 +85,7 @@ erDiagram
 
     queries {
         bigint id PK "autoincremental"
-        bigint student_id FK "ref → students.id (logica, sin FK)"
+        bigint student_id FK "ref → students.id (JOIN para obtener cedula y email)"
         varchar student_hash "64 - SHA-256 anonimizado"
         varchar student_nombre "150 - nombre del estudiante"
         varchar programa "100 - carrera en el momento"
@@ -653,3 +654,89 @@ La trazabilidad del pipeline permite auditar cada decision: se registra cuantas 
 | DB | PostgreSQL | 15 |
 | Infra | Docker Compose | 3.9 |
 | Proxy | Nginx (Alpine) | latest |
+
+---
+
+## 14. Chat IA del Gestor — Acceso a Cedula y Correo
+
+### Diagrama de Flujo
+
+```mermaid
+sequenceDiagram
+    participant G as Gestor (Dashboard)
+    participant F as Frontend
+    participant AI as Microservicio IA
+    participant B as Backend (Laravel)
+    participant DB as PostgreSQL
+
+    G->>F: Pregunta en chat IA
+    F->>B: GET /dashboard/practice-students
+    B->>DB: SELECT queries JOIN students (incluye cedula, email)
+    DB-->>B: datos + cedula + email
+    B-->>F: JSON con cedula y email
+    F->>AI: POST /consultar/admin-chat (dashboard_data completo)
+    AI->>AI: Construye contexto con CC y email
+    AI-->>F: Respuesta IA con datos PII
+    F-->>G: Muestra respuesta formateada
+```
+
+### Explicacion
+
+El chat IA del gestor de conocimiento tiene acceso completo a datos de identificacion de estudiantes:
+- **Cedula:** Se obtiene mediante JOIN entre `queries` y `students` en el endpoint `/dashboard/practice-students`
+- **Email:** Columna agregada a la tabla `students`, poblada automaticamente desde el nombre o ingresada en el registro
+- El contexto enviado a Gemini incluye `[CC: 123456789] [estudiante@saberpro.edu.co]` por cada estudiante
+- El gestor puede preguntar "dame los datos del estudiante con cedula X" o "cual es el correo de Dieghost"
+
+### Registro de Estudiante con Email
+
+El formulario de registro (`LoginPage.tsx`) ahora incluye un campo obligatorio de **Correo electronico**:
+- Validado como `email` en el backend (`AuthController.php`)
+- Almacenado en la columna `students.email`
+- Los estudiantes existentes recibieron correos generados como `nombre@saberpro.edu.co`
+
+---
+
+## 15. Reporte PDF — Cobertura Completa del Dashboard
+
+### Secciones del PDF (13 secciones)
+
+El PDF generado por `reportes.py` ahora incluye **todas** las secciones visibles en el dashboard:
+
+| # | Seccion | Tipo |
+|---|---------|------|
+| 1 | Indicadores Generales | 5 tarjetas de metricas |
+| 2 | Cobertura de Adopcion | Medidor circular SVG |
+| 3 | Ranking de Estudiantes en Practicas | Grafico de barras SVG |
+| 4 | Consultas por Programa | Grafico de barras + tabla |
+| 5 | Tendencia de Uso | Grafico de lineas + tabla |
+| 6 | Temas mas Consultados | Tabla |
+| 7 | Rendimiento en Practicas por Estudiante | Tabla (top 30) |
+| 8 | Rendimiento por Competencia y Programa | Grafico de barras + tabla |
+| 9 | Progresion de Nivel por Competencia | Tabla completa |
+| 10 | **Distribucion por Dificultad** | **Grafico de barras + tabla (NUEVO)** |
+| 11 | **Ingles — Desglose por Tipo** | **Grafico de barras + tabla (NUEVO)** |
+| 12 | **Tiempo de Respuesta Promedio** | **Grafico de barras agrupadas + tabla (NUEVO)** |
+| 13 | **Calificaciones** | **Tarjetas de resumen (NUEVO)** |
+
+### Graficos SVG Nativos
+
+Todos los graficos del PDF se generan como **SVG puro** (sin dependencia de Plotly ni navegador), usando 4 funciones:
+- `build_bar_chart_svg()` — barras simples
+- `build_line_chart_svg()` — lineas con marcadores
+- `build_grouped_bar_chart_svg()` — barras agrupadas (aciertos vs errores)
+- `build_gauge_svg()` — medidor circular de cobertura
+
+### Excel (11 hojas)
+
+El Excel ya cubria todos los datos desde antes, incluyendo `Calificaciones` (hoja adicional no visible en el dashboard).
+
+---
+
+## 16. Centrado del Dashboard
+
+El layout del dashboard fue corregido para centrar correctamente todo el contenido:
+- **Contenedor raiz:** Cambiado de `display: flex; flexDirection: column` a block normal
+- **Content wrapper:** `width: 100%; max-width: 1280px; margin: 0 auto`
+- **Segunda seccion de graficos:** Cambiada de `dash-chart-grid` (grid 2 columnas) a `flex column` con `gap: 20px`
+- **Tarjetas internas:** `width: 100%` en lugar de `gridColumn: 1 / -1`
