@@ -1823,6 +1823,26 @@ async def generate_admin_analytics_report(task: str, analytics_context: dict) ->
         "top_program_share_text": _fmt_pct(top_program_share),
         "trend_delta_text": _fmt_pct(trend_delta),
         "trend_peak_total_text": _fmt_num(trend_peak_total, 0),
+        "top_students": [
+            {"nombre": str(s.get("estudiante", "N/A")), "puntaje": _as_float(s.get("puntaje_promedio", 0)),
+             "intentos": _as_float(s.get("intentos", 0)), "programa": str(s.get("programa", "N/A"))}
+            for s in sorted(
+                [r for r in practicas if isinstance(r, dict) and _as_float(r.get("puntaje_promedio")) is not None],
+                key=lambda s: _as_float(s.get("puntaje_promedio", 0)), reverse=True
+            )[:5]
+        ],
+        "bottom_students": [
+            {"nombre": str(s.get("estudiante", "N/A")), "puntaje": _as_float(s.get("puntaje_promedio", 0)),
+             "intentos": _as_float(s.get("intentos", 0)), "programa": str(s.get("programa", "N/A"))}
+            for s in sorted(
+                [r for r in practicas if isinstance(r, dict) and _as_float(r.get("puntaje_promedio")) is not None],
+                key=lambda s: _as_float(s.get("puntaje_promedio", 0))
+            )[:5]
+        ],
+        "difficulty_levels": {
+            str(r.get("competencia", "?")): {"nivel": str(r.get("nivel_pregunta", "?")), "total": int(_as_float(r.get("total", 0)) or 0)}
+            for r in niveles if isinstance(r, dict) and r.get("competencia")
+        } if niveles else {},
     }
 
     evidence_json = json.dumps(evidence, ensure_ascii=False)
@@ -1830,32 +1850,29 @@ async def generate_admin_analytics_report(task: str, analytics_context: dict) ->
     task_text = re.sub(r"\s+", " ", str(task or "")).strip()
 
     prompt = (
-        "Eres un director de analitica academica y debes redactar un informe institucional para coordinacion Saber Pro.\n"
-        "Tu salida debe parecer un documento tecnico ejecutivo, no bullets genericos.\n"
-        "Usa SOLO la evidencia suministrada; no inventes cifras.\n"
-        "Si falta dato, dilo como vacio de dato y su impacto.\n\n"
-        "Devuelve SOLO JSON valido con esta estructura exacta:\n"
+        "Eres un director de analitica academica experto en educacion superior. Debes redactar un informe ejecutivo "
+        "basado UNICAMENTE en los datos proporcionados. NO uses conocimiento externo ni inventes cifras.\n\n"
+        "ESTRUCTURA DEL INFORME (JSON estricto):\n"
         "{\n"
-        "  \"contexto_general\": \"...\",\n"
-        "  \"hallazgos_clave\": [\"...\", \"...\", \"...\"],\n"
-        "  \"riesgos_prioritarios\": [\"...\", \"...\", \"...\"],\n"
-        "  \"plan_7_dias\": [\n"
-        "    {\"accion\":\"...\",\"responsable\":\"...\",\"kpi\":\"...\",\"plazo\":\"...\"}\n"
-        "  ],\n"
-        "  \"vacios_de_dato\": [\"...\", \"...\"],\n"
-        "  \"foco_solicitado\": \"...\"\n"
+        "  \"contexto_general\": \"Resumen de 60-100 palabras con las cifras clave del periodo.\",\n"
+        "  \"hallazgos_clave\": [\"Hallazgo 1 con dato concreto\", \"Hallazgo 2\", \"Hallazgo 3\"],\n"
+        "  \"riesgos_prioritarios\": [\"Riesgo 1 con impacto\", \"Riesgo 2\"],\n"
+        "  \"plan_7_dias\": [{\"accion\":\"...\",\"responsable\":\"...\",\"kpi\":\"...\",\"plazo\":\"...\"}],\n"
+        "  \"vacios_de_dato\": [\"Dato faltante 1\", \"Dato faltante 2\"],\n"
+        "  \"foco_solicitado\": \"resumen de lo que se pidio\"\n"
         "}\n\n"
-        "Reglas estrictas:\n"
-        "- 1 parrafo en contexto_general (40-80 palabras).\n"
-        "- 3 a 4 hallazgos, cada uno con dato + impacto + implicacion de gestion.\n"
-        "- 2 a 4 riesgos, concretos y accionables.\n"
-        "- 3 a 4 acciones en plan_7_dias con responsable, KPI y plazo realista.\n"
-        "- 2 a 4 vacios de dato priorizados.\n"
-        "- Cruza al menos 3 bloques de evidencia (metricas, programas, tendencia, temas o practicas).\n"
-        "- Sin markdown ni texto fuera del JSON.\n\n"
-        f"EVIDENCIA_NORMALIZADA:\n{evidence_json}\n\n"
+        "REGLAS OBLIGATORIAS:\n"
+        "- CADA hallazgo DEBE MENCIONAR una cifra o porcentaje concreto de la evidencia (ej: 'el programa X concentra el 45% de consultas').\n"
+        "- CADA riesgo DEBE estar vinculado a un dato (ej: 'la cobertura del 23% indica que 3 de cada 4 estudiantes no usan el sistema').\n"
+        "- CADA accion DEBE tener responsable, KPI medible y plazo (ej: 'Aumentar cobertura de 23% a 35% en 7 dias con campana en programas de baja adopcion').\n"
+        "- Si hay estudiantes con puntaje extremo, MENCIONALOS (ej: 'el estudiante X tiene 0% de acierto en 15 intentos').\n"
+        "- Si una competencia tiene desempeno bajo, IDENTIFICA cual y sugiere intervencion.\n"
+        "- Los vacios de dato deben ser ESPECIFICOS a este corte, no genericos.\n"
+        "- NO uses frases como 'se recomienda monitorear' sin decir QUE monitorear y COMO.\n"
+        "- Redacta en ESPANOL formal pero directo, sin rodeos.\n\n"
+        f"EVIDENCIA:\n{evidence_json}\n\n"
         f"FILTROS_ACTIVOS:\n{filters_json}\n\n"
-        f"FOCO_SOLICITADO:\n{task_text or 'Informe general de coordinacion'}\n"
+        f"LO QUE PIDIO EL COORDINADOR:\n{task_text or 'Informe general de coordinacion academica'}\n"
     )
 
     loop = asyncio.get_running_loop()
