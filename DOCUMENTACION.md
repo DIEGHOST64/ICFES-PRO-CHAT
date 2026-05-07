@@ -135,11 +135,52 @@ erDiagram
         int available_at "timestamp de disponibilidad"
         int created_at "timestamp de creacion"
     }
+
+    cache_locks {
+        varchar key PK "255 - clave del lock"
+        varchar owner "255 - identificador del proceso"
+        int expiration "timestamp de expiracion"
+    }
+
+    failed_jobs {
+        bigint id PK "autoincremental - trabajos fallidos"
+        varchar uuid "36 - identificador unico universal"
+        text connection "conexion a la cola"
+        text queue "nombre de la cola"
+        text payload "trabajo serializado (JSON)"
+        text exception "traza del error"
+        timestamp failed_at "marca de tiempo del fallo"
+    }
+
+    job_batches {
+        varchar id PK "255 - ID del lote"
+        varchar name "255 - nombre del lote"
+        int total_jobs "total de trabajos"
+        int pending_jobs "trabajos pendientes"
+        int failed_jobs "trabajos fallidos en el lote"
+        text failed_job_ids "IDs de los trabajos fallidos (JSON)"
+        text options "opciones del lote (JSON)"
+        int created_at "timestamp de creacion"
+        timestamp cancelled_at "marca de cancelacion"
+        timestamp finished_at "marca de finalizacion"
+    }
+
+    migrations {
+        bigint id PK "autoincremental"
+        varchar migration "255 - nombre del archivo de migracion"
+        int batch "lote de migracion en que se ejecuto"
+    }
+
+    password_reset_tokens {
+        varchar email PK "255 - email del usuario"
+        varchar token "64 - token de restablecimiento"
+        timestamp created_at "marca de tiempo de creacion"
+    }
 ```
 
 ### Explicacion
 
-El diagrama entidad-relacion muestra las 13 tablas de la base de datos PostgreSQL y sus relaciones logicas. Se distinguen tres categorias: tablas de dominio (`students`, `coordinators`, `queries`), tablas de autenticacion (`users`, `personal_access_tokens`, `sessions`) y tablas de infraestructura Laravel (`cache`, `jobs`). La estructura esta optimizada para consultas analiticas del dashboard, no para integridad referencial estricta.
+El diagrama entidad-relacion muestra las 13 tablas de la base de datos PostgreSQL y sus relaciones logicas. Se distinguen tres categorias: tablas de dominio (`students`, `coordinators`, `queries`), tablas de autenticacion (`users`, `personal_access_tokens`, `sessions`, `password_reset_tokens`) y tablas de infraestructura Laravel (`cache`, `cache_locks`, `jobs`, `failed_jobs`, `job_batches`, `migrations`). La estructura esta optimizada para consultas analiticas del dashboard, no para integridad referencial estricta.
 
 La tabla `queries` es el nucleo del sistema: almacena cada interaccion del estudiante (practica o consulta) con 17 columnas que registran competencia, respuesta, acierto, tiempo de respuesta en milisegundos y nivel adaptativo. La tabla `students` usa la cedula como identificador unico y se relaciona con queries sin FK fisica para preservar el historial aunque el estudiante sea eliminado. `personal_access_tokens` usa un diseno polimorfico de Sanctum (`tokenable_type` + `tokenable_id`) para servir tokens a los tres tipos de usuarios (students, users, coordinators) desde una sola tabla.
 
