@@ -19,6 +19,7 @@ export interface QueryRecord {
     id: number;
     pregunta: string;
     respuesta: string;
+    respuesta_visual?: string | null;
     competencia?: string;
     calificacion?: boolean | null;
     es_practica?: boolean;

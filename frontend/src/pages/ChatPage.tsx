@@ -945,6 +945,15 @@ export const ChatPage: React.FC = () => {
                             }
                             : m
                     ));
+                    // Persistir datos visuales en el backend
+                    if (queryId) {
+                        const visual = JSON.stringify({
+                            guideImageUrl: imageDataUrl, guideImageCaption: caption,
+                            guideImageModel: imageModel, guideImageError: imageError,
+                            latexFormula, latexExplanation, guideTitle, guideSteps,
+                        });
+                        queriesAPI.updateVisual(queryId, visual).catch(() => {});
+                    }
                 })
                 .catch(() => {
                     setMessages(prev => prev.map(m =>
@@ -1336,10 +1345,26 @@ export const ChatPage: React.FC = () => {
                                             }}
                                             onClick={() => {
                                                 const stamp = `${q.id}_${Date.now()}`;
+                                                let visual = {};
+                                                try {
+                                                    if (q.respuesta_visual) {
+                                                        const v = JSON.parse(q.respuesta_visual);
+                                                        visual = {
+                                                            guideImageUrl: v.guideImageUrl || undefined,
+                                                            guideImageCaption: v.guideImageCaption || undefined,
+                                                            guideImageModel: v.guideImageModel || undefined,
+                                                            guideImageError: v.guideImageError || undefined,
+                                                            latexFormula: v.latexFormula || undefined,
+                                                            latexExplanation: v.latexExplanation || undefined,
+                                                            guideTitle: v.guideTitle || undefined,
+                                                            guideSteps: v.guideSteps || undefined,
+                                                        };
+                                                    }
+                                                } catch {}
                                                 setMessages(prev => [
                                                     ...prev,
                                                     { id: `${stamp}_q`, role: 'user', content: q.pregunta, timestamp: new Date(q.created_at) },
-                                                    { id: `${stamp}_a`, role: 'assistant', content: q.respuesta, timestamp: new Date(q.created_at), rated: q.calificacion, queryId: q.id },
+                                                    { id: `${stamp}_a`, role: 'assistant', content: q.respuesta, timestamp: new Date(q.created_at), rated: q.calificacion, queryId: q.id, ...visual },
                                                 ]);
                                             }}
                                         >

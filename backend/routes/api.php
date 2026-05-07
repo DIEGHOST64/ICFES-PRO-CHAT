@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('queries', [QueryController::class , 'store']);
     Route::get('queries/history', [QueryController::class , 'history']);
     Route::patch('queries/{id}/rate', [QueryController::class , 'rate']);
+    Route::patch('queries/{id}/visual', [QueryController::class , 'updateVisual']);
 });
 
 // ─── Rutas protegidas (solo coordinador) ────────────────

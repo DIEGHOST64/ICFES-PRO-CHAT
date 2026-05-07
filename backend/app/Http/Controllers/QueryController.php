@@ -25,6 +25,7 @@ class QueryController extends Controller
             'nivel_objetivo' => 'nullable|string|max:20',
             'nivel_pregunta' => 'nullable|string|max:20',
             'tipo_pregunta' => 'nullable|string|max:40',
+            'respuesta_visual' => 'nullable|string',
         ]);
 
         $student = $request->user(); // Autenticado con Sanctum
@@ -54,6 +55,7 @@ class QueryController extends Controller
             'nivel_objetivo' => $request->get('nivel_objetivo'),
             'nivel_pregunta' => $request->get('nivel_pregunta'),
             'tipo_pregunta' => $request->get('tipo_pregunta'),
+            'respuesta_visual' => $request->get('respuesta_visual'),
             'calificacion' => null,
         ]);
 
@@ -74,7 +76,7 @@ class QueryController extends Controller
         $queries = Query::where('student_hash', $studentHash)
             ->where('created_at', '>=', now()->subDays(5))
             ->orderBy('created_at', 'asc')
-            ->select(['id', 'pregunta', 'respuesta', 'competencia', 'calificacion', 'es_practica', 'acierto', 'created_at'])
+            ->select(['id', 'pregunta', 'respuesta', 'respuesta_visual', 'competencia', 'calificacion', 'es_practica', 'acierto', 'created_at'])
             ->get();
 
         return response()->json($queries);
@@ -99,5 +101,26 @@ class QueryController extends Controller
         $query->update(['calificacion' => $request->util]);
 
         return response()->json(['message' => 'Calificación registrada. ¡Gracias!']);
+    }
+
+    /**
+     * Actualiza los datos visuales (imagen guía, LaTeX, pasos) de una consulta ya guardada.
+     */
+    public function updateVisual(Request $request, $id)
+    {
+        $request->validate([
+            'respuesta_visual' => 'required|string',
+        ]);
+
+        $student = $request->user();
+        $studentHash = hash('sha256', 'icfes_salt_' . $student->id);
+
+        $query = Query::where('id', $id)
+            ->where('student_hash', $studentHash)
+            ->firstOrFail();
+
+        $query->update(['respuesta_visual' => $request->respuesta_visual]);
+
+        return response()->json(['message' => 'Datos visuales actualizados.']);
     }
 }

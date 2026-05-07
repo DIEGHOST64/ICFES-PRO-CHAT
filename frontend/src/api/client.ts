@@ -87,6 +87,7 @@ export const queriesAPI = {
     save: (data: object) => api.post('/queries', data),
     history: () => api.get('/queries/history'),
     rate: (id: number, util: boolean) => api.patch(`/queries/${id}/rate`, { util }),
+    updateVisual: (id: number, respuesta_visual: string) => api.patch(`/queries/${id}/visual`, { respuesta_visual }),
 };
 
 export const coordinatorAPI = {

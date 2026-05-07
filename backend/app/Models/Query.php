@@ -14,6 +14,7 @@ class Query extends Model
         'competencia',
         'pregunta',
         'respuesta',
+        'respuesta_visual',
         'tiempo_respuesta_ms',
         'es_practica',
         'acierto',
