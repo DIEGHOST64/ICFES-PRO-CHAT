@@ -1,195 +1,481 @@
 # Manual de Usuario — Ascenso Pro
 
-Plataforma de preparación para la prueba Saber Pro · Universidad de Cundinamarca
+**Plataforma de preparación para la prueba Saber Pro**
+Universidad de Cundinamarca · Sede Fusagasugá
 
 ---
 
-## 1. ¿Qué es Ascenso Pro?
+## 1. Ingreso a la Plataforma
 
-Ascenso Pro es un asistente académico inteligente que te ayuda a prepararte para las pruebas Saber Pro. Usa inteligencia artificial para:
+Abre tu navegador y dirígete a: **https://ascensopro.pro**
 
-- **Estudiantes**: practicar con preguntas tipo ICFES, recibir explicaciones personalizadas y medir tu progreso
-- **Gestores de conocimiento**: monitorear el desempeño por programa, competencia y estudiante, y exportar informes
+### Pantalla de bienvenida
 
----
+Al entrar verás la página de inicio con dos opciones:
 
-## 2. Cómo acceder
+![IMAGEN: landing_page.png]
+> *Captura de la página principal mostrando el botón "Soy Estudiante" y el enlace "Eres gestor de conocimiento? Accede aqui"*
 
-1. Abre tu navegador e ingresa a: **https://ascensopro.pro**
-2. Si ya tienes cuenta, inicia sesión con tu cédula y clave secreta
-3. Si es tu primera vez, regístrate en la pestaña "Crear cuenta"
-
----
-
-## 3. Guía para el Creador de Oportunidades (Estudiante)
-
-### 3.1 Registro
-
-Desde la pantalla de inicio de sesión, selecciona la pestaña **"Crear cuenta"** y completa:
-
-| Campo | Descripción |
-|-------|-------------|
-| Número de cédula | Tu documento de identidad |
-| Nombre completo | Tu nombre como aparece en la universidad |
-| Correo electrónico | Un correo válido para contacto |
-| Programa académico | Selecciona tu carrera de la lista |
-| Clave secreta | **Un solo carácter** (ej: @, A, 1). Será tu contraseña |
-
-Haz clic en **"Crear cuenta"** y entrarás directamente al chat.
-
-### 3.2 El Chat de Aprendizaje
-
-Al iniciar sesión verás la **Sala de Estudio**, con tres zonas:
-
-#### Panel izquierdo (Sidebar)
-- **Logo y nombre**: identifican tu sesión
-- **Ir a práctica**: te lleva al modo de entrenamiento con preguntas
-- **Carpetas de estudio**: organiza tus chats por temas (crea una carpeta, asígnale chats)
-- **Historial**: tus conversaciones anteriores, agrupadas por fecha
-- **Tema claro/oscuro**: cambia la apariencia según tu preferencia
-- **Cerrar sesión**: salir de tu cuenta
-
-> En el celular, el panel izquierdo se oculta. Toca el ícono ☰ arriba a la izquierda para abrirlo.
-
-#### Área central (Chat)
-- Al inicio verás **sugerencias rápidas** como "Quiero practicar Lectura Crítica" o "Explícame Razonamiento Cuantitativo". Toca una para empezar.
-- Escribe tu pregunta en el campo de texto inferior y presiona **Enter** para enviar.
-- La IA te responderá con explicaciones, ejemplos y te hará preguntas de verificación.
-- Usa **Shift+Enter** para escribir varias líneas antes de enviar.
-
-#### Cómo aprovechar el chat al máximo:
-- Pregunta temas concretos: *"¿Cómo se resuelve una pregunta de inferencia en Lectura Crítica?"*
-- Pide ejercicios: *"Dame un problema de probabilidad para Razonamiento Cuantitativo"*
-- Solicita retroalimentación: *"Corrígeme esta respuesta sobre competencias ciudadanas"*
-
-### 3.3 Modo Práctica
-
-Al hacer clic en **"Ir a práctica"** desde el chat, entrarás al entrenamiento guiado:
-
-1. **Configura tu sesión**:
-   - Elige la competencia (Lectura Crítica, Razonamiento Cuantitativo, Inglés, etc.)
-   - Selecciona el nivel (Básico, Intermedio, Avanzado)
-   - Elige la cantidad de preguntas (5, 10, 15 o 20)
-
-2. **Responde las preguntas**: lee cada pregunta y selecciona tu respuesta. Recibirás retroalimentación inmediata con la explicación de la respuesta correcta.
-
-3. **Al finalizar**, verás tu puntaje, aciertos y áreas de mejora.
-
-#### Práctica de Escritura (Ensayo)
-Si eliges **Comunicación Escrita**, escribirás un ensayo en el espacio provisto. Al enviarlo, la IA lo evaluará con puntaje de 0 a 300 y te dará fortalezas, oportunidades de mejora y sugerencias.
-
-### 3.4 Calificar respuestas
-
-Después de cada respuesta del chat, puedes calificarla como útil 👍 o no útil 👎. Esto ayuda a mejorar la calidad del asistente.
+| Si eres... | Haz clic en... |
+|-----------|---------------|
+| **Estudiante** (Creador de Oportunidades) | El botón grande **"Soy Estudiante"** |
+| **Coordinador** (Gestor de Conocimiento) | El enlace pequeño abajo: **"Eres gestor de conocimiento? Accede aqui"** |
 
 ---
 
-## 4. Guía para el Gestor de Conocimiento (Coordinador)
+## 2. Guía del Estudiante (Creador de Oportunidades)
 
-### 4.1 Inicio de sesión
+### 2.1 Iniciar sesión o registrarse
 
-1. Ve a **https://ascensopro.pro/coordinador**
-2. Ingresa tu correo institucional y contraseña
+Al hacer clic en **"Soy Estudiante"** verás esta pantalla:
+
+![IMAGEN: login_page.png]
+> *Pantalla de inicio de sesión del estudiante con pestañas "Iniciar Sesión" y "Crear cuenta"*
+
+La pantalla tiene **dos pestañas** en la parte superior:
+
+#### Pestaña "Iniciar Sesión" (si ya tienes cuenta)
+
+| Campo | Qué poner |
+|-------|-----------|
+| Cédula | Tu número de documento de identidad |
+| Clave secreta | **Un solo carácter** que elegiste al registrarte |
+
+Haz clic en **"Ingresar"**.
+
+#### Pestaña "Crear cuenta" (primera vez)
+
+Completa todos los campos:
+
+![IMAGEN: register_form.png]
+> *Formulario de registro con los 5 campos: cédula, nombre, correo, programa, clave secreta*
+
+| Campo | Descripción | Ejemplo |
+|-------|-------------|---------|
+| Número de cédula | Tu documento de identidad | `1234567890` |
+| Nombre completo | Tu nombre como figura en la universidad | `María García López` |
+| Correo electrónico | Un correo válido | `maria@email.com` |
+| Programa académico | Selecciona tu carrera de la lista desplegable | `Ingeniería de Sistemas` |
+| Clave secreta | **1 solo carácter** (letra, número o símbolo) | `@` o `A` o `7` |
+
+> **Importante**: la clave secreta es **exactamente 1 carácter**. No uses más de uno.
+
+Haz clic en **"Crear cuenta"**. Si todo está correcto, entrarás directamente al chat.
+
+---
+
+### 2.2 La Sala de Estudio (Chat)
+
+Al iniciar sesión verás la pantalla principal del chat:
+
+![IMAGEN: chat_desktop.png]
+> *Vista completa de la Sala de Estudio en computador: sidebar izquierdo + chat central + input inferior*
+
+La pantalla se divide en **tres zonas**:
+
+#### Zona 1 — Panel izquierdo (Sidebar)
+
+Contiene todas las herramientas de navegación:
+
+![IMAGEN: chat_sidebar.png]
+> *Detalle del panel izquierdo: logo Ascenso Pro, nombre del estudiante, botón Ir a práctica, carpetas, historial, botones de tema y cerrar sesión*
+
+| Elemento | ¿Para qué sirve? |
+|----------|-----------------|
+| **Logo Ascenso Pro** | Identidad de la plataforma |
+| **Tu nombre** | Confirma que ingresaste con tu cuenta |
+| **Ir a práctica** ⚡ | Te lleva al entrenamiento con preguntas tipo ICFES |
+| **Carpetas de estudio** 📁 | Organiza tus chats por temas (ej: "Mate", "Lectura", "Inglés") |
+| **Historial** 🕐 | Tus conversaciones anteriores agrupadas por fecha (Hoy, Ayer, etc.) |
+| **☀️/🌙 Tema** | Cambia entre modo claro y modo oscuro |
+| **Cerrar sesión** | Sale de tu cuenta |
+
+> **En celular o tablet**: el panel izquierdo se oculta. Toca el ícono **☰** (tres rayitas) en la esquina superior izquierda para mostrarlo. Se desliza desde la izquierda. Toca fuera del panel o la **X** para cerrarlo.
+
+![IMAGEN: chat_mobile_sidebar.png]
+> *Celular mostrando el menú lateral desplegado con el ícono ☰ resaltado*
+
+#### Zona 2 — Área de chat
+
+![IMAGEN: chat_conversation.png]
+> *Conversación en el chat: saludo inicial, sugerencias rápidas, mensaje del estudiante y respuesta de la IA*
+
+Al entrar por primera vez verás:
+- Un **saludo personalizado** con tu nombre
+- **Sugerencias rápidas** en burbujas (chips) como:
+  - "Quiero practicar Lectura Crítica"
+  - "Explícame Razonamiento Cuantitativo paso a paso"
+  - "Necesito ayuda con preguntas de Inglés tipo Saber Pro"
+
+Toca cualquiera para iniciar o escribe tu propia pregunta.
+
+**Cómo escribir en el chat:**
+- Escribe tu mensaje en la **barra inferior**
+- Presiona **Enter** para enviar
+- Usa **Shift + Enter** para escribir varias líneas
+- La IA responde con explicaciones, ejemplos y formato Markdown (negritas, listas, fórmulas)
+
+**Consejos para aprovechar el chat:**
+- Sé específico: *"Dame 3 preguntas de Lectura Crítica nivel intermedio"*
+- Pide explicaciones: *"¿Por qué la respuesta correcta es la B y no la C?"*
+- Solicita práctica guiada: *"Quiero practicar Ciudadanas con enfoque en participación democrática"*
+
+#### Zona 3 — Calificar respuestas
+
+Después de cada respuesta de la IA, verás dos botones debajo del mensaje:
+
+| Botón | Significado |
+|-------|------------|
+| 👍 Útil | La respuesta fue clara y te ayudó |
+| 👎 No útil | La respuesta no fue satisfactoria |
+
+Calificar ayuda a mejorar el sistema. Tus calificaciones son anónimas.
+
+---
+
+### 2.3 Cómo usar las Carpetas de Estudio
+
+Las carpetas te permiten organizar tus conversaciones por tema:
+
+![IMAGEN: chat_folders.png]
+> *Sección de carpetas mostrando el campo para crear nueva carpeta y una carpeta existente*
+
+1. En el panel izquierdo, busca **"Carpetas de estudio"**
+2. Escribe un nombre (ej: "Razonamiento") y haz clic en **+**
+3. La carpeta aparece abajo. Haz clic en el ícono **+** dentro de la carpeta para abrir un chat nuevo dentro de ese tema
+4. Haz clic en el nombre de un chat para retomarlo
+5. El ícono 🗑️ elimina la carpeta o el chat
+
+> Si no creas carpetas, todos los chats van al historial general. Puedes crear hasta 10 carpetas.
+
+---
+
+### 2.4 El Historial
+
+![IMAGEN: chat_history.png]
+> *Panel de historial mostrando conversaciones agrupadas por "Hoy", "Ayer", "Esta semana" con miniaturas del contenido*
+
+- Tus conversaciones se agrupan automáticamente por fecha
+- Haz clic en cualquier conversación para retomarla
+- El historial muestra los **últimos 5 días**. Conversaciones más antiguas se eliminan automáticamente del panel (pero permanecen en el sistema para las métricas del coordinador)
+- Los filtros arriba del historial permiten ver "Todos", "Preguntas", "Prácticas" o chats de una carpeta específica
+
+---
+
+### 2.5 Modo Práctica (Entrenamiento)
+
+Al hacer clic en **"Ir a práctica"** entrarás al entrenamiento guiado tipo Saber Pro:
+
+#### Paso 1 — Configurar la sesión
+
+![IMAGEN: practice_config.png]
+> *Pantalla de configuración: selector de competencia, selector de nivel, selector de cantidad de preguntas*
+
+| Configuración | Opciones |
+|--------------|----------|
+| **Competencia** | Lectura Crítica, Razonamiento Cuantitativo, Comunicación Escrita, Inglés, Ciudadanas, o "Todas" |
+| **Nivel** | Básico, Intermedio, Avanzado |
+| **Cantidad** | 5, 10, 15 o 20 preguntas |
+
+Haz clic en **"Comenzar entrenamiento"**.
+
+#### Paso 2 — Responder preguntas
+
+![IMAGEN: practice_question.png]
+> *Pregunta de práctica con enunciado, opciones A-B-C-D, badges de competencia y nivel*
+
+Cada pregunta muestra:
+- **Badges superiores**: la competencia, el nivel de dificultad, y en Inglés el tipo de pregunta (Parte 1-7)
+- **Enunciado**: el texto de la pregunta
+- **Opciones**: A, B, C, D — haz clic en tu respuesta
+- **Texto base** (si aplica): un pasaje, gráfico o conversación de referencia
+
+Al seleccionar una opción:
+- ✅ Si es **correcta**: la opción se marca en verde y ves la explicación
+- ❌ Si es **incorrecta**: la opción se marca en rojo, se resalta la respuesta correcta en verde, y ves la explicación de por qué
+
+![IMAGEN: practice_answer.png]
+> *Resultado de una pregunta: opción correcta en verde con explicación debajo*
+
+Después de revisar la explicación, haz clic en **"Siguiente"** para continuar.
+
+#### Modo Inglés especial
+
+Cuando practicas Inglés, el formato es idéntico al examen real:
+
+| Parte | Tipo | Ejemplo |
+|-------|------|---------|
+| Part 1 | Señales / Avisos | Un letrero con texto para interpretar |
+| Part 2 | Oraciones incompletas | Completar con la palabra correcta |
+| Part 3 | Conversaciones cortas | Diálogo con espacio en blanco |
+| Part 4 | Texto con espacios | Párrafo con múltiples huecos para rellenar |
+| Part 5 | Lectura literal | Texto + preguntas de comprensión directa |
+| Part 6 | Lectura inferencial | Texto + preguntas de deducción |
+| Part 7 | Texto largo | Pasaje extenso + preguntas de análisis |
+
+![IMAGEN: practice_english.png]
+> *Pregunta de Inglés Parte 1 mostrando un letrero/aviso con borde grueso y opciones*
+
+#### Modo Escritura (Ensayo)
+
+Si seleccionas **Comunicación Escrita**:
+
+![IMAGEN: practice_essay.png]
+> *Área de ensayo con el espacio de escritura y el botón "Calificar ensayo"*
+
+1. Lee el tema propuesto
+2. Escribe tu ensayo en el espacio provisto (mínimo recomendado: 200 palabras)
+3. Haz clic en **"Calificar ensayo"**
+4. La IA evaluará tu texto y te mostrará:
+
+![IMAGEN: practice_essay_result.png]
+> *Resultados del ensayo: puntaje /300, nivel, fortalezas, oportunidades de mejora y feedback general*
+
+- **Puntaje**: de 0 a 300 puntos
+- **Nivel**: según desempeño
+- **Fortalezas**: qué hiciste bien
+- **Oportunidades**: qué puedes mejorar
+- **Feedback**: sugerencias concretas
+
+#### Paso 3 — Resultados finales
+
+Al terminar todas las preguntas verás tu resumen:
+
+![IMAGEN: practice_results.png]
+> *Pantalla de resultados: puntaje total, aciertos/errores, lista de preguntas respondidas con correctas/incorrectas*
+
+- **Total de aciertos** sobre el total de preguntas
+- Lista de cada pregunta con tu respuesta y si fue correcta o incorrecta
+- Puedes hacer clic en cada pregunta para revisar la explicación nuevamente
+- Haz clic en **"Volver al chat"** o **"Nueva práctica"**
+
+---
+
+### 2.6 Modo Oscuro
+
+En cualquier momento puedes cambiar entre tema claro y oscuro:
+
+![IMAGEN: dark_mode_toggle.png]
+> *Botón de tema en el panel izquierdo: icono de sol para modo claro, luna para modo oscuro*
+
+- En el panel izquierdo, al final, verás dos botones: ☀️ (claro) y 🌙 (oscuro)
+- Haz clic en el que prefieras. El cambio es inmediato
+- El modo oscuro es más cómodo para estudiar de noche o en ambientes con poca luz
+
+---
+
+## 3. Guía del Gestor de Conocimiento (Coordinador)
+
+### 3.1 Inicio de sesión
+
+1. En la página principal, haz clic en **"Eres gestor de conocimiento? Accede aqui"**
+2. Ingresa tu correo institucional y contraseña:
+
+![IMAGEN: coordinator_login.png]
+> *Pantalla de login del coordinador con campos de correo y contraseña*
 
 Credenciales de prueba iniciales:
 - Correo: `coordinador@saberpro.edu.co`
 - Contraseña: `admin123`
 
-### 4.2 El Dashboard
+> Cambia esta contraseña apenas ingreses por primera vez.
 
-La pantalla principal del gestor tiene dos modos, seleccionables con el interruptor superior:
+---
 
-#### Modo Dashboard (📊)
-Muestra todas las métricas de uso del sistema:
+### 3.2 El Panel de Control (Dashboard)
 
-- **KPIs superiores**: Total de consultas, estudiantes únicos activos, consultas hoy, calificaciones positivas, total de estudiantes
-- **Filtros**: puedes filtrar por programa, fecha de inicio y fecha de fin para acotar los datos
-- **Cobertura de Adopción**: porcentaje de estudiantes que han usado la plataforma
-- **Ranking de Estudiantes**: mejores puntajes en prácticas
-- **Consultas por Programa**: gráfico de barras comparativo
-- **Tendencia de Uso**: evolución temporal de consultas
-- **Temas más Consultados**: ranking de competencias más practicadas
-- **Evolución por Competencia — Generales**: progresión de nivel (Básico → Intermedio → Avanzado) por competencia
-- **Evolución por Competencia — Inglés**: progresión de nivel CEFR (A2 → B1) por tipo de pregunta
-- **Distribución por Dificultad**: cantidad de preguntas por nivel (básico, intermedio, avanzado)
-- **Inglés — Desglose por Tipo**: tasa de acierto en cada parte (Part 1-7)
-- **Tiempo de Respuesta Promedio**: comparativa de velocidad entre aciertos y errores
-- **Comparativa por Programa y Competencia**: rendimiento cruzado
-- **Tablas de detalle**: listados completos de estudiantes y competencias con puntajes
+Al ingresar verás el dashboard con todas las métricas:
 
-#### Exportar datos
-Usa los botones superiores:
-- **📄 PDF**: genera un informe completo con gráficos y tablas (13 secciones)
-- **📊 Excel**: descarga todas las métricas en 11 hojas de cálculo
+![IMAGEN: dashboard_kpis.png]
+> *Fila superior de KPIs: Total Consultas, Estudiantes Únicos, Consultas Hoy, Calificaciones Positivas, Total Estudiantes*
 
-#### Modo IA (🧠)
-Un chat donde puedes hacer preguntas en lenguaje natural sobre los datos:
+#### Modos de vista
+
+En la parte superior hay un **interruptor** que alterna entre:
+
+| Modo | Ícono | ¿Qué hace? |
+|------|-------|-----------|
+| **Dashboard** | 📊 | Muestra gráficos, tablas y métricas |
+| **IA** | 🧠 | Chat con inteligencia artificial para consultar los datos |
+
+![IMAGEN: dashboard_mode_toggle.png]
+> *Interruptor de modo Dashboard / IA en la parte superior del panel*
+
+#### Filtros
+
+Antes de analizar los datos, configura los filtros:
+
+![IMAGEN: dashboard_filters.png]
+> *Panel de filtros: selector de programa, fecha desde, fecha hasta, chips de tiempo rápido (7d, 15d, 30d)*
+
+| Filtro | Uso |
+|--------|-----|
+| **Programa** | Selecciona una carrera o "Todos los programas" |
+| **Desde / Hasta** | Rango de fechas para acotar los datos |
+| **Chips de tiempo** | Atajos: 7 días, 15 días, 30 días |
+
+#### Secciones del Dashboard
+
+El dashboard se organiza en secciones. Aquí cada una y cómo usarla:
+
+##### KPIs (Indicadores principales)
+
+![IMAGEN: dashboard_kpis_detail.png]
+> *Las 5 tarjetas de KPI con sus valores numéricos*
+
+Cinco tarjetas con los números más importantes del periodo seleccionado. Cada una incluye una guía de interpretación debajo.
+
+##### Cobertura de Adopción
+
+![IMAGEN: dashboard_adoption.png]
+> *Medidor circular mostrando el porcentaje de estudiantes que han usado la plataforma*
+
+Muestra qué porcentaje del total de estudiantes ha usado el asistente. Un valor bajo sugiere que hace falta promocionar la herramienta.
+
+##### Ranking de Estudiantes
+
+![IMAGEN: dashboard_ranking.png]
+> *Gráfico de barras con los 12 mejores puntajes de práctica*
+
+Los estudiantes con mejor rendimiento en prácticas. Sirve para identificar casos de éxito y referentes.
+
+##### Consultas por Programa
+
+![IMAGEN: dashboard_by_program.png]
+> *Gráfico de barras y tabla con el número de consultas por cada programa*
+
+Compara la actividad entre carreras. Si un programa tiene muy pocas consultas, puede necesitar una campaña de difusión.
+
+##### Tendencia de Uso
+
+![IMAGEN: dashboard_trend.png]
+> *Gráfico de línea mostrando la evolución de consultas día a día*
+
+La evolución temporal de consultas. Picos pueden coincidir con fechas de parciales o campañas.
+
+##### Temas más Consultados
+
+![IMAGEN: dashboard_topics.png]
+> *Tabla con ranking de competencias más preguntadas y su programa asociado*
+
+Identifica qué competencias generan más dudas. Prioriza contenido de refuerzo en las más consultadas.
+
+##### Evolución por Competencia — Generales
+
+![IMAGEN: dashboard_evolution_general.png]
+> *Gráficos de línea por competencia general mostrando progresión de nivel Básico→Intermedio→Avanzado*
+
+Cada tarjeta muestra una competencia general (Lectura Crítica, Razonamiento Cuantitativo, etc.) con la evolución del nivel promedio a lo largo del tiempo. Una línea ascendente indica mejora.
+
+##### Evolución por Competencia — Inglés
+
+![IMAGEN: dashboard_evolution_english.png]
+> *Gráficos de línea por tipo de pregunta en Inglés mostrando progresión A2→B1*
+
+Similar al anterior pero para las partes de Inglés con niveles CEFR (A2, B1).
+
+##### Distribución por Dificultad
+
+![IMAGEN: dashboard_difficulty.png]
+> *Gráfico de barras apiladas: básico, intermedio, avanzado por competencia*
+
+Cantidad de preguntas respondidas por nivel de dificultad. Permite ver si los estudiantes practican más en niveles básicos o avanzados.
+
+##### Inglés — Desglose por Tipo
+
+![IMAGEN: dashboard_english_parts.png]
+> *Gráfico de barras con tasa de acierto por cada tipo de pregunta (Parte 1-7)*
+
+Tasa de acierto y volumen en cada tipo de pregunta de Inglés. Identifica rápidamente qué partes necesitan más refuerzo.
+
+##### Tiempo de Respuesta
+
+![IMAGEN: dashboard_response_time.png]
+> *Gráfico de barras agrupadas: tiempo promedio de aciertos vs errores por competencia*
+
+Compara el tiempo que tardan en responder correcta vs incorrectamente. Tiempos altos en errores indican inseguridad.
+
+##### Comparativa por Programa y Competencia
+
+![IMAGEN: dashboard_comparison.png]
+> *Gráfico de barras agrupadas cruzando programas con competencias*
+
+Rendimiento promedio de cada programa en cada competencia. Ideal para detectar brechas específicas.
+
+##### Tablas de detalle
+
+![IMAGEN: dashboard_tables.png]
+> *Tablas de "Puntaje por Creador de Oportunidades" y "Promedio por Competencia y Programa"*
+
+Listados completos con puntajes individuales y por competencia. Usa el scroll para ver todos los registros.
+
+---
+
+### 3.3 Modo IA (Chat del Gestor)
+
+Al activar el modo 🧠 verás un chat similar al del estudiante, pero con acceso a **todos los datos del dashboard**:
+
+![IMAGEN: dashboard_ai_chat.png]
+> *Chat del modo IA con el panel de métricas visibles y el campo de pregunta*
+
+**Lo que puedes preguntar:**
 - *"¿Cuál es el programa con mejor desempeño en Lectura Crítica?"*
-- *"Dame los datos de contacto del estudiante con cédula 2026100"*
-- *"¿Qué competencia necesita más refuerzo en Ingeniería de Sistemas?"*
+- *"¿Cuántos estudiantes de Ingeniería han usado la plataforma este mes?"*
+- *"Dame el correo y cédula del estudiante con mejor puntaje en Ciudadanas"*
+- *"¿Qué competencia necesita más refuerzo en Contaduría?"*
+- *"Compara el rendimiento entre Ingeniería de Sistemas y Electrónica"*
 
-La IA tiene acceso a cédulas y correos de los estudiantes para consultas específicas.
-
-### 4.3 Cómo interpretar los datos
-
-| Indicador | Qué significa | Acción sugerida |
-|-----------|---------------|-----------------|
-| Pocas consultas en un programa | Baja adopción | Socializar la herramienta en ese programa |
-| Promedio bajo en una competencia | Necesidad de refuerzo | Solicitar más ejercicios de esa competencia |
-| Muchas calificaciones negativas | Insatisfacción con respuestas | Revisar calidad del banco de preguntas |
-| Tendencia de uso a la baja | Desinterés o abandono | Campaña de re-engagement con estudiantes |
-| Tiempo de respuesta alto en errores | Inseguridad | Sugerir práctica guiada en esa competencia |
+La IA responde basándose en los datos reales del dashboard, incluyendo cédulas y correos para consultas individuales.
 
 ---
 
-## 5. Competencias disponibles
+### 3.4 Exportar Informes
 
-| Competencia | Tipo | Descripción |
-|------------|------|-------------|
-| Lectura Crítica | General | Comprensión e interpretación de textos |
-| Razonamiento Cuantitativo | General | Matemáticas, estadística y probabilidad |
-| Comunicación Escrita | General | Producción de textos argumentativos |
-| Inglés | General | Comprensión lectora en inglés (Partes 1-7) |
-| Ciudadanas | General | Competencias sociales y éticas |
-| Específica | Por programa | Módulo específico de cada carrera |
+En la parte superior del dashboard tienes dos botones de exportación:
 
----
+![IMAGEN: dashboard_export_buttons.png]
+> *Botones de PDF y Excel en la barra superior del dashboard*
 
-## 6. Dispositivos compatibles
+| Botón | Formato | Contenido |
+|-------|---------|-----------|
+| **📄 Exportar PDF** | Documento PDF | Informe completo con 13 secciones: KPIs, gráficos SVG, tablas y recomendaciones |
+| **📊 Exportar Excel** | Hoja de cálculo | 11 hojas con todos los datos en crudo para análisis propio |
 
-| Dispositivo | Experiencia |
-|-------------|-------------|
-| Computador (recomendado) | Experiencia completa con sidebar visible |
-| Tablet | Sidebar oculto, tocar ☰ para mostrar |
-| Celular | Diseño adaptado, sidebar como menú deslizable, botones más grandes |
+**Para exportar:**
+1. Configura los filtros (programa, fechas) según lo que quieras incluir
+2. Haz clic en el botón de PDF o Excel
+3. El archivo se descargará automáticamente
+
+> El PDF incluye gráficos vectoriales (SVG) que se ven nítidos al imprimir. El Excel permite hacer tus propias tablas dinámicas y cruces de datos.
 
 ---
 
-## 7. Problemas frecuentes
+### 3.5 Interpretar los datos
 
-**No recuerdo mi clave secreta**
-> La clave es 1 solo carácter. Si no la recuerdas, contacta al gestor de conocimiento para restablecerla.
-
-**El chat no responde**
-> Verifica tu conexión a internet. Si el problema persiste, recarga la página con Ctrl+Shift+R.
-
-**El PDF o Excel no se descarga**
-> Asegúrate de tener seleccionado un rango de fechas válido. Algunos navegadores bloquean descargas — revisa la configuración de pop-ups.
-
-**No veo mis prácticas anteriores en el historial**
-> El historial del chat muestra solo conversaciones (no prácticas). Las prácticas se visualizan en el dashboard del gestor.
-
-**¿Qué hago si soy estudiante demo?**
-> El estudiante con cédula `123456789` y clave `1` es para pruebas. Sus datos no se guardan en las métricas reales.
+| Si ves esto... | Significa... | Acción recomendada |
+|---------------|-------------|-------------------|
+| 📉 Pocas consultas en un programa | Baja adopción de la herramienta | Socializar con docentes y estudiantes de ese programa |
+| 📈 Muchas consultas, bajo promedio | Los estudiantes practican pero les cuesta | Reforzar contenidos de esa competencia |
+| ⚠️ Muchas calificaciones negativas | Insatisfacción con las respuestas | Revisar banco de preguntas y calidad de IA |
+| ⏱️ Tendencia de uso a la baja | Desinterés progresivo | Campaña de re-engagement |
+| 🐢 Tiempo de respuesta alto en errores | Inseguridad en la competencia | Sugerir práctica guiada y repaso |
 
 ---
 
-## 8. Soporte
+## 4. Resumen rápido
 
-Para reportar problemas o solicitar ayuda:
-- Contacta al gestor de conocimiento de tu programa
-- Reporta incidencias técnicas al administrador del sistema
+| ¿Quieres...? | ¿Dónde? |
+|-------------|---------|
+| Practicar tipo ICFES | Chat → "Ir a práctica" |
+| Preguntar dudas | Chat — escribe tu pregunta |
+| Organizar temas | Panel izquierdo → Carpetas de estudio |
+| Ver conversaciones pasadas | Panel izquierdo → Historial |
+| Cambiar tema claro/oscuro | Panel izquierdo → ☀️/🌙 |
+| Ver métricas (coordinador) | Dashboard → modo 📊 |
+| Consultar datos con IA (coordinador) | Dashboard → modo 🧠 |
+| Descargar informe (coordinador) | Dashboard → Exportar PDF/Excel |
 
 ---
 
 *Ascenso Pro v1.0 · Universidad de Cundinamarca · Sede Fusagasugá*
+*documento generado el 7 de mayo de 2026*
