@@ -51,6 +51,14 @@
 | **RF-24** | Excel con datos completos | El reporte Excel debe incluir todos los datos crudos disponibles en el dashboard para que el coordinador pueda hacer su propio análisis. |
 | **RF-25** | PDF con gráficos vectoriales | El reporte PDF debe incluir gráficos en formato SVG nativo (sin dependencia de Plotly ni navegador) para garantizar nitidez al imprimir. |
 
+### Módulo de Historial y Sesiones
+
+| ID | Requisito | Descripción |
+|----|-----------|-------------|
+| **RF-26** | Sesiones de conversación | El sistema debe agrupar las consultas del estudiante por sesión de chat. Cada vez que el estudiante inicia un "Nuevo chat", se genera un nuevo `session_id` (UUID) y todas las consultas posteriores se asocian a esa sesión. |
+| **RF-27** | Historial agrupado por conversación | El historial debe mostrar las consultas agrupadas por sesión de chat, no como registros individuales. Cada entrada del historial representa una conversación completa con todas sus preguntas y respuestas. |
+| **RF-28** | Persistencia de ayudas visuales | Las imágenes guía, fórmulas LaTeX, pasos de estudio y demás contenido visual generado por la IA deben persistirse en el backend (`respuesta_visual` como JSON) para que estén disponibles al recargar la página o al acceder desde otro dispositivo. |
+
 ### Módulo de Chat IA del Coordinador
 
 | ID | Requisito | Descripción |
@@ -115,7 +123,7 @@
 |-----------|-----------------------------------|
 | RF-01, RF-02, RF-03, RF-12 | `AuthController.php`, `Student.php`, migración `students` |
 | RF-04, RF-07, RF-22 | `consultar.py`, `gemini_client.py` |
-| RF-05, RF-08, RF-10, RF-11 | `QueryController.php`, `client.ts` |
+| RF-05, RF-08, RF-10, RF-11, RF-26, RF-27, RF-28 | `QueryController.php`, `ChatPage.tsx`, `client.ts` |
 | RF-06 | `chroma_client.py`, `rag_service.py` |
 | RF-09, RF-23 | `sugerencias.py`, `gemini_client.py` |
 | RF-13, RF-14 | `StudentController.php` |

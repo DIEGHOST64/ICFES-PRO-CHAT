@@ -85,6 +85,7 @@ erDiagram
 
     queries {
         bigint id PK "autoincremental"
+        varchar session_id "64 - UUID de sesion de chat (agrupa consultas)"
         bigint student_id FK "ref → students.id (JOIN para obtener cedula y email)"
         varchar student_hash "64 - SHA-256 anonimizado"
         varchar student_nombre "150 - nombre del estudiante"
@@ -92,6 +93,7 @@ erDiagram
         varchar competencia "100 - competencia ICFES"
         text pregunta "texto completo de la pregunta"
         text respuesta "opcion elegida + correcta + explicacion"
+        text respuesta_visual "JSON con imagen guia, LaTeX, pasos (nullable)"
         boolean es_practica "true = practica, false = consulta"
         boolean acierto "resultado (nullable hasta evaluacion)"
         varchar nivel_pregunta "20 - basico/intermedio/avanzado/A2/B1"

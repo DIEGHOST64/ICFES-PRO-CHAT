@@ -153,11 +153,14 @@ Las carpetas te permiten organizar tus conversaciones por tema:
 ### 2.4 El Historial
 
 ![IMAGEN: chat_history.png]
-> *Panel de historial mostrando conversaciones agrupadas por "Hoy", "Ayer", "Esta semana" con miniaturas del contenido*
+> *Panel de historial mostrando conversaciones agrupadas por sesión de chat*
 
-- Tus conversaciones se agrupan automáticamente por fecha
-- Haz clic en cualquier conversación para retomarla
-- El historial muestra los **últimos 5 días**. Conversaciones más antiguas se eliminan automáticamente del panel (pero permanecen en el sistema para las métricas del coordinador)
+- Tus consultas se agrupan **por sesión de chat**: todas las preguntas y respuestas de una misma conversación aparecen como una sola entrada
+- Cada entrada muestra la primera pregunta como título y un badge con el número de mensajes (ej: "3 mensajes")
+- Al hacer clic en una conversación, se cargan **todos** los pares de pregunta-respuesta de esa sesión como un chat continuo
+- Las conversaciones se agrupan automáticamente por fecha (Hoy, Ayer, Esta semana, Anteriores)
+- Cuando haces clic en **"Nuevo chat"**, se inicia una nueva sesión y las consultas siguientes van a una conversación nueva
+- Las imágenes guía y fórmulas LaTeX generadas por la IA se conservan en el historial — al hacer clic en una conversación antigua, se restauran
 - Los filtros arriba del historial permiten ver "Todos", "Preguntas", "Prácticas" o chats de una carpeta específica
 
 ---
