@@ -935,7 +935,7 @@ export const PracticePage: React.FC = () => {
 
                 {/* Filtros */}
                 {preguntas.length === 0 && !loading && (
-                    <div data-motion="panel" className="card animate-fade-up" style={{ border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }}>
+                    <div data-motion="panel" className="card practice-card animate-fade-up" style={{ border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }}>
                         <h2 style={{ fontSize: '20px', marginBottom: 'var(--space-md)', textAlign: 'center' }}>Configura tu sesión</h2>
                         <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '10px', textAlign: 'center' }}>
                             Elige una competencia
@@ -1422,7 +1422,7 @@ export const PracticePage: React.FC = () => {
                                                 <p style={{ margin: '0 0 15px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text)' }}>
                                                     {ensayoResult.feedback_general}
                                                 </p>
-                                                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '15px' }}>
+                                                <div className="practice-results-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '15px' }}>
                                                     <div>
                                                         <strong style={{ fontSize: '12px', color: 'var(--accent)', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>✔️ Fuertes</strong>
                                                         <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
@@ -1539,12 +1539,19 @@ export const PracticePage: React.FC = () => {
                 }
                 @media (max-width: 600px) {
                     .practice-logo { display: none !important; }
-                    .practice-title { font-size: 20px !important; white-space: normal !important; }
+                    .practice-title { font-size: 18px !important; white-space: normal !important; }
                     .practice-subtitle { font-size: 12px !important; }
-                    .practice-header-row { gap: 8px !important; padding: 0 4px !important; }
+                    .practice-header-row { gap: 6px !important; padding: 0 2px !important; min-height: 48px !important; }
+                    .practice-card { padding: 12px !important; }
+                    .practice-results-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+                    .practice-question-title { font-size: 16px !important; }
+                    .practice-question-text { font-size: 14px !important; padding: 12px !important; }
                 }
                 @media (max-width: 480px) {
-                    .practice-session-grid { grid-template-columns: 1fr 1fr !important; }
+                    .practice-session-grid { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+                    .practice-title { font-size: 16px !important; }
+                    .practice-option-btn { font-size: 13px !important; padding: 10px 12px !important; }
+                    .practice-ensaio-textarea { min-height: 160px !important; }
                 }
             `}</style>
         </div>

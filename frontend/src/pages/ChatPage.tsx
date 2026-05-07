@@ -285,7 +285,7 @@ const MessageBubble: React.FC<{
                 </div>
             )}
 
-            <div style={{ maxWidth: '72%' }}>
+            <div className={`chat-msg-bubble-${isUser ? 'user' : 'ai'}`} style={{ maxWidth: '72%' }}>
                 <div style={{
                     padding: '12px 16px',
                     borderRadius: isUser
@@ -981,7 +981,7 @@ export const ChatPage: React.FC = () => {
     };
 
     return (
-        <div ref={pageRef} style={{
+        <div id="chat-root" ref={pageRef} style={{
             position: 'fixed',
             inset: 0,
             display: 'grid',
@@ -1370,7 +1370,7 @@ export const ChatPage: React.FC = () => {
             </aside>
 
             <main data-motion="headline" style={{ position: 'relative', minWidth: 0, minHeight: 0, overflow: 'hidden' }}>
-                <header data-motion="panel" style={{
+                <header data-motion="panel" className="chat-header" style={{
                     height: '72px',
                     display: 'flex',
                     alignItems: 'center',
@@ -1412,7 +1412,7 @@ export const ChatPage: React.FC = () => {
                     </div>
                 </header>
 
-                <div data-motion="panel" style={{
+                <div data-motion="panel" className="chat-messages" style={{
                     position: 'absolute',
                     top: 72,
                     left: 0,
@@ -1423,7 +1423,7 @@ export const ChatPage: React.FC = () => {
                 }}>
                     <div style={{ maxWidth: '980px', margin: '0 auto' }}>
                         {messages.length <= 1 && (
-                            <div className="animate-fade-up" style={{
+                            <div className="chat-quick-prompts animate-fade-up" style={{
                                 marginBottom: '16px',
                                 display: 'grid',
                                 gap: '8px',
@@ -1465,7 +1465,7 @@ export const ChatPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div data-motion="panel" style={{
+                <div data-motion="panel" className="chat-input-area" style={{
                     position: 'absolute',
                     left: '24px',
                     right: '24px',
@@ -1668,6 +1668,7 @@ export const ChatPage: React.FC = () => {
                     .chat-sidebar { width: 260px !important; }
                 }
                 @media (max-width: 768px) {
+                    #chat-root { grid-template-columns: 1fr !important; }
                     .chat-sidebar {
                         position: fixed !important;
                         left: 0;
@@ -1677,10 +1678,31 @@ export const ChatPage: React.FC = () => {
                         transform: translateX(-100%);
                         transition: transform 0.25s ease;
                         box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+                        z-index: 100 !important;
                     }
                     .chat-sidebar.sidebar-open { transform: translateX(0); }
-                    main { margin-left: 0 !important; }
                     .sidebar-toggle { display: flex !important; }
+                    .chat-header { padding: 0 12px !important; }
+                    .chat-header h2 { font-size: 15px !important; }
+                    .chat-header p { font-size: 11px !important; }
+                    .chat-header .badge { font-size: 10px !important; }
+                    .chat-header .btn { height: 26px !important; font-size: 11px !important; padding: 0 8px !important; }
+                    .chat-messages { padding: 16px 12px 140px 12px !important; }
+                    .chat-msg-bubble-user { max-width: 88% !important; }
+                    .chat-msg-bubble-ai { max-width: 92% !important; }
+                    .chat-input-area {
+                        left: 8px !important;
+                        right: 8px !important;
+                        bottom: 8px !important;
+                    }
+                    .chat-input-area textarea { font-size: 14px !important; }
+                    .chat-quick-prompts button { font-size: 11px !important; padding: 6px 10px !important; }
+                }
+                @media (max-width: 480px) {
+                    .chat-header h2 { font-size: 14px !important; }
+                    .chat-messages { padding: 12px 8px 130px 8px !important; }
+                    .chat-msg-bubble-user { max-width: 92% !important; }
+                    .chat-msg-bubble-ai { max-width: 95% !important; }
                 }
                 .history-filter-chip:hover {
                     transform: translateY(-1px);
