@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Query extends Model
 {
     protected $fillable = [
+        'session_id',
         'student_id',
         'student_nombre',
         'student_hash',

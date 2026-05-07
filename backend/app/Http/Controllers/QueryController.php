@@ -26,6 +26,7 @@ class QueryController extends Controller
             'nivel_pregunta' => 'nullable|string|max:20',
             'tipo_pregunta' => 'nullable|string|max:40',
             'respuesta_visual' => 'nullable|string',
+            'session_id' => 'nullable|string|max:64',
         ]);
 
         $student = $request->user(); // Autenticado con Sanctum
@@ -42,6 +43,7 @@ class QueryController extends Controller
         $studentHash = hash('sha256', 'icfes_salt_' . $student->id);
 
         $query = Query::create([
+            'session_id' => $request->get('session_id'),
             'student_id' => $student->id,
             'student_nombre' => $student->nombre,
             'student_hash' => $studentHash,
@@ -76,7 +78,7 @@ class QueryController extends Controller
         $queries = Query::where('student_hash', $studentHash)
             ->where('created_at', '>=', now()->subDays(5))
             ->orderBy('created_at', 'asc')
-            ->select(['id', 'pregunta', 'respuesta', 'respuesta_visual', 'competencia', 'calificacion', 'es_practica', 'acierto', 'created_at'])
+            ->select(['id', 'session_id', 'pregunta', 'respuesta', 'respuesta_visual', 'competencia', 'calificacion', 'es_practica', 'acierto', 'created_at'])
             ->get();
 
         return response()->json($queries);

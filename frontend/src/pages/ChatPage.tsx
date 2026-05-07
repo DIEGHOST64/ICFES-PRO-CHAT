@@ -93,26 +93,23 @@ const groupHistoryByDate = (items: QueryRecord[]) => {
     const todayStart = startOfDay(now).getTime();
     const oneDayMs = 24 * 60 * 60 * 1000;
 
-    // Merge consecutive queries within 5 minutes into conversations
-    const CONVERSATION_GAP_MS = 5 * 60 * 1000;
-    const conversations: QueryRecord[][] = [];
-    let current: QueryRecord[] = [];
+    // Group by session_id, fallback to individual items
+    const sessionMap = new Map<string, QueryRecord[]>();
+    const orphans: QueryRecord[] = [];
 
     for (const q of items) {
-        const t = new Date(q.created_at).getTime();
-        if (current.length === 0) {
-            current.push(q);
+        if (q.session_id) {
+            const existing = sessionMap.get(q.session_id) || [];
+            existing.push(q);
+            sessionMap.set(q.session_id, existing);
         } else {
-            const lastT = new Date(current[current.length - 1].created_at).getTime();
-            if (t - lastT <= CONVERSATION_GAP_MS) {
-                current.push(q);
-            } else {
-                conversations.push(current);
-                current = [q];
-            }
+            orphans.push(q);
         }
     }
-    if (current.length > 0) conversations.push(current);
+
+    const conversations: QueryRecord[][] = [...sessionMap.values()];
+    for (const o of orphans) conversations.push([o]);
+    conversations.sort((a, b) => new Date(a[0].created_at).getTime() - new Date(b[0].created_at).getTime());
 
     const groups: Array<{ key: string; label: string; items: QueryRecord[][]; }> = [
         { key: 'hoy', label: 'Hoy', items: [] },
@@ -482,6 +479,7 @@ export const ChatPage: React.FC = () => {
     const [practiceTransitioning, setPracticeTransitioning] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 769);
+    const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
 
     useEffect(() => {
         const mq = window.matchMedia('(min-width: 769px)');
@@ -736,6 +734,7 @@ export const ChatPage: React.FC = () => {
     };
 
     const startNewChat = () => {
+        setSessionId(crypto.randomUUID());
         if (activeWorkspaceFolderId) {
             createChatInFolder(activeWorkspaceFolderId);
             return;
@@ -906,6 +905,7 @@ export const ChatPage: React.FC = () => {
                     pregunta,
                     respuesta: fullText,
                     tiempo_respuesta_ms: 0,
+                    session_id: sessionId,
                 });
                 queryId = saveRes.data.id;
                 setHistory(prev => [{

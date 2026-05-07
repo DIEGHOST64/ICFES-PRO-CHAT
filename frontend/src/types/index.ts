@@ -17,6 +17,7 @@ export interface AuthToken {
 
 export interface QueryRecord {
     id: number;
+    session_id?: string | null;
     pregunta: string;
     respuesta: string;
     respuesta_visual?: string | null;
