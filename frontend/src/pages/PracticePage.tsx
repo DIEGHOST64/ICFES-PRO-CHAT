@@ -7,6 +7,7 @@ import { aiAPI, queriesAPI } from '../api/client';
 import type { Pregunta } from '../types';
 import { useGsapPageMotion } from '../hooks/useGsapPageMotion';
 import { InstitutionalLogo } from '../components/InstitutionalLogo';
+import './PracticePage.css';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import ReactMarkdown from 'react-markdown';
@@ -738,7 +739,7 @@ export const PracticePage: React.FC = () => {
     const SessionIcon = sessionVisual.Icon;
 
     return (
-        <div ref={pageRef} style={{ minHeight: '100dvh', boxSizing: 'border-box', background: 'var(--grad-hero)', padding: 'var(--space-lg)', position: 'relative' }}>
+        <div ref={pageRef} className="practice-root">
             <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1, overflow: 'hidden' }}>
                 {particleConfigs.map((p, i) => (
                     <span
