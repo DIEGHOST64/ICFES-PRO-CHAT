@@ -18,7 +18,6 @@ import type { ChatMessage, QueryRecord } from '../types';
 import { useGsapPageMotion } from '../hooks/useGsapPageMotion';
 import { useVisualMood } from '../context/VisualMoodContext';
 import { InstitutionalLogo } from '../components/InstitutionalLogo';
-import './ChatPage.css';
 
 const CHAT_VISUAL_HISTORY_PREFIX = 'sp_chat_visual_history_cutoff_v1';
 const CHAT_STUDY_FOLDERS_PREFIX = 'sp_chat_study_folders_v1';
@@ -264,15 +263,41 @@ const MessageBubble: React.FC<{
     const isUser = msg.role === 'user';
 
     return (
-        <div className={`chat-msg-row ${isUser ? 'user' : ''}`}>
+        <div className="animate-fade-up" style={{
+            display: 'flex',
+            flexDirection: isUser ? 'row-reverse' : 'row',
+            gap: 'var(--space-sm)',
+            marginBottom: 'var(--space-md)',
+            alignItems: 'flex-end',
+        }}>
             {!isUser && (
-                <div className="chat-msg-avatar">
+                <div style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: 'var(--radius-full)',
+                    background: 'var(--primary)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                }}>
                     <Brain size={15} color="#fff" />
                 </div>
             )}
 
-            <div className={`chat-msg-bubble ${isUser ? 'user' : 'ai'}`}>
-                <div>
+            <div className={`chat-msg-bubble-${isUser ? 'user' : 'ai'}`} style={{ maxWidth: '72%' }}>
+                <div style={{
+                    padding: '12px 16px',
+                    borderRadius: isUser
+                        ? 'var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg)'
+                        : 'var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm)',
+                    background: isUser ? 'var(--primary)' : 'var(--surface)',
+                    color: isUser ? '#fff' : 'var(--text)',
+                    border: isUser ? 'none' : '1px solid var(--border)',
+                    boxShadow: isUser ? '0 10px 20px rgba(0,0,0,0.20)' : '0 8px 18px rgba(0,0,0,0.10)',
+                    fontSize: '14px',
+                    lineHeight: '1.6',
+                }}>
                     {msg.streaming && !msg.content
                         ? <div style={{ display: 'flex', gap: '5px', alignItems: 'center', padding: '2px 0' }}>
                             {[0, 1, 2].map(i => <span key={i} className="typing-dot" style={{ animationDelay: `${i * 0.16}s` }} />)}
@@ -289,6 +314,7 @@ const MessageBubble: React.FC<{
                                 </ReactMarkdown>
                                 {msg.streaming && <span className="streaming-cursor" />}
                               </div>}
+                                </div>
 
                 {!isUser && (
                     <div style={{ marginTop: '6px', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
@@ -436,6 +462,15 @@ export const ChatPage: React.FC = () => {
     const [activeFolderChatId, setActiveFolderChatId] = useState<string | null>(null);
     const [practiceTransitioning, setPracticeTransitioning] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 769);
+
+    useEffect(() => {
+        const mq = window.matchMedia('(min-width: 769px)');
+        const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+        setIsDesktop(mq.matches);
+        mq.addEventListener('change', handler);
+        return () => mq.removeEventListener('change', handler);
+    }, []);
 
     const quickPrompts = useMemo(() => buildPersonalizedPrompts(history), [history]);
     const chatHistoryOnly = useMemo(() => history.filter((q) => !q.es_practica), [history]);
@@ -955,9 +990,31 @@ export const ChatPage: React.FC = () => {
     };
 
     return (
-        <div className="chat-root" ref={pageRef}>
-            <div className={`chat-sidebar-backdrop ${sidebarOpen ? 'visible' : ''}`} onClick={() => setSidebarOpen(false)} />
-            <aside data-motion="panel" className={`glass-panel chat-sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <div id="chat-root" ref={pageRef} style={{
+            position: 'fixed',
+            inset: 0,
+            display: 'grid',
+            gridTemplateColumns: '320px 1fr',
+            background: 'transparent',
+            overflow: 'hidden',
+        }}>
+            {!isDesktop && sidebarOpen && (
+                <div style={{ position: 'fixed', inset: 0, zIndex: 99, background: 'rgba(0,0,0,0.45)' }} onClick={() => setSidebarOpen(false)} />
+            )}
+            <aside data-motion="panel" className="glass-panel" style={{
+                background: 'var(--surface)',
+                color: 'var(--text)',
+                padding: '20px 16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+                borderRight: '1px solid var(--border)',
+                overflow: 'hidden',
+                ...(isDesktop
+                    ? { position: 'relative', zIndex: 1 }
+                    : { position: 'fixed', zIndex: 100, left: 0, top: 0, bottom: 0, width: 280, transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)', transition: 'transform 0.25s ease' }
+                ),
+            }}>
                 <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
                     {sidebarParticles.map((p, i) => (
                         <span
@@ -1326,31 +1383,93 @@ export const ChatPage: React.FC = () => {
                 </div>
             </aside>
 
-<main data-motion="headline" className="chat-main">
-                <header data-motion="panel" className="chat-header">
-                    <div className="chat-header-left">
-                        <button className="chat-hamburger" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Menú">
-                            {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
-                        </button>
-                        <div style={{ minWidth: 0 }}>
-                            <h2 className="chat-header-title"><Brain size={15} color="#3e6f62" /> Chat de Aprendizaje</h2>
-                            <p className="chat-header-subtitle">{student?.programa} · Modo motivación ON</p>
-                        </div>
+            <main data-motion="headline" style={{ position: 'relative', minWidth: 0, minHeight: 0, overflow: 'hidden' }}>
+                <header data-motion="panel" className="chat-header" style={{
+                    height: '72px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0 24px',
+                    borderBottom: '1px solid var(--border)',
+                    background: 'color-mix(in srgb, var(--surface) 80%, transparent)',
+                    backdropFilter: 'blur(8px)',
+                }}>
+                    <div>
+                        <h2 style={{ fontSize: '18px', fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            {!isDesktop && (
+                                <button className="btn-icon" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Menú" style={{ width: '36px', height: '36px', borderColor: 'var(--border)', background: 'var(--surface)', flexShrink: 0 }}>
+                                    {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
+                                </button>
+                            )}
+                            <Brain size={15} color="#3e6f62" /> Chat de Aprendizaje
+                        </h2>
+                        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{student?.programa} · Modo motivación ON</p>
                     </div>
-                    <div className="chat-header-actions">
-                        <button className="chat-header-btn" onClick={startNewChat}><MessageSquarePlus size={13} /> Nuevo chat</button>
-                        <span className="badge badge-accent chat-online-badge">En línea</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <button
+                            className="btn"
+                            onClick={startNewChat}
+                            style={{
+                                height: '30px',
+                                padding: '0 10px',
+                                fontSize: '12px',
+                                borderRadius: '999px',
+                                background: 'var(--surface)',
+                                border: '1px solid var(--border)',
+                                color: 'var(--text)',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                            }}
+                        >
+                            <MessageSquarePlus size={13} /> Nuevo chat
+                        </button>
+                        <span className="badge badge-accent" style={{ fontSize: '12px', boxShadow: '0 6px 14px rgba(46,126,93,0.24)' }}>En línea</span>
                     </div>
                 </header>
 
-                <div data-motion="panel" className="chat-messages">
-                    <div className="chat-messages-inner">
+                <div data-motion="panel" className="chat-messages" style={{
+                    position: 'absolute',
+                    top: 72,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    overflowY: 'auto',
+                    padding: '24px 24px 160px 24px',
+                }}>
+                    <div style={{ maxWidth: '980px', margin: '0 auto' }}>
                         {messages.length <= 1 && (
-                            <div className="chat-quick-prompts animate-fade-up">
-                                <p className="chat-quick-title">Arranca con una de estas:</p>
-                                <div className="chat-quick-chips">
+                            <div className="chat-quick-prompts animate-fade-up" style={{
+                                marginBottom: '16px',
+                                display: 'grid',
+                                gap: '8px',
+                            }}>
+                                <p style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: 600 }}>Arranca con una de estas:</p>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                     {quickPrompts.map((qp) => (
-                                        <button key={qp} className="chat-quick-chip" onClick={() => handleQuickPrompt(qp)}>{qp}</button>
+                                        <button
+                                            key={qp}
+                                            onClick={() => handleQuickPrompt(qp)}
+                                            style={{
+                                                padding: '8px 12px',
+                                                borderRadius: '999px',
+                                                border: '1px solid var(--border)',
+                                                background: 'var(--surface)',
+                                                fontSize: '12px',
+                                                color: 'var(--text)',
+                                                transition: 'var(--t-fast)',
+                                            }}
+                                            onMouseOver={e => {
+                                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                                e.currentTarget.style.boxShadow = '0 8px 16px rgba(61,108,140,0.18)';
+                                            }}
+                                            onMouseOut={e => {
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = 'none';
+                                            }}
+                                        >
+                                            {qp}
+                                        </button>
                                     ))}
                                 </div>
                             </div>
@@ -1362,11 +1481,34 @@ export const ChatPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div data-motion="panel" className="chat-input-area">
-                    <div className="chat-input-row">
+                <div data-motion="panel" className="chat-input-area" style={{
+                    position: 'absolute',
+                    left: '24px',
+                    right: '24px',
+                    bottom: '20px',
+                    background: 'color-mix(in srgb, var(--surface) 90%, transparent)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '18px',
+                    boxShadow: '0 14px 30px rgba(0,0,0,0.14)',
+                    backdropFilter: 'blur(10px)',
+                    padding: '10px 10px 12px 14px',
+                }}>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
                         <textarea
                             ref={inputRef}
-                            className="chat-input-textarea"
+                            className="input"
+                            style={{
+                                flex: 1,
+                                border: 'none',
+                                background: 'transparent',
+                                resize: 'none',
+                                minHeight: '24px',
+                                maxHeight: '120px',
+                                padding: 0,
+                                boxShadow: 'none',
+                                fontSize: '15px',
+                                lineHeight: '1.5',
+                            }}
                             placeholder="Escribe tu pregunta..."
                             value={input}
                             onChange={e => setInput(e.target.value)}
@@ -1374,11 +1516,11 @@ export const ChatPage: React.FC = () => {
                             rows={1}
                             disabled={loading}
                         />
-                        <button className="chat-input-send" onClick={handleSend} disabled={!input.trim() || loading} aria-label="Enviar pregunta">
+                        <button className="btn btn-primary" onClick={handleSend} disabled={!input.trim() || loading} style={{ height: '38px', padding: '0 16px', flexShrink: 0 }} aria-label="Enviar pregunta">
                             {loading ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Send size={16} />}
                         </button>
                     </div>
-                    <p className="chat-input-hint">Enter para enviar · Shift+Enter nueva línea</p>
+                    <p style={{ fontSize: '11px', color: 'var(--text-hint)', marginTop: '8px', textAlign: 'center' }}>Enter para enviar · Shift+Enter nueva línea</p>
                 </div>
             </main>
 
@@ -1537,6 +1679,30 @@ export const ChatPage: React.FC = () => {
                 @keyframes practice-transition-particles {
                     0% { transform: translate3d(0, 0, 0) scale(0.88); opacity: 0.4; }
                     100% { transform: translate3d(12px, -18px, 0) scale(1.18); opacity: 1; }
+                }
+                @media (max-width: 768px) {
+                    #chat-root { grid-template-columns: 1fr !important; }
+                    .chat-header { padding: 0 12px !important; }
+                    .chat-header h2 { font-size: 15px !important; }
+                    .chat-header p { font-size: 11px !important; }
+                    .chat-header .badge { font-size: 10px !important; }
+                    .chat-header .btn { height: 26px !important; font-size: 11px !important; padding: 0 8px !important; }
+                    .chat-messages { padding: 16px 12px 140px 12px !important; }
+                    .chat-msg-bubble-user { max-width: 88% !important; }
+                    .chat-msg-bubble-ai { max-width: 92% !important; }
+                    .chat-input-area {
+                        left: 8px !important;
+                        right: 8px !important;
+                        bottom: 8px !important;
+                    }
+                    .chat-input-area textarea { font-size: 14px !important; }
+                    .chat-quick-prompts button { font-size: 11px !important; padding: 6px 10px !important; }
+                }
+                @media (max-width: 480px) {
+                    .chat-header h2 { font-size: 14px !important; }
+                    .chat-messages { padding: 12px 8px 130px 8px !important; }
+                    .chat-msg-bubble-user { max-width: 92% !important; }
+                    .chat-msg-bubble-ai { max-width: 95% !important; }
                 }
                 .history-filter-chip:hover {
                     transform: translateY(-1px);
