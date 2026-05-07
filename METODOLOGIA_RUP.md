@@ -16,7 +16,7 @@ El proyecto se desarrolló siguiendo las 4 fases de la metodología RUP (Rationa
 Se identificó que los estudiantes de la Universidad de Cundinamarca no cuentan con una herramienta de preparación guiada para las pruebas Saber Pro. Los cuadernillos oficiales existen pero son estáticos: no ofrecen retroalimentación personalizada ni se adaptan al nivel del estudiante. Se definió que el prototipo debía resolver dos necesidades principales: (a) un chat conversacional que explique conceptos tipo ICFES usando IA generativa, y (b) un módulo de práctica con preguntas adaptativas que simule el examen real.
 
 **2. Definición de requisitos funcionales**
-Se documentaron 19 requisitos funcionales (RF-01 a RF-19) que cubren:
+Se documentaron 25 requisitos funcionales (RF-01 a RF-25) que cubren:
 - Registro y autenticación de estudiantes (RF-01 a RF-03)
 - Chat con IA contextual usando RAG (RF-04 a RF-07)
 - Historial de consultas y calificaciones (RF-08, RF-10)
@@ -24,6 +24,9 @@ Se documentaron 19 requisitos funcionales (RF-01 a RF-19) que cubren:
 - Autenticación del coordinador (RF-12)
 - Panel de gestión de estudiantes (RF-13, RF-14)
 - Dashboard con métricas e indicadores (RF-15 a RF-19)
+- Exportación de reportes (RF-20, RF-21, RF-24, RF-25)
+- Chat IA del coordinador (RF-22)
+- Generación de práctica adaptativa (RF-23)
 
 **3. Selección del stack tecnológico**
 Tras evaluar alternativas, se seleccionó:
@@ -49,7 +52,7 @@ Se elaboró el diagrama C4 de contenedores y el modelo entidad-relación (ERD) d
 Se recopilaron y analizaron cuadernillos oficiales ICFES, guías de orientación y ejemplos de preguntas para cada competencia. Se identificaron las 5 competencias genéricas (Lectura Crítica, Razonamiento Cuantitativo, Comunicación Escrita, Inglés, Ciudadanas) más los módulos específicos de cada programa académico. Este material se usó posteriormente como base de conocimiento para el pipeline RAG.
 
 ### Entregables de la fase
-- Documento de requisitos funcionales (RF-01 a RF-19)
+- Documento de requisitos funcionales (RF-01 a RF-25)
 - Diagrama de arquitectura C4
 - Modelo entidad-relación (ERD)
 - Stack tecnológico definido y justificado

@@ -139,7 +139,7 @@ erDiagram
 
 ### Explicacion
 
-El diagrama entidad-relacion muestra las 10 tablas de la base de datos PostgreSQL y sus relaciones logicas. Se distinguen tres categorias: tablas de dominio (`students`, `coordinators`, `queries`), tablas de autenticacion (`users`, `personal_access_tokens`, `sessions`) y tablas de infraestructura Laravel (`cache`, `jobs`). La estructura esta optimizada para consultas analiticas del dashboard, no para integridad referencial estricta.
+El diagrama entidad-relacion muestra las 13 tablas de la base de datos PostgreSQL y sus relaciones logicas. Se distinguen tres categorias: tablas de dominio (`students`, `coordinators`, `queries`), tablas de autenticacion (`users`, `personal_access_tokens`, `sessions`) y tablas de infraestructura Laravel (`cache`, `jobs`). La estructura esta optimizada para consultas analiticas del dashboard, no para integridad referencial estricta.
 
 La tabla `queries` es el nucleo del sistema: almacena cada interaccion del estudiante (practica o consulta) con 17 columnas que registran competencia, respuesta, acierto, tiempo de respuesta en milisegundos y nivel adaptativo. La tabla `students` usa la cedula como identificador unico y se relaciona con queries sin FK fisica para preservar el historial aunque el estudiante sea eliminado. `personal_access_tokens` usa un diseno polimorfico de Sanctum (`tokenable_type` + `tokenable_id`) para servir tokens a los tres tipos de usuarios (students, users, coordinators) desde una sola tabla.
 
