@@ -59,124 +59,124 @@ erDiagram
     users ||--o{ sessions : "mantiene sesiones<br/>de navegador"
     
     students {
-        bigint id PK "autoincremental"
-        varchar cedula UK "20 - identificador unico del estudiante"
-        varchar nombre "150 - nombre completo"
-        varchar email "255 - correo electronico del estudiante (nullable)"
-        varchar programa "100 - carrera academica"
-        varchar password_hash "255 - bcrypt hash"
+        bigint id PK
+        varchar cedula UK "identificador unico"
+        varchar nombre "nombre completo"
+        varchar email "correo electronico"
+        varchar programa "carrera academica"
+        varchar password_hash "bcrypt hash"
     }
 
     coordinators {
-        bigint id PK "autoincremental"
-        varchar nombre "150 - nombre completo"
-        varchar email UK "255 - correo institucional"
-        varchar password "255 - bcrypt hash"
+        bigint id PK
+        varchar nombre "nombre completo"
+        varchar email UK "correo institucional"
+        varchar password "bcrypt hash"
     }
 
     users {
-        bigint id PK "autoincremental - Laravel auth nativo"
-        varchar name "255"
-        varchar email UK "255"
-        timestamp email_verified_at "nullable - verificacion de email"
-        varchar password "255 - bcrypt hash"
-        varchar remember_token "100 - sesion persistente"
+        bigint id PK "Laravel auth"
+        varchar name
+        varchar email UK
+        timestamp email_verified_at
+        varchar password "bcrypt hash"
+        varchar remember_token "sesion persistente"
     }
 
     queries {
-        bigint id PK "autoincremental"
-        varchar session_id "64 - UUID de sesion de chat (agrupa consultas)"
-        bigint student_id FK "ref → students.id (JOIN para obtener cedula y email)"
-        varchar student_hash "64 - SHA-256 anonimizado"
-        varchar student_nombre "150 - nombre del estudiante"
-        varchar programa "100 - carrera en el momento"
-        varchar competencia "100 - competencia ICFES"
-        text pregunta "texto completo de la pregunta"
-        text respuesta "opcion elegida + correcta + explicacion"
-        text respuesta_visual "JSON con imagen guia, LaTeX, pasos (nullable)"
-        boolean es_practica "true = practica, false = consulta"
-        boolean acierto "resultado (nullable hasta evaluacion)"
-        varchar nivel_pregunta "20 - basico/intermedio/avanzado/A2/B1"
-        varchar nivel_objetivo "20 - nivel adaptativo del estudiante"
-        varchar tipo_pregunta "40 - part1-part7 (solo Ingles)"
-        int tiempo_respuesta_ms "milisegundos en responder"
-        boolean calificacion "utilidad reportada por estudiante"
+        bigint id PK
+        varchar session_id "UUID sesion de chat"
+        bigint student_id FK
+        varchar student_hash "SHA-256 anonimizado"
+        varchar student_nombre "nombre del estudiante"
+        varchar programa "carrera"
+        varchar competencia "competencia ICFES"
+        text pregunta "pregunta del estudiante"
+        text respuesta "respuesta completa"
+        text respuesta_visual "JSON ayudas visuales"
+        boolean es_practica
+        boolean acierto "correcto/incorrecto"
+        varchar nivel_pregunta "basico/intermedio/avanzado"
+        varchar nivel_objetivo "nivel adaptativo"
+        varchar tipo_pregunta "part1-7 ingles"
+        int tiempo_respuesta_ms
+        boolean calificacion "util/no util"
     }
 
     sessions {
-        varchar id PK "255 - ID de sesion Laravel"
-        bigint user_id FK "ref → users.id o students.cedula"
-        varchar ip_address "45"
-        text user_agent "navegador del usuario"
-        text payload "datos serializados de sesion"
-        int last_activity "timestamp ultima actividad"
+        varchar id PK "ID de sesion"
+        bigint user_id FK
+        varchar ip_address
+        text user_agent "navegador"
+        text payload "datos sesion"
+        int last_activity "ultima actividad"
     }
 
     personal_access_tokens {
-        bigint id PK "autoincremental - Sanctum API tokens"
-        varchar tokenable_type "255 - students, users o coordinators"
-        bigint tokenable_id "ID del modelo dueno del token"
-        text name "nombre descriptivo del token"
-        varchar token UK "64 - hash SHA-256 del token"
-        text abilities "permisos del token (json)"
-        timestamp last_used_at "ultimo uso del token"
-        timestamp expires_at "fecha de expiracion"
+        bigint id PK "Sanctum tokens"
+        varchar tokenable_type "students/coordinators/users"
+        bigint tokenable_id "ID del dueno"
+        text name "nombre del token"
+        varchar token UK "hash SHA-256"
+        text abilities "permisos JSON"
+        timestamp last_used_at
+        timestamp expires_at
     }
 
     cache {
-        varchar key PK "255 - clave de cache"
+        varchar key PK "clave de cache"
         text value "valor serializado"
-        int expiration "timestamp de expiracion"
+        int expiration "timestamp expiracion"
     }
 
      jobs {
-        bigint id PK "autoincremental - cola de trabajos"
-        varchar queue "255 - nombre de la cola"
-        text payload "trabajo serializado (JSON)"
-        smallint attempts "intentos realizados"
-        int available_at "timestamp de disponibilidad"
-        int created_at "timestamp de creacion"
+        bigint id PK "cola de trabajos"
+        varchar queue "nombre de la cola"
+        text payload "trabajo JSON"
+        smallint attempts "intentos"
+        int available_at
+        int created_at
     }
 
     cache_locks {
-        varchar key PK "255 - clave del lock"
-        varchar owner "255 - identificador del proceso"
-        int expiration "timestamp de expiracion"
+        varchar key PK "clave del lock"
+        varchar owner "proceso dueno"
+        int expiration "timestamp expiracion"
     }
 
     failed_jobs {
-        bigint id PK "autoincremental - trabajos fallidos"
-        varchar uuid "36 - identificador unico universal"
-        text connection "conexion a la cola"
-        text queue "nombre de la cola"
-        text payload "trabajo serializado (JSON)"
-        text exception "traza del error"
-        timestamp failed_at "marca de tiempo del fallo"
+        bigint id PK "trabajos fallidos"
+        varchar uuid "ID universal"
+        text connection "conexion cola"
+        text queue "nombre cola"
+        text payload "trabajo JSON"
+        text exception "traza error"
+        timestamp failed_at
     }
 
     job_batches {
-        varchar id PK "255 - ID del lote"
-        varchar name "255 - nombre del lote"
-        int total_jobs "total de trabajos"
-        int pending_jobs "trabajos pendientes"
-        int failed_jobs "trabajos fallidos en el lote"
-        text failed_job_ids "IDs de los trabajos fallidos (JSON)"
-        text options "opciones del lote (JSON)"
-        int created_at "timestamp de creacion"
-        timestamp cancelled_at "marca de cancelacion"
-        timestamp finished_at "marca de finalizacion"
+        varchar id PK "ID del lote"
+        varchar name "nombre"
+        int total_jobs "total trabajos"
+        int pending_jobs "pendientes"
+        int failed_jobs "fallidos"
+        text failed_job_ids "IDs JSON"
+        text options "opciones JSON"
+        int created_at
+        timestamp cancelled_at
+        timestamp finished_at
     }
 
     migrations {
-        bigint id PK "autoincremental"
-        varchar migration "255 - nombre del archivo de migracion"
-        int batch "lote de migracion en que se ejecuto"
+        bigint id PK
+        varchar migration "archivo migracion"
+        int batch "lote ejecucion"
     }
 
     password_reset_tokens {
-        varchar email PK "255 - email del usuario"
-        varchar token "64 - token de restablecimiento"
-        timestamp created_at "marca de tiempo de creacion"
+        varchar email PK "email usuario"
+        varchar token "token reset"
+        timestamp created_at
     }
 ```
 
