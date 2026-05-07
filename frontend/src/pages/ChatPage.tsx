@@ -93,27 +93,45 @@ const groupHistoryByDate = (items: QueryRecord[]) => {
     const todayStart = startOfDay(now).getTime();
     const oneDayMs = 24 * 60 * 60 * 1000;
 
-    const groups: Array<{ key: string; label: string; items: QueryRecord[] }> = [
+    // Merge consecutive queries within 5 minutes into conversations
+    const CONVERSATION_GAP_MS = 5 * 60 * 1000;
+    const conversations: QueryRecord[][] = [];
+    let current: QueryRecord[] = [];
+
+    for (const q of items) {
+        const t = new Date(q.created_at).getTime();
+        if (current.length === 0) {
+            current.push(q);
+        } else {
+            const lastT = new Date(current[current.length - 1].created_at).getTime();
+            if (t - lastT <= CONVERSATION_GAP_MS) {
+                current.push(q);
+            } else {
+                conversations.push(current);
+                current = [q];
+            }
+        }
+    }
+    if (current.length > 0) conversations.push(current);
+
+    const groups: Array<{ key: string; label: string; items: QueryRecord[][]; }> = [
         { key: 'hoy', label: 'Hoy', items: [] },
         { key: 'ayer', label: 'Ayer', items: [] },
         { key: 'semana', label: 'Esta semana', items: [] },
         { key: 'anteriores', label: 'Anteriores', items: [] },
     ];
 
-    for (const q of items) {
-        const createdAt = new Date(q.created_at);
+    for (const conv of conversations) {
+        const createdAt = new Date(conv[0].created_at);
         if (Number.isNaN(createdAt.getTime())) {
-            groups[3].items.push(q);
-            continue;
+            groups[3].items.push(conv); continue;
         }
-
         const itemDayStart = startOfDay(createdAt).getTime();
         const dayDiff = Math.floor((todayStart - itemDayStart) / oneDayMs);
-
-        if (dayDiff <= 0) groups[0].items.push(q);
-        else if (dayDiff === 1) groups[1].items.push(q);
-        else if (dayDiff <= 7) groups[2].items.push(q);
-        else groups[3].items.push(q);
+        if (dayDiff <= 0) groups[0].items.push(conv);
+        else if (dayDiff === 1) groups[1].items.push(conv);
+        else if (dayDiff <= 7) groups[2].items.push(conv);
+        else groups[3].items.push(conv);
     }
 
     return groups.filter(g => g.items.length > 0);
@@ -1321,72 +1339,59 @@ export const ChatPage: React.FC = () => {
                                 }}>
                                     {group.label}
                                 </p>
-                                {group.items.map((q, idx) => {
+                                {group.items.map((conv, idx) => {
+                                    const firstQ = conv[0];
                                     const isLast = idx === group.items.length - 1;
-                                    const createdAt = new Date(q.created_at);
+                                    const createdAt = new Date(firstQ.created_at);
                                     const timeLabel = group.key === 'anteriores'
                                         ? createdAt.toLocaleString('es-CO', {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
+                                            day: '2-digit', month: '2-digit',
+                                            hour: '2-digit', minute: '2-digit',
                                         }).replace(',', ' ·')
                                         : createdAt.toLocaleTimeString('es-CO', {
-                                            hour: '2-digit',
-                                            minute: '2-digit',
+                                            hour: '2-digit', minute: '2-digit',
                                         });
+                                    const msgCount = conv.length;
                                     return (
                                         <div
-                                            key={`${group.key}-${q.id}-${idx}`}
+                                            key={`${group.key}-${firstQ.id}-${idx}`}
                                             style={{
                                                 padding: '8px',
                                                 borderBottom: isLast ? 'none' : '1px solid var(--border)',
                                                 cursor: 'pointer',
                                             }}
                                             onClick={() => {
-                                                const stamp = `${q.id}_${Date.now()}`;
-                                                let visual = {};
-                                                try {
-                                                    if (q.respuesta_visual) {
-                                                        const v = JSON.parse(q.respuesta_visual);
-                                                        visual = {
-                                                            guideImageUrl: v.guideImageUrl || undefined,
-                                                            guideImageCaption: v.guideImageCaption || undefined,
-                                                            guideImageModel: v.guideImageModel || undefined,
-                                                            guideImageError: v.guideImageError || undefined,
-                                                            latexFormula: v.latexFormula || undefined,
-                                                            latexExplanation: v.latexExplanation || undefined,
-                                                            guideTitle: v.guideTitle || undefined,
-                                                            guideSteps: v.guideSteps || undefined,
-                                                        };
-                                                    }
-                                                } catch {}
-                                                setMessages(prev => [
-                                                    ...prev,
-                                                    { id: `${stamp}_q`, role: 'user', content: q.pregunta, timestamp: new Date(q.created_at) },
-                                                    { id: `${stamp}_a`, role: 'assistant', content: q.respuesta, timestamp: new Date(q.created_at), rated: q.calificacion, queryId: q.id, ...visual },
-                                                ]);
+                                                const newMsgs: ChatMessage[] = [];
+                                                for (const q of conv) {
+                                                    let visual = {};
+                                                    try {
+                                                        if (q.respuesta_visual) {
+                                                            const v = JSON.parse(q.respuesta_visual);
+                                                            visual = {
+                                                                guideImageUrl: v.guideImageUrl || undefined,
+                                                                guideImageCaption: v.guideImageCaption || undefined,
+                                                                guideImageModel: v.guideImageModel || undefined,
+                                                                guideImageError: v.guideImageError || undefined,
+                                                                latexFormula: v.latexFormula || undefined,
+                                                                latexExplanation: v.latexExplanation || undefined,
+                                                                guideTitle: v.guideTitle || undefined,
+                                                                guideSteps: v.guideSteps || undefined,
+                                                            };
+                                                        }
+                                                    } catch {}
+                                                    const stamp = `${q.id}_${Date.now()}_${Math.random()}`;
+                                                    newMsgs.push(
+                                                        { id: `${stamp}_q`, role: 'user', content: q.pregunta, timestamp: new Date(q.created_at) },
+                                                        { id: `${stamp}_a`, role: 'assistant', content: q.respuesta, timestamp: new Date(q.created_at), rated: q.calificacion, queryId: q.id, ...visual },
+                                                    );
+                                                }
+                                                setMessages(prev => [...prev, ...newMsgs]);
                                             }}
                                         >
-                                            <p style={{ fontSize: '12px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{q.pregunta}</p>
+                                            <p style={{ fontSize: '12px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{firstQ.pregunta}</p>
                                             <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginTop: '4px' }}>
                                                 <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>{timeLabel}</p>
-                                                <span
-                                                    style={{
-                                                        marginLeft: 'auto',
-                                                        height: '20px',
-                                                        borderRadius: '6px',
-                                                        border: '1px solid var(--border)',
-                                                        background: 'var(--surface)',
-                                                        color: 'var(--text-muted)',
-                                                        fontSize: '10px',
-                                                        padding: '0 6px',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    {getFolderNameById(historyFolderMap[String(q.id)])}
-                                                </span>
+                                                {msgCount > 1 && <span style={{ fontSize: '10px', background: 'var(--surface-2)', padding: '1px 6px', borderRadius: '999px', color: 'var(--text-muted)' }}>{msgCount} mensajes</span>}
                                             </div>
                                         </div>
                                     );
