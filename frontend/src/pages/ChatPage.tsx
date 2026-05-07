@@ -550,11 +550,6 @@ export const ChatPage: React.FC = () => {
             .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
     }, [folderChats, activeWorkspaceFolderId]);
 
-    const getFolderNameById = (folderId?: string) => {
-        if (!folderId) return 'Sin carpeta';
-        return studyFolders.find((f) => f.id === folderId)?.name || 'Sin carpeta';
-    };
-
     const { setMood } = useVisualMood();
 
     useGsapPageMotion(pageRef);
