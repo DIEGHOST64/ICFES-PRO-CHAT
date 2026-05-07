@@ -355,8 +355,6 @@ La evolución temporal de consultas. Picos pueden coincidir con fechas de parcia
 
 ##### Temas más Consultados
 
-![IMAGEN: dashboard_topics.png]
-> *Tabla con ranking de competencias más preguntadas y su programa asociado*
 
 Identifica qué competencias generan más dudas. Prioriza contenido de refuerzo en las más consultadas.
 
@@ -369,43 +367,31 @@ Cada tarjeta muestra una competencia general (Lectura Crítica, Razonamiento Cua
 
 ##### Evolución por Competencia — Inglés
 
-![IMAGEN: dashboard_evolution_english.png]
-> *Gráficos de línea por tipo de pregunta en Inglés mostrando progresión A2→B1*
 
 Similar al anterior pero para las partes de Inglés con niveles CEFR (A2, B1).
 
 ##### Distribución por Dificultad
 
-![IMAGEN: dashboard_difficulty.png]
-> *Gráfico de barras apiladas: básico, intermedio, avanzado por competencia*
 
 Cantidad de preguntas respondidas por nivel de dificultad. Permite ver si los estudiantes practican más en niveles básicos o avanzados.
 
 ##### Inglés — Desglose por Tipo
 
-![IMAGEN: dashboard_english_parts.png]
-> *Gráfico de barras con tasa de acierto por cada tipo de pregunta (Parte 1-7)*
 
 Tasa de acierto y volumen en cada tipo de pregunta de Inglés. Identifica rápidamente qué partes necesitan más refuerzo.
 
 ##### Tiempo de Respuesta
 
-![IMAGEN: dashboard_response_time.png]
-> *Gráfico de barras agrupadas: tiempo promedio de aciertos vs errores por competencia*
 
 Compara el tiempo que tardan en responder correcta vs incorrectamente. Tiempos altos en errores indican inseguridad.
 
 ##### Comparativa por Programa y Competencia
 
-![IMAGEN: dashboard_comparison.png]
-> *Gráfico de barras agrupadas cruzando programas con competencias*
 
 Rendimiento promedio de cada programa en cada competencia. Ideal para detectar brechas específicas.
 
 ##### Tablas de detalle
 
-![IMAGEN: dashboard_tables.png]
-> *Tablas de "Puntaje por Creador de Oportunidades" y "Promedio por Competencia y Programa"*
 
 Listados completos con puntajes individuales y por competencia. Usa el scroll para ver todos los registros.
 
