@@ -308,7 +308,7 @@ const MessageBubble: React.FC<{
                             : <div style={{ display: 'grid', gap: '2px' }}>
                                 <ReactMarkdown
                                     remarkPlugins={[remarkGfm, remarkMath]}
-                                    rehypePlugins={[rehypeKatex]}
+                                    rehypePlugins={[[rehypeKatex, { throwOnError: false, strict: false }]]}
                                     components={markdownComponents}
                                 >
                                     {msg.content || ''}
@@ -663,11 +663,7 @@ export const ChatPage: React.FC = () => {
         localStorage.setItem(studyFolderChatsStorageKey, JSON.stringify(serializable));
     }, [folderChats, studyFolderChatsStorageKey]);
 
-    useEffect(() => {
-        if (activeWorkspaceFolderId) return;
-        if (!studyFolders.length) return;
-        setActiveWorkspaceFolderId(studyFolders[0].id);
-    }, [studyFolders, activeWorkspaceFolderId]);
+    // Only set active folder when user explicitly selects one — no auto-assignment
 
     useEffect(() => {
         if (!activeFolderChatId) return;
@@ -678,14 +674,15 @@ export const ChatPage: React.FC = () => {
 
     useEffect(() => {
         if (!activeFolderChatId) return;
+        const cleanMessages = messages.map(m => ({ ...m, streaming: false }));
         setFolderChats((prev) => prev.map((chat) => {
             if (chat.id !== activeFolderChatId) return chat;
-            if (chat.messages === messages) return chat;
+            if (chat.messages === cleanMessages) return chat;
             return {
                 ...chat,
-                messages,
+                messages: cleanMessages,
                 updatedAt: new Date().toISOString(),
-                title: deriveChatTitle(messages),
+                title: deriveChatTitle(cleanMessages),
             };
         }));
     }, [messages, activeFolderChatId]);
