@@ -235,10 +235,10 @@ const markdownComponents = {
     ul: ({ children }: { children?: React.ReactNode }) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px' }}>{children}</ul>,
     ol: ({ children }: { children?: React.ReactNode }) => <ol style={{ margin: '0 0 8px 0', paddingLeft: '20px' }}>{children}</ol>,
     li: ({ children }: { children?: React.ReactNode }) => <li style={{ marginBottom: '4px' }}>{children}</li>,
-    strong: ({ children }: { children?: React.ReactNode }) => <strong style={{ fontWeight: 700 }}>{children}</strong>,
-    em: ({ children }: { children?: React.ReactNode }) => <em style={{ fontStyle: 'italic' }}>{children}</em>,
+    strong: ({ children }: { children?: React.ReactNode }) => <strong style={{ fontWeight: 700, color: 'inherit' }}>{children}</strong>,
+    em: ({ children }: { children?: React.ReactNode }) => <em style={{ fontStyle: 'italic', color: 'inherit' }}>{children}</em>,
     code: ({ children }: { children?: React.ReactNode }) => (
-        <code style={{ background: 'rgba(15, 23, 42, 0.08)', borderRadius: '6px', padding: '1px 6px', fontSize: '13px' }}>
+        <code style={{ background: 'rgba(15, 23, 42, 0.08)', borderRadius: '6px', padding: '1px 6px', fontSize: '13px', color: 'inherit' }}>
             {children}
         </code>
     ),
@@ -250,11 +250,12 @@ const markdownComponents = {
             borderRadius: '8px',
             padding: '10px',
             fontSize: '13px',
+            color: 'inherit',
         }}>
             {children}
         </pre>
     ),
-} as const;
+};
 
 const MessageBubble: React.FC<{
     msg: ChatMessage;
