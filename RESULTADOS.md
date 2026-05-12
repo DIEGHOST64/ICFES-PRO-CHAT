@@ -172,7 +172,169 @@ El prototipo **Ascenso Pro** fue desarrollado, desplegado y validado exitosament
 
 ---
 
-## 5. Conclusiones
+## 6. Cálculo de Métricas
+
+### 6.1 Tiempo de respuesta en práctica
+
+**Fórmula:** Promedio de `tiempo_respuesta_ms` para todas las filas donde `es_practica = true` y `tiempo_respuesta_ms > 0`.
+
+```
+SQL: SELECT ROUND(AVG(tiempo_respuesta_ms)) FROM queries
+     WHERE es_practica = true AND tiempo_respuesta_ms > 0
+```
+
+**Origen del dato:** El frontend registra `Date.now()` al mostrar la pregunta y `Date.now()` al recibir la respuesta del estudiante. El delta en milisegundos se envía al backend en el campo `tiempo_respuesta_ms` del endpoint `POST /queries`.
+
+**Resultado:** 24,036 ms (24 segundos). Este valor incluye el tiempo de lectura de la pregunta por parte del estudiante, no solo el procesamiento del sistema.
+
+---
+
+### 6.2 Precisión del RAG
+
+**Fórmula:** (Consultas que retornaron al menos 1 fragmento de ChromaDB con distancia coseno < 0.85) / (Total de consultas al chat) × 100
+
+```
+Python (rag_service.py):
+resultados = ChromaService.query(embedding=embedding, n_results=4, ...)
+fragmentos_validos = [d for d in resultados.distances[0] if d < 0.85]
+precision = len(fragmentos_validos) > 0  # True si hay al menos 1
+```
+
+**Origen del dato:** El pipeline RAG en `rag_service.py` recibe los resultados de ChromaDB con distancias coseno. El umbral 0.85 se estableció empíricamente durante la fase de elaboración para filtrar fragmentos poco relevantes.
+
+**Resultado:** 100% de las consultas al chat retornaron al menos 1 fragmento relevante.
+
+---
+
+### 6.3 Cobertura de Requisitos Funcionales
+
+**Fórmula:** (Requisitos implementados y verificados) / (Total de requisitos definidos) × 100
+
+```
+Conteo manual:
+RF implementados = 28 (RF-01 a RF-28 según REQUISITOS.md)
+RF verificados con caso de prueba = 28 (cada RF mapea a al menos 1 CP o CN)
+Cobertura = 28 / 28 × 100 = 100%
+```
+
+**Origen del dato:** Checklist contra el documento `REQUISITOS.md` y trazabilidad en el código (cada controlador y ruta referencia su RF correspondiente con comentarios `// RF-XX`).
+
+**Resultado:** 28/28 = 100%. Todos los requisitos funcionales definidos en la fase de inicio fueron implementados y verificados.
+
+---
+
+### 6.4 Calidad percibida (satisfacción)
+
+**Fórmula:** (Calificaciones positivas) / (Total de calificaciones) × 100
+
+```
+SQL: SELECT
+       COUNT(CASE WHEN calificacion = true THEN 1 END) as positivas,
+       COUNT(CASE WHEN calificacion = false THEN 1 END) as negativas
+     FROM queries WHERE calificacion IS NOT NULL
+```
+
+**Origen del dato:** El estudiante califica cada respuesta del chat con 👍 (true) o 👎 (false). El valor se almacena en `queries.calificacion`. La calificación es opcional: `NULL` significa "no calificado".
+
+**Resultado:** 2 positivas, 0 negativas = 100% de satisfacción. Tamaño de muestra: 2 calificaciones.
+
+---
+
+### 6.5 Aciertos en práctica
+
+**Fórmula:** (Respuestas correctas) / (Total de respuestas en práctica) × 100
+
+```
+SQL: SELECT ROUND(AVG(CASE WHEN acierto = true THEN 1 ELSE 0 END) * 100, 1)
+     FROM queries WHERE es_practica = true AND acierto IS NOT NULL
+```
+
+**Origen del dato:** En el modo práctica, cada pregunta tiene una `respuesta_correcta`. El frontend compara la opción elegida por el estudiante con la correcta y envía `acierto: true/false` al backend en `POST /queries`.
+
+**Resultado:** 36.4% (4 aciertos de 11 intentos). Por competencia: Razonamiento Cuantitativo 37.5% (3/8), Inglés 0% (0/2), Comunicación Escrita 100% (1/1).
+
+---
+
+### 6.6 Disponibilidad del sistema
+
+**Fórmula:** (Tiempo total de pruebas - Tiempo de inactividad) / (Tiempo total de pruebas) × 100
+
+```
+Docker healthchecks:
+- Cada contenedor tiene un healthcheck cada 15 segundos
+- Estado "healthy" = contenedor responde correctamente
+- Uptime = 100% si ningún contenedor entró en estado "unhealthy" durante las pruebas
+```
+
+**Origen del dato:** Docker Compose ejecuta healthchecks definidos en `docker-compose.yml`. El comando `docker ps` muestra el estado de cada contenedor.
+
+**Resultado:** 100% de uptime. Los 6 contenedores permanecieron en estado "healthy" durante todas las sesiones de prueba (aproximadamente 4 horas acumuladas).
+
+---
+
+### 6.7 Agrupación de sesiones
+
+**Fórmula:** Consultas agrupadas por `session_id` / Total de consultas con `session_id`
+
+```
+SQL: SELECT session_id, COUNT(*) as mensajes
+     FROM queries WHERE session_id IS NOT NULL
+     GROUP BY session_id
+```
+
+**Origen del dato:** El frontend genera un UUID v4 (`crypto.randomUUID()`) al iniciar el chat y lo envía con cada `POST /queries`. Al hacer clic en "Nuevo chat", se genera un nuevo UUID. El backend almacena este valor en `queries.session_id`.
+
+**Resultado:** 2 sesiones de chat correctamente agrupadas, con un promedio de 2 mensajes por sesión.
+
+---
+
+### 6.8 Documentos indexados en ChromaDB
+
+**Fórmula:** Conteo directo de documentos en la colección `saberpro_docs`
+
+```
+Python: collection.count()
+```
+
+**Origen del dato:** El script `indexar.py` procesa PDFs del ICFES, los divide en fragmentos de 600 caracteres con solapamiento de 120, genera embeddings con `all-MiniLM-L6-v2` y los almacena en ChromaDB con metadatos (módulo, tipo, competencia, programa, página).
+
+**Resultado:** 2,091 documentos indexados al momento de la prueba.
+
+---
+
+### 6.9 Casos de prueba exitosos
+
+**Fórmula:** (Casos con resultado ✅) / (Total de casos ejecutados) × 100
+
+```
+Funcionales:   20 / 20 = 100%
+No funcionales: 8 / 8  = 100%
+Total:         28 / 28 = 100%
+```
+
+**Origen del dato:** Cada caso de prueba se ejecutó manualmente sobre el sistema en producción (`https://ascensopro.pro`). El resultado se registró como ✅ (exitosiso) o ❌ (fallido). Cada caso se repitió 2 veces para confirmar consistencia.
+
+**Resultado:** 28/28 casos exitosos = 100% de tasa de aprobación.
+
+---
+
+### 6.10 Resumen de fórmulas
+
+| Métrica | Fórmula | Dato origen |
+|---------|---------|-------------|
+| Tiempo respuesta | `AVG(tiempo_respuesta_ms)` | `queries` (PostgreSQL) |
+| Precisión RAG | `count(dist < 0.85) > 0` | `rag_service.py` (logs) |
+| Cobertura RF | `implementados / total` | `REQUISITOS.md` (checklist) |
+| Satisfacción | `likes / (likes + dislikes)` | `queries.calificacion` |
+| Aciertos | `aciertos / intentos` | `queries.acierto` |
+| Disponibilidad | `uptime / total` | Docker healthchecks |
+| Sesiones | `COUNT(DISTINCT session_id)` | `queries.session_id` |
+| Documentos | `collection.count()` | ChromaDB |
+| Pruebas | `exitosos / total` | Ejecución manual |
+
+---
+
+## 7. Conclusiones
 
 1. Se demostró que es viable construir un asistente Saber Pro basado en IA generativa usando únicamente herramientas open-source (Docker, ChromaDB, SentenceTransformers) y una API externa (Gemini).
 
