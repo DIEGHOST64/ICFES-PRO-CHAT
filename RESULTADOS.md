@@ -50,6 +50,8 @@ Prototipo funcional | Enfoque: calidad técnica del software | No mide impacto a
 
 **Resultado: 20/20 casos funcionales exitosos (100%)**
 
+CHART_FUNC
+
 ### 2.2 Pruebas No Funcionales (Caja Blanca)
 
 | ID | Caso | Resultado esperado | Resultado |
@@ -65,13 +67,15 @@ Prototipo funcional | Enfoque: calidad técnica del software | No mide impacto a
 
 **Resultado: 8/8 casos no funcionales exitosos (100%)**
 
+CHART_NFUNC
+
 ---
 
-## 3. Métricas
+## 3. Métricas del Sistema
 
-### 3.1 Rendimiento del Sistema
+### 3.1 Actividad en producción
 
-```
+CHART_ACTIVITY
 Tiempo de respuesta en práctica
 ════════════════════════════════════════
 Promedio: 24,036 ms (24 segundos)
@@ -89,15 +93,15 @@ RF-01 a RF-28 implementados y funcionales
 Verificados mediante casos de prueba CP-01 a CP-20
 ```
 
-### 3.3 Calidad de Respuestas
+### 3.2 Precisión en Prácticas
 
-```
-Calificaciones del chat
+CHART_ACIERTOS
+
+### 3.3 Calidad de Respuestas
 ════════════════════════════════════════
 Positivas (👍): 2
 Negativas (👎): 0
-Tasa de satisfacción: 100% (muestra pequeña)
-```
+GAUGE_SAT
 
 ### 3.4 Uso del Sistema
 
@@ -112,16 +116,9 @@ Programas con actividad: 2
 Competencias practicadas: 3 (RC, Inglés, Escrita)
 ```
 
-### 3.5 Precisión en Prácticas
+### 3.5 Distribución por Nivel de Dificultad
 
-```
-Aciertos por competencia
-════════════════════════════════════════
-Razonamiento Cuantitativo: 37.5% (3/8)
-Inglés:                     0.0% (0/2)
-Comunicación Escrita:     100.0% (1/1)
-Promedio general:          36.4% (4/11)
-```
+CHART_LEVELS
 
 ### 3.6 Base de Conocimiento
 
@@ -142,12 +139,9 @@ Infraestructura Docker
 Contenedores: 6 (frontend, backend, ai, postgres, chromadb, redis)
 Healthchecks: todos healthy
 Uptime durante pruebas: 100%
-Reinicios por fallo: 0
-```
+GAUGE_RF
 
----
-
-## 4. Resultados
+### 3.8 Resumen de métricas
 
 ### 4.1 Resultado General
 
