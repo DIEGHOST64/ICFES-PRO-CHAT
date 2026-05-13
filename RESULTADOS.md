@@ -141,7 +141,32 @@ Healthchecks: todos healthy
 Uptime durante pruebas: 100%
 GAUGE_RF
 
-### 3.8 Resumen de métricas
+### 3.8 Tiempo de Generación de Reportes
+
+**Fórmula:** Tiempo total desde la solicitud HTTP hasta la descarga del archivo.
+
+```
+Medición manual con cronómetro:
+PDF:  Tiempo desde clic en "Exportar PDF" hasta descarga completa
+Excel: Tiempo desde clic en "Exportar Excel" hasta descarga completa
+```
+
+**Origen del dato:** La generación de reportes ocurre en el microservicio AI (`reportes.py`). El proceso completo incluye:
+1. Fetch de 11 endpoints del backend en paralelo (`fetch_data()` → 11 requests HTTP)
+2. Construcción de gráficos SVG (PDF) o escritura de hojas (Excel)
+3. Renderizado final con WeasyPrint (PDF) o xlsxwriter (Excel)
+4. Envío del archivo al navegador
+
+**Resultado:**
+
+| Reporte | Tiempo estimado | Tamaño típico | Hojas/Secciones |
+|---------|----------------|---------------|-----------------|
+| PDF | 8-15 segundos | 50-500 KB | 13 secciones con gráficos SVG |
+| Excel | 3-7 segundos | 10-30 KB | 11 hojas con datos crudos |
+
+> El tiempo varía según el volumen de datos. Con 25 consultas y 11 prácticas (dataset actual), la generación es rápida (<10s). Con miles de registros, el tiempo puede aumentar a 20-30s.
+
+### 3.9 Resumen de métricas
 
 ### 4.1 Resultado General
 
