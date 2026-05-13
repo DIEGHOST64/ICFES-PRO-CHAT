@@ -126,6 +126,7 @@ export const DashboardPage: React.FC = () => {
     const [englishParts, setEnglishParts] = useState<Array<{ tipo_pregunta: string; total: number; estudiantes: number; tasa_acierto: number; tiempo_promedio_seg: number }>>([]);
     const [responseTime, setResponseTime] = useState<Array<{ competencia: string; tiempo_promedio_seg: number; tiempo_acierto_seg: number; tiempo_error_seg: number; total: number }>>([]);
     const [programs, setPrograms] = useState<string[]>([]);
+    const [allStudents, setAllStudents] = useState<Array<{ cedula: string; nombre: string; email: string; programa: string }>>([]);
     const [progFilter, setProgFilter] = useState('');
     const [dateFrom, setDateFrom] = useState('');
     const [dateTo, setDateTo] = useState('');
@@ -243,6 +244,7 @@ export const DashboardPage: React.FC = () => {
             setDifficultyDist(dd.data ?? []);
             setEnglishParts(ep.data ?? []);
             setResponseTime(rt.data ?? []);
+            try { const st = await coordinatorAPI.students(); setAllStudents(st.data ?? []); } catch {}
         } catch (e: unknown) {
             const msg = (e as { response?: { data?: { message?: string } } })?.response?.data?.message;
             setError(msg || 'Error cargando datos del dashboard. Verifica tu sesión.');
@@ -628,6 +630,7 @@ export const DashboardPage: React.FC = () => {
             programas: byProgram,
             tendencia: trend,
             temas_top: topics,
+            todos_estudiantes: allStudents.filter(s => s.cedula !== '123456789'),
             resultados_practicas: practiceStudents,
             promedio_competencias: practiceCompetencies,
             evolucion_nivel: levelProgression,

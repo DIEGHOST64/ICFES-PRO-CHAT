@@ -145,6 +145,7 @@ async def admin_chat(payload: AdminChatRequest):
         by_program = data.get("programas") or data.get("by_program") or []
         trend      = data.get("tendencia") or data.get("trend") or []
         practice_students = data.get("resultados_practicas") or data.get("practice_students") or []
+        all_students = data.get("todos_estudiantes") or []
         practice_comp = data.get("promedio_competencias") or data.get("practice_competencies") or []
         level_prog = data.get("evolucion_nivel") or data.get("level_progression") or []
         difficulty = data.get("distribucion_dificultad") or data.get("difficulty_distribution") or []
@@ -171,6 +172,14 @@ async def admin_chat(payload: AdminChatRequest):
             for p in by_program[:20]:
                 ctx += f"  - {p.get('programa','?')}: {p.get('total',0)} consultas\n"
         
+        if all_students and isinstance(all_students, list) and len(all_students) > 0:
+            ctx += f"\nLISTA COMPLETA DE ESTUDIANTES REGISTRADOS ({len(all_students)}):\n"
+            for s in all_students[:100]:
+                ctx += f"  - {s.get('cedula','?')} | {s.get('nombre','?')} | {s.get('programa','?')}"
+                email = s.get('email')
+                if email: ctx += f" | {email}"
+                ctx += "\n"
+
         if practice_students and isinstance(practice_students, list) and len(practice_students) > 0:
             ctx += f"\nTODOS LOS ESTUDIANTES ({len(practice_students)} total):\n"
             for s in practice_students[:50]:
