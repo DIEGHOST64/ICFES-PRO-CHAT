@@ -244,7 +244,7 @@ export const DashboardPage: React.FC = () => {
             setDifficultyDist(dd.data ?? []);
             setEnglishParts(ep.data ?? []);
             setResponseTime(rt.data ?? []);
-            try { const st = await coordinatorAPI.students(); setAllStudents(st.data ?? []); } catch {}
+            try { const st = await coordinatorAPI.students(); setAllStudents(st.data?.data ?? st.data ?? []); } catch {}
         } catch (e: unknown) {
             const msg = (e as { response?: { data?: { message?: string } } })?.response?.data?.message;
             setError(msg || 'Error cargando datos del dashboard. Verifica tu sesión.');
@@ -285,9 +285,8 @@ export const DashboardPage: React.FC = () => {
             });
             const respuesta = res?.data?.respuesta?.trim() || 'No se pudo generar respuesta en este momento.';
             setChatMessages(prev => [...prev, { role: 'assistant', content: respuesta }]);
-        } catch (e: any) {
-            const msg = e?.response?.data?.detail || e?.message || 'Error desconocido';
-            setChatMessages(prev => [...prev, { role: 'assistant', content: 'Error al consultar: ' + String(msg).slice(0, 200) }]);
+        } catch {
+            setChatMessages(prev => [...prev, { role: 'assistant', content: 'Error al consultar el chat. Intenta de nuevo.' }]);
         } finally {
             setChatLoading(false);
         }
