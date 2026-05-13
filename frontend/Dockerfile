@@ -1,6 +1,9 @@
 # ── Etapa 1: Build ──────────────────────────────────────
 FROM node:20-alpine AS builder
 
+ARG VITE_AI_URL=/ai
+ENV VITE_AI_URL=$VITE_AI_URL
+
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --silent

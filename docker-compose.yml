@@ -177,11 +177,13 @@ services:
   # ─────────────────────────────────────────
   # Frontend – React 18 + Nginx
   # ─────────────────────────────────────────
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: icfes_frontend
+   frontend:
+     build:
+       context: ./frontend
+       dockerfile: Dockerfile
+       args:
+         - VITE_AI_URL=/ai
+     container_name: icfes_frontend
     restart: unless-stopped
     depends_on:
       - backend
