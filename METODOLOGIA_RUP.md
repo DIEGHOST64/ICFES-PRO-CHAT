@@ -16,7 +16,7 @@ El proyecto se desarrolló siguiendo las 4 fases de la metodología RUP (Rationa
 Se identificó que los estudiantes de la Universidad de Cundinamarca no cuentan con una herramienta de preparación guiada para las pruebas Saber Pro. Los cuadernillos oficiales existen pero son estáticos: no ofrecen retroalimentación personalizada ni se adaptan al nivel del estudiante. Se definió que el prototipo debía resolver dos necesidades principales: (a) un chat conversacional que explique conceptos tipo ICFES usando IA generativa, y (b) un módulo de práctica con preguntas adaptativas que simule el examen real.
 
 **2. Definición de requisitos funcionales**
-Se documentaron 25 requisitos funcionales (RF-01 a RF-25) que cubren:
+Se documentaron 28 requisitos funcionales (RF-01 a RF-28) que cubren:
 - Registro y autenticación de estudiantes (RF-01 a RF-03)
 - Chat con IA contextual usando RAG (RF-04 a RF-07)
 - Historial de consultas y calificaciones (RF-08, RF-10)
@@ -27,6 +27,8 @@ Se documentaron 25 requisitos funcionales (RF-01 a RF-25) que cubren:
 - Exportación de reportes (RF-20, RF-21, RF-24, RF-25)
 - Chat IA del coordinador (RF-22)
 - Generación de práctica adaptativa (RF-23)
+- Sesiones de conversación y agrupación de historial (RF-26, RF-27)
+- Persistencia de ayudas visuales (RF-28)
 
 **3. Selección del stack tecnológico**
 Tras evaluar alternativas, se seleccionó:
@@ -52,7 +54,7 @@ Se elaboró el diagrama C4 de contenedores y el modelo entidad-relación (ERD) d
 Se recopilaron y analizaron cuadernillos oficiales ICFES, guías de orientación y ejemplos de preguntas para cada competencia. Se identificaron las 5 competencias genéricas (Lectura Crítica, Razonamiento Cuantitativo, Comunicación Escrita, Inglés, Ciudadanas) más los módulos específicos de cada programa académico. Este material se usó posteriormente como base de conocimiento para el pipeline RAG.
 
 ### Entregables de la fase
-- Documento de requisitos funcionales (RF-01 a RF-25)
+- Documento de requisitos funcionales (RF-01 a RF-28)
 - Diagrama de arquitectura C4
 - Modelo entidad-relación (ERD)
 - Stack tecnológico definido y justificado
@@ -170,6 +172,12 @@ Se verificó que el pipeline RAG recuperara fragmentos relevantes para preguntas
 - Nginx como reverse proxy unificado (frontend, backend, IA por el mismo puerto 80/443)
 - Redirección automática HTTP → HTTPS
 
+**Iteración 8 — Sesiones, persistencia visual y pulido final**
+- Agrupación de historial por sesión de chat (`session_id`) en lugar de registros individuales
+- Persistencia de ayudas visuales (imágenes guía, LaTeX, pasos de estudio) en el backend (`respuesta_visual`)
+- Corrección de bugs: chats auto-creados en carpetas, input de carpeta invisible en modo claro, LaTeX tras recarga
+- Ajustes finales de UI/UX basados en feedback de usuarios de prueba
+
 ### Entregables de la fase
 - Prototipo completamente funcional con todas las características
 - Sistema desplegado y accesible en `https://ascensopro.pro`
@@ -190,12 +198,16 @@ Se realizaron sesiones de prueba con estudiantes voluntarios y un coordinador. L
 
 | Problema detectado | Corrección aplicada |
 |-------------------|-------------------|
-| Los asteriscos `**` del Markdown no se renderizaban como negrita en el chat | Se ajustaron los componentes de ReactMarkdown añadiendo `fontWeight: 700` y `color: inherit` explícitos |
-| La sesión del estudiante expiraba inesperadamente durante la práctica | Se agregó el guard `sanctum` explícito en `config/auth.php` y se extendió el tiempo de sesión |
-| El menú lateral no se desplegaba en dispositivos móviles | Se rediseñó con control por estado React (`sidebarOpen`) y `transform: translateX()`, eliminando dependencia de clases CSS |
-| El PDF de reportes no incluía todas las secciones del dashboard | Se agregaron 4 secciones faltantes: distribución por dificultad, inglés por tipo, tiempo de respuesta y calificaciones |
-| El dashboard aparecía desplazado hacia la derecha en monitores grandes | Se corrigió el layout eliminando `display: flex` innecesario del contenedor raíz |
-| Las preguntas generadas no se guardaban correctamente en el banco | Se implementó guardado asíncrono con `background_tasks` y reintentos |
+| Los asteriscos `**` del Markdown no se renderizaban como negrita | Se ajustaron los componentes de ReactMarkdown añadiendo `fontWeight: 700` y `throwOnError: false` en rehypeKatex |
+| La sesión del estudiante expiraba inesperadamente | Se agregó el guard `sanctum` explícito en `config/auth.php` |
+| El menú lateral no se desplegaba en móviles | Se rediseñó con control por estado React (`sidebarOpen`) y `transform: translateX()`, eliminando dependencia de clases CSS |
+| El PDF no incluía todas las secciones del dashboard | Se agregaron 4 secciones: distribución por dificultad, inglés por tipo, tiempo de respuesta y calificaciones |
+| El dashboard aparecía desplazado a la derecha | Se corrigió el layout del contenedor raíz |
+| El historial mostraba cada mensaje como entrada individual | Se implementó agrupación por `session_id` (UUID generado al iniciar chat) |
+| Las imágenes guía y LaTeX se perdían al recargar | Se agregó columna `respuesta_visual` (JSON) en backend y endpoint `PATCH /queries/{id}/visual` |
+| Se creaban chats automáticamente en carpetas al enviar mensajes | Se eliminó la auto-asignación de `activeWorkspaceFolderId` |
+| El input de crear carpeta era invisible en modo claro | Se reemplazaron colores hardcodeados por variables CSS (`var(--surface)`, `var(--text)`) |
+| Las preguntas no se guardaban correctamente en el banco | Se implementó guardado asíncrono con `background_tasks` y reintentos |
 
 **2. Corrección de errores en producción**
 - **Bug de centrado del dashboard:** Se reemplazó el grid de 2 columnas por flex column con `width: 100%` para las tarjetas de la segunda sección.
@@ -207,8 +219,11 @@ Se realizaron sesiones de prueba con estudiantes voluntarios y un coordinador. L
 
 | Documento | Contenido |
 |-----------|-----------|
-| **Manual de usuario** | Guía paso a paso con 29 capturas reales del sistema. Cubre: ingreso, registro, chat, práctica, dashboard, exportación de reportes, modo IA, dispositivos compatibles y solución de problemas frecuentes. |
-| **Documentación técnica** (`DOCUMENTACION.md`) | 16 secciones con diagramas Mermaid: arquitectura C4, modelo ERD, flujo RAG, pipeline de preguntas, endpoints de la API, estructura de la base de datos, configuraciones y stack tecnológico. |
+| **Manual de usuario** (`MANUAL_USUARIO.md`) | Guía paso a paso con 29 capturas reales del sistema. Cubre: ingreso, registro, chat, práctica, dashboard, exportación de reportes, modo IA, dispositivos compatibles y solución de problemas frecuentes. |
+| **Documentación técnica** (`DOCUMENTACION.md`) | 16 secciones con diagramas Mermaid: arquitectura C4, modelo ERD (13 tablas), flujo RAG, pipeline de preguntas, endpoints de la API, estructura de la base de datos, configuraciones y stack tecnológico. |
+| **Requisitos** (`REQUISITOS.md`) | 28 requisitos funcionales (RF-01 a RF-28) y 16 requisitos no funcionales (RNF-01 a RNF-16) con trazabilidad a componentes del código. |
+| **Metodología** (`METODOLOGIA_RUP.md`) | Descripción detallada de las 4 fases RUP con actividades, iteraciones, entregables y resumen del ciclo de desarrollo. |
+| **Resultados** (`RESULTADOS.md`) | Variables, 28 casos de prueba (20 funcionales + 8 no funcionales), métricas con datos reales extraídos del sistema en producción, gráficos SVG y análisis de limitaciones. |
 | **Especificación OpenAPI** (`swagger.json`) | Documentación de todos los endpoints de la API REST con esquemas de request/response. |
 
 **4. Preparación para presentación**
@@ -218,11 +233,14 @@ Se realizaron sesiones de prueba con estudiantes voluntarios y un coordinador. L
 - Se creó el archivo `.env.example` para facilitar despliegues futuros
 
 ### Entregables de la fase
-- Prototipo validado con usuarios reales y bugs corregidos
-- Manual de usuario ilustrado (PDF, 4.7 MB)
-- Documentación técnica completa con 16 secciones y diagramas
+- Prototipo validado con usuarios reales y 10 bugs corregidos
+- Manual de usuario ilustrado (PDF con 29 capturas)
+- Documentación técnica completa con 16 secciones y diagramas Mermaid
+- 28 requisitos funcionales y 16 no funcionales documentados con trazabilidad
+- 28 casos de prueba ejecutados con 100% de tasa de éxito
+- Métricas del sistema con datos reales y gráficos SVG
 - Especificación OpenAPI 3.0 (Swagger)
-- Sistema funcional y accesible públicamente
+- Sistema funcional y accesible públicamente en `https://ascensopro.pro`
 
 ---
 
@@ -232,7 +250,7 @@ Se realizaron sesiones de prueba con estudiantes voluntarios y un coordinador. L
 |------|----------|------|---------------------|
 | **Inicio** | 2 semanas | Viabilidad y alcance | MVP: login + chat básico |
 | **Elaboración** | 2 semanas | Riesgos técnicos | RAG pipeline + base de datos + práctica |
-| **Construcción** | 3 semanas | Funcionalidades | Dashboard + PDF + IA + responsive |
-| **Transición** | 1 semana | Validación y documentación | Manual + bugs corregidos + deploy |
+| **Construcción** | 3 semanas | Funcionalidades (8 iteraciones) | Dashboard + PDF + IA + responsive + deploy + sesiones |
+| **Transición** | 1 semana | Validación y documentación | 10 bugs corregidos + 6 documentos + métricas |
 
 **Resultado final:** Prototipo completamente funcional de un asistente Saber Pro basado en IA generativa, con modo estudiante (chat + práctica), modo coordinador (dashboard + informes), arquitectura de microservicios en Docker, desplegado en VPS con HTTPS, documentado y validado con usuarios reales.
