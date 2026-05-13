@@ -1,6 +1,89 @@
 # Documentacion Tecnica - Asistente Saber Pro ICFES
 
-## 1. Arquitectura del Sistema (C4 - Contenedores)
+## 1. Diagramas de Casos de Uso
+
+### 1.1 Actor: Creador de Oportunidades (Estudiante)
+
+```mermaid
+graph TD
+    ESTUDIANTE[("🎓 Creador de Oportunidades<br/>Estudiante")]
+
+    subgraph "Sistema Ascenso Pro"
+        UC1["Registrarse<br/>RF-01, RF-02"]
+        UC2["Iniciar Sesión<br/>RF-03"]
+        UC3["Chatear con IA<br/>RF-04 a RF-07"]
+        UC4["Practicar por Competencia<br/>RF-09, RF-23"]
+        UC5["Calificar Respuestas<br/>RF-10"]
+        UC6["Ver Historial<br/>RF-08, RF-27"]
+        UC7["Organizar Carpetas<br/>RF-26"]
+        UC8["Escribir Ensayo<br/>RF-09"]
+        UC9["Cambiar Tema Claro/Oscuro<br/>RNF-11"]
+    end
+
+    subgraph "Servicios Externos"
+        GEMINI["Google Gemini API"]
+        CHROMA["ChromaDB<br/>Vector DB"]
+    end
+
+    ESTUDIANTE --> UC1
+    ESTUDIANTE --> UC2
+    ESTUDIANTE --> UC3
+    ESTUDIANTE --> UC4
+    ESTUDIANTE --> UC5
+    ESTUDIANTE --> UC6
+    ESTUDIANTE --> UC7
+    ESTUDIANTE --> UC8
+    ESTUDIANTE --> UC9
+
+    UC3 -.->|"RAG Pipeline"| CHROMA
+    UC3 -.->|"Generacion"| GEMINI
+    UC4 -.->|"Generacion"| GEMINI
+    UC8 -.->|"Evaluacion"| GEMINI
+```
+
+### 1.2 Actor: Gestor de Conocimiento (Coordinador)
+
+```mermaid
+graph TD
+    COORDINADOR[("📊 Gestor de Conocimiento<br/>Coordinador")]
+
+    subgraph "Sistema Ascenso Pro"
+        UC10["Iniciar Sesión<br/>RF-12"]
+        UC11["Ver Dashboard<br/>RF-15 a RF-19"]
+        UC12["Filtrar Métricas<br/>RF-18"]
+        UC13["Exportar PDF<br/>RF-21, RF-25"]
+        UC14["Exportar Excel<br/>RF-20, RF-24"]
+        UC15["Consultar con IA<br/>RF-22"]
+        UC16["Ver Lista de Estudiantes<br/>RF-13, RF-14"]
+    end
+
+    subgraph "Servicios Externos"
+        GEMINI2["Google Gemini API"]
+    end
+
+    COORDINADOR --> UC10
+    COORDINADOR --> UC11
+    COORDINADOR --> UC12
+    COORDINADOR --> UC13
+    COORDINADOR --> UC14
+    COORDINADOR --> UC15
+    COORDINADOR --> UC16
+
+    UC12 -.->|"Actualiza"| UC11
+    UC15 -.->|"Consulta"| GEMINI2
+```
+
+### Explicacion
+
+Los diagramas de casos de uso muestran la interaccion de los dos actores principales del sistema con las funcionalidades implementadas. Cada caso de uso esta vinculado a su requisito funcional correspondiente (RF-XX).
+
+**Creador de Oportunidades (Estudiante):** 9 casos de uso que cubren el ciclo completo desde el registro hasta la practica guiada. Las funcionalidades de chat y practica dependen de servicios externos (Gemini para generacion de texto, ChromaDB para busqueda semantica).
+
+**Gestor de Conocimiento (Coordinador):** 7 casos de uso centrados en la visualizacion y exportacion de metricas. El chat IA del gestor accede a los datos agregados del dashboard para responder preguntas en lenguaje natural.
+
+---
+
+## 2. Arquitectura del Sistema (C4 - Contenedores)
 
 ```mermaid
 graph TB
@@ -47,7 +130,7 @@ Los dos roles (Creador y Gestor) acceden unicamente por Nginx, que enruta segun 
 
 ---
 
-## 2. Diagrama Entidad-Relacion (ERD)
+## 3. Diagrama Entidad-Relacion (ERD)
 
 ```mermaid
 erDiagram
