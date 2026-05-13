@@ -285,8 +285,9 @@ export const DashboardPage: React.FC = () => {
             });
             const respuesta = res?.data?.respuesta?.trim() || 'No se pudo generar respuesta en este momento.';
             setChatMessages(prev => [...prev, { role: 'assistant', content: respuesta }]);
-        } catch {
-            setChatMessages(prev => [...prev, { role: 'assistant', content: 'Error al consultar el chat. Intenta de nuevo.' }]);
+        } catch (e: any) {
+            const msg = e?.response?.data?.detail || e?.message || 'Error desconocido';
+            setChatMessages(prev => [...prev, { role: 'assistant', content: 'Error al consultar: ' + String(msg).slice(0, 200) }]);
         } finally {
             setChatLoading(false);
         }
