@@ -194,7 +194,7 @@ Se verificó que el pipeline RAG recuperara fragmentos relevantes para preguntas
 ### Actividades realizadas
 
 **1. Pruebas con usuarios reales**
-Se realizaron sesiones de prueba con estudiantes voluntarios y un coordinador. Las pruebas no midieron impacto académico (mejora en puntajes Saber Pro), sino **problemas técnicos y de usabilidad del prototipo**:
+Se realizaron sesiones de prueba con estudiantes voluntarios y un coordinador. Las pruebas no midieron impacto académico (mejora en puntajes Saber Pro), sino **problemas técnicos y de usabilidad del prototipo**. Los resultados completos de las 28 pruebas (20 funcionales + 8 no funcionales), las métricas con datos reales extraídos del sistema en producción, y los gráficos de resultados se documentan en `RESULTADOS.md`.
 
 | Problema detectado | Corrección aplicada |
 |-------------------|-------------------|
