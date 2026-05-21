@@ -130,7 +130,48 @@ Los dos roles (Creador y Gestor) acceden unicamente por Nginx, que enruta segun 
 
 ---
 
-## 3. Diagrama Entidad-Relacion (ERD)
+## 3. Pipeline RAG (Generacion Aumentada por Recuperacion)
+
+```mermaid
+flowchart TB
+    subgraph FASE1["Fase 1: Indexacion Documental"]
+        PDF["Guías y Cuadernillos ICFES<br/>(PDF, TXT, JSON)"] --> EXTRACT["Extraccion de texto<br/>PyMuPDF + LangChain"]
+        EXTRACT --> CHUNK["Segmentacion en chunks<br/>(~800 tokens, sliding window)"]
+        CHUNK --> EMBED["Generacion de embeddings<br/>all-MiniLM-L6-v2 (384 dims)"]
+        EMBED --> STORE[("ChromaDB<br/>Coleccion: saberpro_docs<br/>+2.000 documentos<br/>Metadatos: modulo, tipo,<br/>competencia, programa, fuente")]
+    end
+
+    subgraph FASE2["Fase 2: Recuperacion Semantica"]
+        QUERY["Pregunta del estudiante"] --> Q_EMBED["Embedding de la consulta<br/>(mismo modelo)"]
+        Q_EMBED --> SEARCH["Busqueda por similitud coseno<br/>ChromaDB query"]
+        SEARCH --> FILTER["Cascada de fallbacks:<br/>1. modulo + tipo<br/>2. solo tipo<br/>3. sin filtros"]
+        FILTER --> TOPK["Top-4 fragmentos:<br/>2 ejemplos + 2 practica<br/>Umbral: distancia coseno < 0.85"]
+    end
+
+    subgraph FASE3["Fase 3: Generacion de Respuesta"]
+        TOPK --> PROMPT["Construccion del prompt:<br/>- Nombre del estudiante<br/>- Historial reciente (6 msg)<br/>- Fragmentos recuperados<br/>- Instrucciones anti-alucinacion<br/>- Instrucciones anti-filler"]
+        PROMPT --> GEMINI["Gemini 2.5 Flash<br/>Generacion de respuesta<br/>Streaming SSE"]
+        GEMINI --> RESPONSE["Respuesta contextualizada<br/>con fuentes verificables"]
+    end
+
+    STORE -.-> SEARCH
+    RESPONSE --> FEEDBACK["Retroalimentacion:<br/>Background Miner genera<br/>+2 preguntas por visita"]
+    FEEDBACK -.-> STORE
+```
+
+### Explicacion
+
+El diagrama describe el ciclo completo del pipeline RAG implementado en el asistente Ascenso Pro:
+
+**Fase 1 — Indexacion:** Los documentos oficiales del ICFES (PDFs, cuadernillos, bancos de preguntas) son procesados extrayendo texto con PyMuPDF, segmentados en chunks de aproximadamente 800 tokens con ventana deslizante, y transformados en vectores de 384 dimensiones mediante el modelo `all-MiniLM-L6-v2` de Sentence Transformers. Cada embedding se almacena en ChromaDB (coleccion `saberpro_docs`) con metadatos que permiten filtrar por modulo, tipo de documento, competencia evaluada y programa academico. El banco incluye +2.000 documentos oficiales y 300 preguntas de Razonamiento Cuantitativo generadas desde 22 temas ICFES estructurados.
+
+**Fase 2 — Recuperacion:** Cuando un estudiante realiza una consulta, el sistema transforma la pregunta en un embedding usando el mismo modelo. ChromaDB ejecuta una busqueda por similitud coseno aplicando una cascada de filtros: primero intenta recuperar fragmentos del modulo y tipo especificos; si no encuentra resultados, relaja progresivamente los filtros hasta buscar sin restricciones. El sistema retorna los 4 fragmentos mas relevantes (2 de tipo "ejemplo" y 2 de tipo "practica") que superen el umbral de distancia coseno de 0.85.
+
+**Fase 3 — Generacion:** Los fragmentos recuperados se integran en un prompt contextualizado que incluye el nombre del estudiante, el historial reciente de la conversacion (ultimas 6 interacciones) e instrucciones especificas para prevenir alucinaciones y evitar frases conversacionales genericas ("te presento...", "aqui tienes..."). Gemini 2.5 Flash procesa el prompt y genera la respuesta en tiempo real mediante streaming SSE hacia el frontend. Adicionalmente, el Background Miner genera 2 preguntas nuevas por cada visita para alimentar progresivamente el banco de preguntas sin intervencion manual.
+
+---
+
+## 4. Diagrama Entidad-Relacion (ERD)
 
 ```mermaid
 erDiagram
@@ -306,7 +347,7 @@ Los 6 indices compuestos en `queries` son el fundamento de rendimiento: permiten
 
 ---
 
-## 3. ChromaDB - Coleccion `saberpro_docs`
+## 5. ChromaDB - Coleccion `saberpro_docs`
 
 ### Estructura de Documentos
 
@@ -382,7 +423,7 @@ La baja cantidad de preguntas avanzadas en RC limita las practicas de estudiante
 
 ---
 
-## 4. Flujo: Practica de Estudiante
+## 6. Flujo: Practica de Estudiante
 
 ```mermaid
 sequenceDiagram
@@ -439,7 +480,7 @@ El registro en backend de cada respuesta individual alimenta los 8 endpoints del
 
 ---
 
-## 5. Flujo: Background Miner (Generacion Automatica)
+## 7. Flujo: Background Miner (Generacion Automatica)
 
 ```mermaid
 sequenceDiagram
@@ -480,7 +521,7 @@ Este mecanismo hace que ChromaDB crezca organicamente con cada practica: el banc
 
 ---
 
-## 6. Estado: Ciclo de Vida de una Pregunta
+## 8. Estado: Ciclo de Vida de una Pregunta
 
 ```mermaid
 stateDiagram-v2
@@ -515,7 +556,7 @@ Esta maquina de estados proporciona trazabilidad completa: se sabe exactamente c
 
 ---
 
-## 7. Flujo: Informe Estrategico IA (Gestor)
+## 9. Flujo: Informe Estrategico IA (Gestor)
 
 ```mermaid
 sequenceDiagram
@@ -570,7 +611,7 @@ El sistema incluye un mecanismo de fallback deterministico: si Gemini falla o ex
 
 ---
 
-## 8. Estado: Nivel Adaptativo del Estudiante
+## 10. Estado: Nivel Adaptativo del Estudiante
 
 ```mermaid
 stateDiagram-v2
@@ -599,7 +640,7 @@ El sistema esta disenado para adaptarse al estudiante, no al reves: un estudiant
 
 ---
 
-## 9. Flujo: Indexacion de Documentos ICFES
+## 11. Flujo: Indexacion de Documentos ICFES
 
 ```mermaid
 sequenceDiagram
@@ -639,7 +680,7 @@ Este pipeline es la base del sistema RAG (Retrieval-Augmented Generation): cuand
 
 ---
 
-## 10. Estructura de Directorios
+## 12. Estructura de Directorios
 
 ```
 ICFES-PRO-CHAT/
@@ -702,7 +743,7 @@ ICFES-PRO-CHAT/
 
 ---
 
-## 11. Endpoints API
+## 13. Endpoints API
 
 | Metodo | Ruta | Auth | Descripcion |
 |--------|------|------|-------------|
@@ -732,7 +773,7 @@ ICFES-PRO-CHAT/
 
 ---
 
-## 12. Pipeline de Generacion de Preguntas
+## 14. Pipeline de Generacion de Preguntas
 
 ```mermaid
 flowchart TB
@@ -762,7 +803,7 @@ La trazabilidad del pipeline permite auditar cada decision: se registra cuantas 
 
 ---
 
-## 13. Stack Tecnologico
+## 15. Stack Tecnologico
 
 | Capa | Tecnologia | Version |
 |------|-----------|---------|
@@ -783,7 +824,7 @@ La trazabilidad del pipeline permite auditar cada decision: se registra cuantas 
 
 ---
 
-## 14. Chat IA del Gestor — Acceso a Cedula y Correo
+## 16. Chat IA del Gestor — Acceso a Cedula y Correo
 
 ### Diagrama de Flujo
 
@@ -823,7 +864,7 @@ El formulario de registro (`LoginPage.tsx`) ahora incluye un campo obligatorio d
 
 ---
 
-## 15. Reporte PDF — Cobertura Completa del Dashboard
+## 17. Reporte PDF — Cobertura Completa del Dashboard
 
 ### Secciones del PDF (13 secciones)
 
@@ -859,7 +900,7 @@ El Excel ya cubria todos los datos desde antes, incluyendo `Calificaciones` (hoj
 
 ---
 
-## 16. Centrado del Dashboard
+## 18. Centrado del Dashboard
 
 El layout del dashboard fue corregido para centrar correctamente todo el contenido:
 - **Contenedor raiz:** Cambiado de `display: flex; flexDirection: column` a block normal
