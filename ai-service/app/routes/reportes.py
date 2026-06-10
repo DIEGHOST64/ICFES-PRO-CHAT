@@ -4,6 +4,7 @@ GET /reportes/excel → archivo Excel con resumen, detalle, tendencia y temas.
 GET /reportes/pdf   → informe PDF institucional con gráficos Plotly.
 """
 
+import os
 import io
 import base64
 import html
