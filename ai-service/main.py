@@ -29,6 +29,7 @@ app = FastAPI(
     title="Asistente Saber Pro – IA Service",
     description="Microservicio de IA con pipeline RAG para preparación de pruebas Saber Pro",
     version="1.0.0",
+    root_path="/ai",
     lifespan=lifespan,
 )
 
