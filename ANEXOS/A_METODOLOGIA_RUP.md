@@ -193,8 +193,8 @@ Se verificó que el pipeline RAG recuperara fragmentos relevantes para preguntas
 
 ### Actividades realizadas
 
-**1. Pruebas con usuarios reales**
-Se realizaron sesiones de prueba con estudiantes voluntarios y un coordinador. Las pruebas no midieron impacto académico (mejora en puntajes Saber Pro), sino **problemas técnicos y de usabilidad del prototipo**. Los resultados completos de las 28 pruebas (20 funcionales + 8 no funcionales), las métricas con datos reales extraídos del sistema en producción, y los gráficos de resultados se documentan en `RESULTADOS.md`.
+**1. Pruebas técnicas del prototipo**
+Se ejecutaron 28 casos de prueba de software (20 funcionales CP-01 a CP-20 y 8 no funcionales CN-01 a CN-08) directamente sobre el prototipo desplegado en un entorno de desarrollo controlado. Estas pruebas verificaron exclusivamente aspectos técnicos del sistema —cumplimiento de requisitos funcionales, tolerancia a fallos, rendimiento, disponibilidad y seguridad— sin involucrar estudios con usuarios finales, en coherencia con el alcance del proyecto como desarrollo tecnológico. Los resultados completos, las métricas con datos reales extraídos del sistema en producción, y los gráficos de resultados se documentan en `RESULTADOS.md`.
 
 | Problema detectado | Corrección aplicada |
 |-------------------|-------------------|
