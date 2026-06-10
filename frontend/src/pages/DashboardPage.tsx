@@ -257,7 +257,12 @@ export const DashboardPage: React.FC = () => {
     useEffect(() => { loadData(); }, [progFilter, dateFrom, dateTo]);
 
     useEffect(() => {
-        chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        const container = chatBottomRef.current?.parentElement;
+        if (!container) return;
+        const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+        if (isNearBottom || chatLoading) {
+            container.scrollTop = container.scrollHeight;
+        }
     }, [chatMessages, chatLoading]);
 
     const clearAdminChat = () => {
