@@ -253,12 +253,28 @@ def build_grouped_bar_chart_svg(title: str, labels: list[str], series: list[tupl
 
 
 async def fetch_logo_data_uri() -> str:
-    """Obtiene el logo institucional y lo codifica como data URI para incrustarlo en el PDF."""
+    """Obtiene el logo institucional y lo codifica como data URI para incrustarlo en el PDF.
+    Intenta primero lectura directa del archivo (via volumen Docker), luego URLs HTTP como fallback."""
+    # Opcion 1: Archivo local (montado via volumen Docker en /app/static/logo.png)
+    local_paths = [
+        "/app/static/logo.png",
+        os.path.join(os.path.dirname(__file__), "..", "..", "static", "logo.png"),
+    ]
+    for local_path in local_paths:
+        try:
+            if os.path.exists(local_path):
+                with open(local_path, "rb") as f:
+                    content = f.read()
+                encoded = base64.b64encode(content).decode("ascii")
+                return f"data:image/png;base64,{encoded}"
+        except Exception:
+            continue
+
+    # Opcion 2: URLs HTTP (fallback para desarrollo local)
     logo_urls = [
         "http://frontend/assets/logo-ucundinamarca.png",
         "http://localhost:3000/assets/logo-ucundinamarca.png",
     ]
-
     timeout = httpx.Timeout(10.0, connect=3.0)
     async with httpx.AsyncClient(timeout=timeout) as client:
         for logo_url in logo_urls:
