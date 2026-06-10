@@ -371,7 +371,7 @@ Total:         28 / 28 = 100%
 
 5. La persistencia de ayudas visuales (imágenes guía, LaTeX, pasos de estudio) en el backend permite que el estudiante recupere todo el contenido generado incluso al cambiar de dispositivo.
 
-6. Las 28 pruebas funcionales y no funcionales con 100% de éxito validan que el prototipo cumple con todos los requisitos planteados y está listo para una fase de prueba piloto con usuarios reales.
+6. Las 28 pruebas funcionales y no funcionales con 100% de éxito validan que el prototipo cumple con todos los requisitos planteados y está listo para futuras fases de evaluación.
 
 ---
 

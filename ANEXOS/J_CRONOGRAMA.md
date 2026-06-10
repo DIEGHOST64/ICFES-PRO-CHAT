@@ -97,7 +97,7 @@ FASE 4: TRANSI │     │     │     │     │     │     │████�
 
 | Día | Actividad | Entregable |
 |-----|-----------|-----------|
-| 1-3 | Pruebas con usuarios reales (estudiantes + coordinador) | Feedback |
+| 1-3 | Pruebas técnicas del prototipo (CP-01 a CP-20, CN-01 a CN-08) | RESULTADOS.md |
 | 3-5 | Corrección de bugs detectados (10 bugs) | Sistema estable |
 | 5-7 | Ajustes finales de UI/UX | Producto pulido |
 
@@ -136,7 +136,7 @@ FASE 4: TRANSI │     │     │     │     │     │     │████�
 | **M3 — Práctica** | S3 | Módulo de práctica adaptativa con 6 competencias |
 | **M4 — Dashboard** | S5 | Panel del coordinador con 13 secciones y KPIs |
 | **M5 — Deploy** | S6 | Sistema en producción con HTTPS y dominio |
-| **M6 — Validación** | S7 | Pruebas con usuarios reales, 10 bugs corregidos |
+| **M6 — Validación** | S7 | Pruebas técnicas del software, 10 bugs corregidos |
 | **M7 — Documentación** | S8 | 5 documentos técnicos + PDFs con portada |
 | **M8 — Entrega final** | S8 | Prototipo funcional + documentación completa |
 

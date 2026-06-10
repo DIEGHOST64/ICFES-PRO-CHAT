@@ -189,7 +189,7 @@ Se verificó que el pipeline RAG recuperara fragmentos relevantes para preguntas
 
 **Duración aproximada:** 1 semana
 
-**Objetivo de la fase:** Validar el prototipo con usuarios reales, corregir defectos encontrados y documentar el sistema para su presentación.
+**Objetivo de la fase:** Validar el prototipo mediante pruebas técnicas de software, corregir defectos encontrados y documentar el sistema para su presentación.
 
 ### Actividades realizadas
 
@@ -233,7 +233,7 @@ Se ejecutaron 28 casos de prueba de software (20 funcionales CP-01 a CP-20 y 8 n
 - Se creó el archivo `.env.example` para facilitar despliegues futuros
 
 ### Entregables de la fase
-- Prototipo validado con usuarios reales y 10 bugs corregidos
+- Prototipo validado mediante 28 casos de prueba de software y 10 bugs corregidos
 - Manual de usuario ilustrado (PDF con 29 capturas)
 - Documentación técnica completa con 16 secciones y diagramas Mermaid
 - 28 requisitos funcionales y 16 no funcionales documentados con trazabilidad
@@ -253,4 +253,4 @@ Se ejecutaron 28 casos de prueba de software (20 funcionales CP-01 a CP-20 y 8 n
 | **Construcción** | 3 semanas | Funcionalidades (8 iteraciones) | Dashboard + PDF + IA + responsive + deploy + sesiones |
 | **Transición** | 1 semana | Validación y documentación | 10 bugs corregidos + 6 documentos + métricas |
 
-**Resultado final:** Prototipo completamente funcional de un asistente Saber Pro basado en IA generativa, con modo estudiante (chat + práctica), modo coordinador (dashboard + informes), arquitectura de microservicios en Docker, desplegado en VPS con HTTPS, documentado y validado con usuarios reales.
+**Resultado final:** Prototipo completamente funcional de un asistente Saber Pro basado en IA generativa, con modo estudiante (chat + práctica), modo coordinador (dashboard + informes), arquitectura de microservicios en Docker, desplegado en VPS con HTTPS, documentado y validado técnicamente.
