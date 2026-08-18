@@ -4,7 +4,9 @@ Gestiona la colección de embeddings del asistente Saber Pro.
 """
 
 import os
+
 import chromadb
+import httpx
 from chromadb.config import Settings
 
 
@@ -56,6 +58,33 @@ class ChromaService:
         return cls._collection
 
     @classmethod
+    def _raw_query(cls, embedding: list[float], n_results: int, where: dict | None) -> dict:
+        """
+        Workaround HTTP directo para el bug de collection.query() en ChromaDB
+        v0.5.x: el cliente envía `where: {}` y el servidor lo rechaza con
+        "Expected where to have exactly one operator, got {}".
+        """
+        host = os.getenv("CHROMA_HOST", "chromadb")
+        port = int(os.getenv("CHROMA_PORT", "8000"))
+        collection_id = cls.get_collection().id
+
+        payload = {
+            "query_embeddings": [embedding],
+            "n_results": n_results,
+            "include": ["documents", "metadatas", "distances"],
+        }
+        if where:
+            payload["where"] = where
+
+        resp = httpx.post(
+            f"http://{host}:{port}/api/v1/collections/{collection_id}/query",
+            json=payload,
+            timeout=30,
+        )
+        resp.raise_for_status()
+        return resp.json()
+
+    @classmethod
     def query(cls, embedding: list[float], programa: str, n_results: int = 5,
               where_extra: dict = None, modulo: str = None) -> dict:
         """
@@ -84,24 +113,17 @@ class ChromaService:
                 return {"$and": conditions}
             return None
 
-        def do_query(where):
-            kwargs = {"query_embeddings": [embedding], "n_results": n,
-                      "include": ["documents", "metadatas", "distances"]}
-            if where:
-                kwargs["where"] = where
-            return collection.query(**kwargs)
-
         # Nivel 1: modulo + tipo
         try:
-            return do_query(build_where(include_modulo=True))
+            return cls._raw_query(embedding, n, build_where(include_modulo=True))
         except Exception:
             pass
 
         # Nivel 2: solo tipo (sin filtro de módulo)
         try:
-            return do_query(build_where(include_modulo=False))
+            return cls._raw_query(embedding, n, build_where(include_modulo=False))
         except Exception:
             pass
 
         # Nivel 3: sin ningún filtro
-        return do_query(None)
+        return cls._raw_query(embedding, n, None)
