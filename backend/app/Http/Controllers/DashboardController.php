@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Query;
 use App\Models\Student;
+use App\Models\StudentLoginEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -265,6 +266,167 @@ class DashboardController extends Controller
             ->get();
 
         return response()->json($rows);
+    }
+
+    /**
+     * Actividad de estudiantes: ingresos y sesiones por rafagas.
+     */
+    public function activity(Request $request)
+    {
+        $minGap = 30; // minutos de inactividad para considerar una sesion nueva
+
+        // 1. Ingresos desde la tabla de eventos de login
+        $ingresosTotal = StudentLoginEvent::count();
+        $ingresosHoy = StudentLoginEvent::whereDate('created_at', today())->count();
+        $ingresos7d = StudentLoginEvent::where('created_at', '>=', now()->subDays(7))->count();
+
+        $loginSeries = StudentLoginEvent::select(
+                DB::raw('DATE(created_at) as fecha'),
+                DB::raw('COUNT(*) as ingresos'),
+                DB::raw('COUNT(DISTINCT student_hash) as estudiantes')
+            )
+            ->where('created_at', '>=', now()->subDays(30))
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->orderBy('fecha')
+            ->get()
+            ->keyBy('fecha');
+
+        // 2. Sesiones por rafagas de actividad sobre las consultas
+        $rows = Query::select('student_hash', 'created_at')
+            ->where('created_at', '>=', now()->subDays(30))
+            ->orderBy('student_hash')
+            ->orderBy('created_at')
+            ->get();
+
+        $porEstudiante = [];
+        foreach ($rows as $r) {
+            if (!$r->student_hash) {
+                continue;
+            }
+            $porEstudiante[$r->student_hash][] = $r->created_at;
+        }
+
+        $series = [];
+        $porEstudianteResumen = [];
+        $diasActivos = [];
+        $totalHoras = 0.0;
+        $totalSesiones = 0;
+        $totalHoras7d = 0.0;
+
+        $hashToStudent = [];
+        foreach (Student::all() as $s) {
+            $hashToStudent[hash('sha256', 'icfes_salt_' . $s->id)] = [
+                'nombre' => $s->nombre,
+                'cedula' => $s->cedula,
+                'programa' => $s->programa,
+            ];
+        }
+
+        $ingresosPorHash = StudentLoginEvent::selectRaw('student_hash, COUNT(*) as n')
+            ->whereNotNull('student_hash')
+            ->groupBy('student_hash')
+            ->pluck('n', 'student_hash');
+
+        foreach ($porEstudiante as $hash => $times) {
+            $prev = null;
+            $sStart = null;
+            $sLast = null;
+            $sesiones = 0;
+            $horas = 0.0;
+            $porDia = [];
+
+            foreach ($times as $t) {
+                if ($prev === null || $t->diffInMinutes($prev, true) > $minGap) {
+                    if ($sStart !== null) {
+                        $horas += $sLast->diffInMinutes($sStart, true) / 60.0;
+                        $dia = $sLast->format('Y-m-d');
+                        $porDia[$dia] = ($porDia[$dia] ?? 0) + $sLast->diffInMinutes($sStart, true) / 60.0;
+                    }
+                    $sStart = $t;
+                    $sesiones++;
+                }
+                $sLast = $t;
+                $prev = $t;
+            }
+            if ($sStart !== null) {
+                $horas += $sLast->diffInMinutes($sStart, true) / 60.0;
+                $dia = $sLast->format('Y-m-d');
+                $porDia[$dia] = ($porDia[$dia] ?? 0) + $sLast->diffInMinutes($sStart, true) / 60.0;
+            }
+
+            $totalHoras += $horas;
+            $totalSesiones += $sesiones;
+
+            foreach ($times as $t) {
+                $diasActivos[$t->format('Y-m-d')] = true;
+            }
+
+            $st = $hashToStudent[$hash] ?? null;
+            $porEstudianteResumen[] = [
+                'student_hash' => substr($hash, 0, 12),
+                'nombre' => $st['nombre'] ?? 'Estudiante sin registro',
+                'cedula' => $st['cedula'] ?? '',
+                'programa' => $st['programa'] ?? '',
+                'sesiones' => $sesiones,
+                'horas_totales' => round($horas, 2),
+                'ingresos' => (int) ($ingresosPorHash[$hash] ?? 0),
+            ];
+
+            foreach ($porDia as $dia => $h) {
+                $series[$dia]['horas_activas'] = round(($series[$dia]['horas_activas'] ?? 0) + $h, 2);
+                $series[$dia]['sesiones'] = ($series[$dia]['sesiones'] ?? 0) + 1;
+            }
+        }
+
+        usort($porEstudianteResumen, fn ($a, $b) => $b['horas_totales'] <=> $a['horas_totales']);
+
+        // Serie diaria: desde el despliegue del software (2026-08-18), sin dias
+        // vacios previos. Si aun no hay actividad, cae a los ultimos 30 dias.
+        $primeraActividad = Query::min('created_at');
+        $primerLogin = StudentLoginEvent::min('created_at');
+        $inicioActividad = null;
+        if ($primeraActividad && $primerLogin) {
+            $inicioActividad = $primeraActividad < $primerLogin ? $primeraActividad : $primerLogin;
+        } else {
+            $inicioActividad = $primeraActividad ?? $primerLogin;
+        }
+        $fechaDespliegue = \Illuminate\Support\Carbon::parse('2026-08-18')->startOfDay();
+        $inicioSerie = $inicioActividad
+            ? max(\Illuminate\Support\Carbon::parse($inicioActividad)->startOfDay(), $fechaDespliegue)
+            : now()->subDays(30)->startOfDay();
+        $totalDias = max(now()->startOfDay()->diffInDays($inicioSerie, true) + 1, 1);
+
+        $salida = [];
+        for ($i = $totalDias - 1; $i >= 0; $i--) {
+            $fecha = now()->subDays($i)->format('Y-m-d');
+            $horas = $series[$fecha]['horas_activas'] ?? 0;
+            if ($i < 7) {
+                $totalHoras7d += $horas;
+            }
+            $salida[] = [
+                'fecha' => $fecha,
+                'ingresos' => (int) ($loginSeries->get($fecha)->ingresos ?? 0),
+                'estudiantes_login' => (int) ($loginSeries->get($fecha)->estudiantes ?? 0),
+                'horas_activas' => $horas,
+                'sesiones' => (int) ($series[$fecha]['sesiones'] ?? 0),
+            ];
+        }
+
+        $nDiasActivos = max(count($diasActivos), 1);
+
+        return response()->json([
+            'kpis' => [
+                'ingresos_hoy' => $ingresosHoy,
+                'ingresos_total' => $ingresosTotal,
+                'ingresos_7d' => $ingresos7d,
+                'horas_diarias_prom' => round($totalHoras / $nDiasActivos, 2),
+                'horas_semanales_prom' => round($totalHoras7d / 7, 2),
+                'sesiones_prom_dia' => round($totalSesiones / $nDiasActivos, 2),
+                'duracion_sesion_prom_min' => round(($totalHoras * 60) / max($totalSesiones, 1), 1),
+            ],
+            'serie' => $salida,
+            'por_estudiante' => $porEstudianteResumen,
+        ]);
     }
 
     /**

@@ -114,6 +114,12 @@ class AuthController extends Controller
         $student->tokens()->delete();
         $token = $student->createToken('student_token', ['role:student'])->plainTextToken;
 
+        // Registrar evento de ingreso para métricas de actividad
+        \App\Models\StudentLoginEvent::create([
+            'student_id' => $student->id,
+            'student_hash' => hash('sha256', 'icfes_salt_' . $student->id),
+        ]);
+
         return response()->json([
             'token' => $token,
             'student' => [

@@ -45,4 +45,5 @@ Route::middleware(['auth:sanctum', 'ability:role:coordinator'])->group(function 
     Route::get('dashboard/english-parts', [DashboardController::class , 'englishParts']);
     Route::get('dashboard/response-time', [DashboardController::class , 'responseTime']);
     Route::get('dashboard/ratings-breakdown', [DashboardController::class , 'ratingsBreakdown']);
+    Route::get('dashboard/activity', [DashboardController::class , 'activity']);
 });

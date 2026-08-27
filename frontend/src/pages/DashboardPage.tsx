@@ -126,6 +126,16 @@ export const DashboardPage: React.FC = () => {
     const [englishParts, setEnglishParts] = useState<Array<{ tipo_pregunta: string; total: number; estudiantes: number; tasa_acierto: number; tiempo_promedio_seg: number }>>([]);
     const [responseTime, setResponseTime] = useState<Array<{ competencia: string; tiempo_promedio_seg: number; tiempo_acierto_seg: number; tiempo_error_seg: number; total: number }>>([]);
     const [ratings, setRatings] = useState<Array<{ competencia: string | null; programa: string; total: number; positivas: number; porcentaje: number }>>([]);
+    const [activityPage, setActivityPage] = useState(1);
+    const [activity, setActivity] = useState<{
+        kpis: { ingresos_hoy: number; ingresos_total: number; ingresos_7d: number; horas_diarias_prom: number; horas_semanales_prom: number; sesiones_prom_dia: number; duracion_sesion_prom_min: number };
+        serie: Array<{ fecha: string; ingresos: number; estudiantes_login: number; horas_activas: number; sesiones: number }>;
+        por_estudiante: Array<{ student_hash: string; nombre: string; cedula: string; programa: string; sesiones: number; horas_totales: number; ingresos: number }>;
+    }>({
+        kpis: { ingresos_hoy: 0, ingresos_total: 0, ingresos_7d: 0, horas_diarias_prom: 0, horas_semanales_prom: 0, sesiones_prom_dia: 0, duracion_sesion_prom_min: 0 },
+        serie: [],
+        por_estudiante: [],
+    });
     const [programs, setPrograms] = useState<string[]>([]);
     const [allStudents, setAllStudents] = useState<Array<{ cedula: string; nombre: string; email: string; programa: string }>>([]);
     const [progFilter, setProgFilter] = useState('');
@@ -221,7 +231,7 @@ export const DashboardPage: React.FC = () => {
         setError(null);
         try {
             const params = { programa: progFilter, fecha_inicio: dateFrom, fecha_fin: dateTo };
-            const [m, bp, tr, tp, ps, pc, lp, pr, dd, ep, rt, rtb] = await Promise.all([
+            const [m, bp, tr, tp, ps, pc, lp, pr, dd, ep, rt, rtb, act] = await Promise.all([
                 coordinatorAPI.metrics(params),
                 coordinatorAPI.byProgram(params),
                 coordinatorAPI.trend(params),
@@ -234,6 +244,7 @@ export const DashboardPage: React.FC = () => {
                 api.get('/dashboard/english-parts', { params }),
                 api.get('/dashboard/response-time', { params }),
                 api.get('/dashboard/ratings-breakdown', { params }),
+                api.get('/dashboard/activity', { params }),
             ]);
             setMetrics(m.data);
             setByProgram(bp.data);
@@ -247,6 +258,20 @@ export const DashboardPage: React.FC = () => {
             setEnglishParts(ep.data ?? []);
             setResponseTime(rt.data ?? []);
             setRatings(rtb.data ?? []);
+            setActivity({
+                kpis: {
+                    ingresos_hoy: Number(act.data?.kpis?.ingresos_hoy ?? 0),
+                    ingresos_total: Number(act.data?.kpis?.ingresos_total ?? 0),
+                    ingresos_7d: Number(act.data?.kpis?.ingresos_7d ?? 0),
+                    horas_diarias_prom: Number(act.data?.kpis?.horas_diarias_prom ?? 0),
+                    horas_semanales_prom: Number(act.data?.kpis?.horas_semanales_prom ?? 0),
+                    sesiones_prom_dia: Number(act.data?.kpis?.sesiones_prom_dia ?? 0),
+                    duracion_sesion_prom_min: Number(act.data?.kpis?.duracion_sesion_prom_min ?? 0),
+                },
+                serie: act.data?.serie ?? [],
+                por_estudiante: act.data?.por_estudiante ?? [],
+            });
+            setActivityPage(1);
             try { const st = await coordinatorAPI.students(); setAllStudents(st.data?.data ?? st.data ?? []); } catch {}
         } catch (e: unknown) {
             const msg = (e as { response?: { data?: { message?: string } } })?.response?.data?.message;
@@ -632,6 +657,16 @@ export const DashboardPage: React.FC = () => {
         };
     }, [ratings]);
 
+    const activityChart = useMemo(() => {
+        const serie = activity.serie ?? [];
+        return {
+            fechas: serie.map(s => String(s.fecha ?? '').slice(5)),
+            horas: serie.map(s => Number(s.horas_activas ?? 0)),
+            ingresos: serie.map(s => Number(s.ingresos ?? 0)),
+            sesiones: serie.map(s => Number(s.sesiones ?? 0)),
+        };
+    }, [activity]);
+
     const buildAnalyticsContext = () => {
         return {
             _contexto: {
@@ -656,6 +691,11 @@ export const DashboardPage: React.FC = () => {
             desglose_ingles: englishParts,
             tiempo_respuesta: responseTime,
             calificaciones: ratings,
+            actividad: {
+                kpis: activity.kpis,
+                serie: activity.serie,
+                por_estudiante: activity.por_estudiante,
+            },
             cobertura_dataset: {
                 total_programas: byProgram.length,
                 total_puntos_tendencia: trend.length,
@@ -667,11 +707,23 @@ export const DashboardPage: React.FC = () => {
                 total_partes_ingles: englishParts.length,
                 total_tiempos: responseTime.length,
                 total_calificaciones: ratings.length,
+                total_dias_actividad: activity.serie.length,
             },
         };
     };
 
 
+
+    const ACTIVITY_PAGE_SIZE = 10;
+    const activityPageCount = Math.max(1, Math.ceil(activity.por_estudiante.length / ACTIVITY_PAGE_SIZE));
+    const safeActivityPage = Math.min(activityPage, activityPageCount);
+    const activityPageRows = activity.por_estudiante.slice((safeActivityPage - 1) * ACTIVITY_PAGE_SIZE, safeActivityPage * ACTIVITY_PAGE_SIZE);
+    const activityPageStart = activity.por_estudiante.length === 0 ? 0 : (safeActivityPage - 1) * ACTIVITY_PAGE_SIZE + 1;
+    const activityPageEnd = Math.min(safeActivityPage * ACTIVITY_PAGE_SIZE, activity.por_estudiante.length);
+    const activityPageNumbers: number[] = [];
+    const pageWindowStart = Math.max(1, safeActivityPage - 2);
+    const pageWindowEnd = Math.min(activityPageCount, pageWindowStart + 4);
+    for (let p = pageWindowStart; p <= pageWindowEnd; p++) activityPageNumbers.push(p);
 
     return (
         <div ref={pageRef} style={{
@@ -1647,6 +1699,133 @@ export const DashboardPage: React.FC = () => {
                                 config={interactivePlotConfig}
                                 style={{ width: '100%' }}
                             />
+                        )}
+                    </div>
+
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', width: '100%' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <Activity size={17} color="var(--accent)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Actividad y Sesiones de Estudiantes</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Ingresos a la plataforma, horas activas por dia y promedio de horas diarias y semanales. Una sesion termina tras 30 minutos de inactividad.</p>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', marginBottom: '12px' }}>
+                            <div data-motion="card"><KPICard icon={<Users size={18} />} label="Ingresos hoy" value={activity.kpis.ingresos_hoy} delay={0} /></div>
+                            <div data-motion="card"><KPICard icon={<Users size={18} />} label="Ingresos totales" value={activity.kpis.ingresos_total} delay={60} /></div>
+                            <div data-motion="card"><KPICard icon={<Clock size={18} />} label="Prom. horas por dia" value={activity.kpis.horas_diarias_prom} suffix="h" delay={120} /></div>
+                            <div data-motion="card"><KPICard icon={<Clock size={18} />} label="Prom. horas por semana" value={activity.kpis.horas_semanales_prom} suffix="h" delay={180} /></div>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '11px', color: 'var(--text-hint)' }}>
+                            Sesion promedio: {activity.kpis.duracion_sesion_prom_min} min · Sesiones por dia activo: {activity.kpis.sesiones_prom_dia} · Ingresos ultimos 7 dias: {activity.kpis.ingresos_7d}
+                        </p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+                            <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('activity')}>Reset vista</button>
+                        </div>
+                        {activityChart.fechas.length === 0 ? (
+                            <p style={{ margin: 0, color: 'var(--text-hint)', fontSize: '13px' }}>
+                                Aun no hay actividad registrada desde el despliegue del software.
+                            </p>
+                        ) : (
+                            <Plot
+                                key={getPlotKey('activity')}
+                                data={[
+                                    {
+                                        type: 'bar',
+                                        x: activityChart.fechas,
+                                        y: activityChart.horas,
+                                        name: 'Horas activas',
+                                        marker: { color: isDark ? '#8ec5a8' : '#3f7f66', opacity: 0.85 },
+                                        hovertemplate: '<b>%{x}</b><br>Horas activas: %{y:.2f}<extra></extra>',
+                                    },
+                                    {
+                                        type: 'scatter',
+                                        mode: 'lines+markers',
+                                        x: activityChart.fechas,
+                                        y: activityChart.ingresos,
+                                        name: 'Ingresos',
+                                        yaxis: 'y2',
+                                        line: { color: isDark ? '#a5c9e8' : '#3f6f9f', width: 2 },
+                                        marker: { size: 6 },
+                                        hovertemplate: '<b>%{x}</b><br>Ingresos: %{y}<extra></extra>',
+                                    },
+                                ] as any}
+                                layout={{
+                                    paper_bgcolor: plotBg,
+                                    plot_bgcolor: plotBg,
+                                    font: { color: plotFont, size: 12 },
+                                    margin: { t: 12, b: 70, l: 50, r: 50 },
+                                    height: 380,
+                                    dragmode: 'pan',
+                                    xaxis: { gridcolor: plotGrid, automargin: true, tickangle: -45, title: { text: 'Fecha (desde el despliegue)' } },
+                                    yaxis: { gridcolor: plotGrid, title: { text: 'Horas activas' } },
+                                    yaxis2: { overlaying: 'y', side: 'right', gridcolor: 'transparent', title: { text: 'Ingresos' } },
+                                    legend: { orientation: 'h', y: 1.14, x: 0 },
+                                }}
+                                config={interactivePlotConfig}
+                                style={{ width: '100%' }}
+                            />
+                        )}
+                        {activity.por_estudiante.length > 0 && (
+                            <div style={{ marginTop: '12px' }}>
+                                <div style={{ overflowX: 'auto' }}>
+                                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '640px' }}>
+                                        <thead>
+                                            <tr>
+                                                <th style={{ padding: '8px 10px', fontSize: '11px', textAlign: 'left', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>Estudiante</th>
+                                                <th style={{ padding: '8px 10px', fontSize: '11px', textAlign: 'left', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>Cedula</th>
+                                                <th style={{ padding: '8px 10px', fontSize: '11px', textAlign: 'left', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>Programa</th>
+                                                <th style={{ padding: '8px 10px', fontSize: '11px', textAlign: 'right', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>Ingresos</th>
+                                                <th style={{ padding: '8px 10px', fontSize: '11px', textAlign: 'right', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>Sesiones</th>
+                                                <th style={{ padding: '8px 10px', fontSize: '11px', textAlign: 'right', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>Horas totales</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {activityPageRows.map((s, i) => (
+                                                <tr key={`act-${s.student_hash}-${i}`}>
+                                                    <td style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 600 }}>{s.nombre}</td>
+                                                    <td style={{ padding: '6px 10px', fontSize: '12px', color: 'var(--text-muted)' }}>{s.cedula}</td>
+                                                    <td style={{ padding: '6px 10px', fontSize: '12px', color: 'var(--text-muted)' }}>{s.programa}</td>
+                                                    <td style={{ padding: '6px 10px', fontSize: '12px', textAlign: 'right' }}>{s.ingresos}</td>
+                                                    <td style={{ padding: '6px 10px', fontSize: '12px', textAlign: 'right' }}>{s.sesiones}</td>
+                                                    <td style={{ padding: '6px 10px', fontSize: '12px', textAlign: 'right' }}>{s.horas_totales}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '12px', flexWrap: 'wrap' }}>
+                                    <span style={{ fontSize: '11px', color: 'var(--text-hint)', marginRight: '8px' }}>
+                                        Mostrando {activityPageStart}-{activityPageEnd} de {activity.por_estudiante.length} estudiantes
+                                    </span>
+                                    <button
+                                        className="btn btn-secondary"
+                                        style={{ padding: '4px 10px', fontSize: '11px' }}
+                                        disabled={safeActivityPage <= 1}
+                                        onClick={() => setActivityPage(safeActivityPage - 1)}
+                                    >‹</button>
+                                    {activityPageNumbers.map(p => (
+                                        <button
+                                            key={`pg-${p}`}
+                                            onClick={() => setActivityPage(p)}
+                                            style={{
+                                                padding: '4px 10px',
+                                                fontSize: '11px',
+                                                borderRadius: '6px',
+                                                cursor: 'pointer',
+                                                fontWeight: p === safeActivityPage ? 700 : 500,
+                                                border: p === safeActivityPage ? '1px solid var(--primary)' : '1px solid var(--border)',
+                                                background: p === safeActivityPage ? 'var(--primary)' : 'transparent',
+                                                color: p === safeActivityPage ? '#fff' : 'var(--text-muted)',
+                                            }}
+                                        >{p}</button>
+                                    ))}
+                                    <button
+                                        className="btn btn-secondary"
+                                        style={{ padding: '4px 10px', fontSize: '11px' }}
+                                        disabled={safeActivityPage >= activityPageCount}
+                                        onClick={() => setActivityPage(safeActivityPage + 1)}
+                                    >›</button>
+                                </div>
+                            </div>
                         )}
                     </div>
 
