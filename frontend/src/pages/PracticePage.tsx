@@ -192,6 +192,8 @@ const difficultyLabel = (value: string): string => {
 
 const LATEX_REGEX = /(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$\n]+?\$(?!\$))/g;
 
+const stripOptionLetter = (text: string): string => String(text || '').replace(/^[A-Da-d]\s*[.):-]\s*/, '');
+
 const renderTextWithLatex = (text: string): React.ReactNode => {
     const source = String(text || '');
     const parts = source.split(LATEX_REGEX).filter(Boolean);
@@ -1358,7 +1360,7 @@ export const PracticePage: React.FC = () => {
                                             {['A', 'B', 'C', 'D'][i]}
                                         </span>
                                         <div style={{ display: 'grid', gap: '3px' }}>
-                                            <span style={{ fontSize: '14px', whiteSpace: 'pre-wrap' }}>{renderTextWithLatex(op)}</span>
+                                            <span style={{ fontSize: '14px', whiteSpace: 'pre-wrap' }}>{renderTextWithLatex(stripOptionLetter(op))}</span>
                                             {qSupport?.mostrar_traduccion && qSupport?.opciones_es?.[i] && qSupport?.opciones_es?.[i] !== op && (
                                                 <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                                                     {renderTextWithLatex(qSupport?.opciones_es?.[i])}
