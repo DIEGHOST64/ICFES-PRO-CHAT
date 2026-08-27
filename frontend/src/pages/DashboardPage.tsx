@@ -125,6 +125,7 @@ export const DashboardPage: React.FC = () => {
     const [difficultyDist, setDifficultyDist] = useState<Array<{ competencia: string; nivel_pregunta: string; total: number; tasa_acierto: number }>>([]);
     const [englishParts, setEnglishParts] = useState<Array<{ tipo_pregunta: string; total: number; estudiantes: number; tasa_acierto: number; tiempo_promedio_seg: number }>>([]);
     const [responseTime, setResponseTime] = useState<Array<{ competencia: string; tiempo_promedio_seg: number; tiempo_acierto_seg: number; tiempo_error_seg: number; total: number }>>([]);
+    const [ratings, setRatings] = useState<Array<{ competencia: string | null; programa: string; total: number; positivas: number; porcentaje: number }>>([]);
     const [programs, setPrograms] = useState<string[]>([]);
     const [allStudents, setAllStudents] = useState<Array<{ cedula: string; nombre: string; email: string; programa: string }>>([]);
     const [progFilter, setProgFilter] = useState('');
@@ -220,7 +221,7 @@ export const DashboardPage: React.FC = () => {
         setError(null);
         try {
             const params = { programa: progFilter, fecha_inicio: dateFrom, fecha_fin: dateTo };
-            const [m, bp, tr, tp, ps, pc, lp, pr, dd, ep, rt] = await Promise.all([
+            const [m, bp, tr, tp, ps, pc, lp, pr, dd, ep, rt, rtb] = await Promise.all([
                 coordinatorAPI.metrics(params),
                 coordinatorAPI.byProgram(params),
                 coordinatorAPI.trend(params),
@@ -232,6 +233,7 @@ export const DashboardPage: React.FC = () => {
                 api.get('/dashboard/difficulty-distribution', { params }),
                 api.get('/dashboard/english-parts', { params }),
                 api.get('/dashboard/response-time', { params }),
+                api.get('/dashboard/ratings-breakdown', { params }),
             ]);
             setMetrics(m.data);
             setByProgram(bp.data);
@@ -244,6 +246,7 @@ export const DashboardPage: React.FC = () => {
             setDifficultyDist(dd.data ?? []);
             setEnglishParts(ep.data ?? []);
             setResponseTime(rt.data ?? []);
+            setRatings(rtb.data ?? []);
             try { const st = await coordinatorAPI.students(); setAllStudents(st.data?.data ?? st.data ?? []); } catch {}
         } catch (e: unknown) {
             const msg = (e as { response?: { data?: { message?: string } } })?.response?.data?.message;
@@ -619,6 +622,16 @@ export const DashboardPage: React.FC = () => {
         return { competencias, traces: [correctoTrace, incorrectoTrace] };
     }, [responseTime]);
 
+    const ratingsChart = useMemo(() => {
+        if (!ratings.length) return { labels: [] as string[], pct: [] as number[], totals: [] as number[] };
+        const rows = [...ratings].sort((a, b) => Number(b.porcentaje ?? 0) - Number(a.porcentaje ?? 0));
+        return {
+            labels: rows.map(r => `${r.programa}${r.competencia ? ' · ' + r.competencia : ''}`),
+            pct: rows.map(r => Number(r.porcentaje ?? 0)),
+            totals: rows.map(r => Number(r.total ?? 0)),
+        };
+    }, [ratings]);
+
     const buildAnalyticsContext = () => {
         return {
             _contexto: {
@@ -642,6 +655,7 @@ export const DashboardPage: React.FC = () => {
             distribucion_dificultad: difficultyDist,
             desglose_ingles: englishParts,
             tiempo_respuesta: responseTime,
+            calificaciones: ratings,
             cobertura_dataset: {
                 total_programas: byProgram.length,
                 total_puntos_tendencia: trend.length,
@@ -652,6 +666,7 @@ export const DashboardPage: React.FC = () => {
                 total_dificultades: difficultyDist.length,
                 total_partes_ingles: englishParts.length,
                 total_tiempos: responseTime.length,
+                total_calificaciones: ratings.length,
             },
         };
     };
@@ -1587,6 +1602,47 @@ export const DashboardPage: React.FC = () => {
                                     xaxis: { gridcolor: plotGrid, automargin: true, tickangle: -18, title: { text: 'Competencia' } },
                                     yaxis: { gridcolor: plotGrid, title: { text: 'Tiempo (segundos)' } },
                                     legend: { orientation: 'h', y: 1.14, x: 0 },
+                                }}
+                                config={interactivePlotConfig}
+                                style={{ width: '100%' }}
+                            />
+                        )}
+                    </div>
+
+                    <div data-motion="panel" className="card animate-fade-up" style={{ padding: '16px', border: '1px solid var(--border)', background: 'var(--grad-card)', boxShadow: 'var(--shadow-md)', width: '100%' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <ThumbsUp size={17} color="var(--accent)" />
+                            <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-heading)', margin: 0 }}>Calificaciones de Respuestas</h3>
+                        </div>
+                        <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Porcentaje de respuestas calificadas como utiles por los estudiantes, por programa y competencia.</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+                            <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => resetPlotView('ratings')}>Reset vista</button>
+                        </div>
+                        {ratingsChart.labels.length === 0 ? (
+                            <p style={{ margin: 0, color: 'var(--text-hint)', fontSize: '13px' }}>
+                                Aun no hay calificaciones de respuestas. Los estudiantes pueden marcar una respuesta como util desde su historial.
+                            </p>
+                        ) : (
+                            <Plot
+                                key={getPlotKey('ratings')}
+                                data={[{
+                                    type: 'bar',
+                                    x: ratingsChart.labels,
+                                    y: ratingsChart.pct,
+                                    text: ratingsChart.totals.map(t => `Total: ${t}`),
+                                    textposition: 'outside',
+                                    marker: { color: isDark ? '#8ec5a8' : '#3f7f66', opacity: 0.88 },
+                                    hovertemplate: '<b>%{x}</b><br>Positivas: %{y:.1f}%<br>%{text}<extra></extra>',
+                                }]}
+                                layout={{
+                                    paper_bgcolor: plotBg,
+                                    plot_bgcolor: plotBg,
+                                    font: { color: plotFont, size: 12 },
+                                    margin: { t: 12, b: 90, l: 50, r: 10 },
+                                    height: 360,
+                                    dragmode: 'pan',
+                                    xaxis: { gridcolor: plotGrid, automargin: true, tickangle: -18, title: { text: 'Programa y Competencia' } },
+                                    yaxis: { gridcolor: plotGrid, range: [0, 100], title: { text: 'Positivas %' } },
                                 }}
                                 config={interactivePlotConfig}
                                 style={{ width: '100%' }}

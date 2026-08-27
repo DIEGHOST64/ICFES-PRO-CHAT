@@ -226,7 +226,7 @@ class DashboardController extends Controller
      */
     public function englishParts(Request $request)
     {
-        $q = Query::query()->where('es_practica', true)->where('competencia', 'Ingles');
+        $q = Query::query()->where('es_practica', true)->whereRaw("LOWER(competencia) LIKE '%ingl%'");
         $q = $this->applyFilters($q, $request);
 
         $rows = $q->select(
