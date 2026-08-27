@@ -16,7 +16,7 @@ from fastapi.responses import StreamingResponse
 
 router = APIRouter()
 
-BACKEND_URL = "http://backend/api"
+BACKEND_URL = os.getenv("BACKEND_URL", "http://backend/api")
 
 
 def _to_number(value, default: float = 0.0) -> float:
@@ -328,6 +328,7 @@ async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: 
         english_parts = await fetch_json(client, "/dashboard/english-parts", params, headers)
         response_time = await fetch_json(client, "/dashboard/response-time", params, headers)
         ratings = await fetch_json(client, "/dashboard/ratings-breakdown", params, headers)
+        activity = await fetch_json(client, "/dashboard/activity", params, headers)
 
     return {
         "metrics":    metrics,
@@ -341,6 +342,7 @@ async def fetch_data(programa: str | None, fecha_inicio: str | None, fecha_fin: 
         "english_parts": english_parts,
         "response_time": response_time,
         "ratings": ratings,
+        "activity": activity,
     }
 
 
@@ -361,7 +363,10 @@ async def export_excel(
             workbook = writer.book
 
             # Hoja 1: Resumen / Métricas
-            metrics = data["metrics"]
+            metrics = dict(data["metrics"])
+            act_kpis = (data.get("activity") or {}).get("kpis", {}) or {}
+            for k, v in act_kpis.items():
+                metrics[f"actividad_{k}"] = v
             df_resumen = pd.DataFrame([metrics])
             df_resumen.to_excel(writer, sheet_name="Resumen", index=False)
 
@@ -409,6 +414,18 @@ async def export_excel(
             df_ratings = pd.DataFrame(data["ratings"])
             if not df_ratings.empty:
                 df_ratings.to_excel(writer, sheet_name="Calificaciones", index=False)
+
+            # Hoja 12: Actividad Diaria
+            act_serie = (data.get("activity") or {}).get("serie", []) or []
+            df_act_serie = pd.DataFrame(act_serie)
+            if not df_act_serie.empty:
+                df_act_serie.to_excel(writer, sheet_name="Actividad Diaria", index=False)
+
+            # Hoja 13: Actividad por Estudiante
+            act_estudiantes = (data.get("activity") or {}).get("por_estudiante", []) or []
+            df_act_est = pd.DataFrame(act_estudiantes)
+            if not df_act_est.empty:
+                df_act_est.to_excel(writer, sheet_name="Actividad Estudiantes", index=False)
 
         output.seek(0)
         filename = f"reporte_saberpro_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
@@ -567,26 +584,20 @@ async def export_pdf(
         response_rows = "".join([
             (
                 f"<tr><td>{rt.get('competencia', 'N/A')}</td>"
-                f"<td>{rt.get('tipo', 'N/A')}</td>"
-                f"<td>{_to_number(rt.get('tiempo_promedio', 0), 0):.1f}s</td>"
+                f"<td>{_to_number(rt.get('tiempo_promedio_seg', 0), 0):.1f}s</td>"
+                f"<td>{_to_number(rt.get('tiempo_acierto_seg', 0), 0):.1f}s</td>"
+                f"<td>{_to_number(rt.get('tiempo_error_seg', 0), 0):.1f}s</td>"
                 f"<td>{rt.get('total', 0)}</td></tr>"
             )
             for rt in response_time
         ])
         if not response_rows:
-            response_rows = "<tr><td colspan='4'>Sin datos de tiempo de respuesta.</td></tr>"
+            response_rows = "<tr><td colspan='5'>Sin datos de tiempo de respuesta.</td></tr>"
 
         # Grafico de tiempo de respuesta: promedio correcto vs incorrecto por competencia
-        rt_comp_map = {}
-        for rt in response_time:
-            comp = rt.get("competencia", "N/A")
-            tipo = rt.get("tipo", "N/A")
-            if comp not in rt_comp_map:
-                rt_comp_map[comp] = {}
-            rt_comp_map[comp][tipo] = _to_number(rt.get("tiempo_promedio", 0), 0)
-        rt_labels = sorted(rt_comp_map.keys())
-        rt_correct_values = [rt_comp_map[c].get("correcto", 0) for c in rt_labels]
-        rt_incorrect_values = [rt_comp_map[c].get("incorrecto", 0) for c in rt_labels]
+        rt_labels = [str(rt.get("competencia", "N/A")) for rt in response_time]
+        rt_correct_values = [_to_number(rt.get("tiempo_acierto_seg", 0)) for rt in response_time]
+        rt_incorrect_values = [_to_number(rt.get("tiempo_error_seg", 0)) for rt in response_time]
         response_chart_html = ""
         if rt_labels:
             response_chart = build_grouped_bar_chart_svg(
@@ -596,10 +607,60 @@ async def export_pdf(
             )
             response_chart_html = f"<img src='{response_chart}' class='chart-image' alt='Tiempo de respuesta' />" if response_chart else ""
 
+        # Actividad y sesiones
+        activity = data.get("activity") or {}
+        act_kpis = activity.get("kpis", {}) or {}
+        act_serie = activity.get("serie", []) or []
+        act_estudiantes = activity.get("por_estudiante", []) or []
+        activity_kpis_html = (
+            f"<div class='metrics'>"
+            f"<div class='metric-card'><div class='metric-value'>{act_kpis.get('ingresos_hoy', 0)}</div><div class='metric-label'>Ingresos Hoy</div></div>"
+            f"<div class='metric-card'><div class='metric-value'>{act_kpis.get('ingresos_total', 0)}</div><div class='metric-label'>Ingresos Totales</div></div>"
+            f"<div class='metric-card'><div class='metric-value'>{act_kpis.get('horas_diarias_prom', 0)}h</div><div class='metric-label'>Prom. Horas/Dia</div></div>"
+            f"<div class='metric-card'><div class='metric-value'>{act_kpis.get('horas_semanales_prom', 0)}h</div><div class='metric-label'>Prom. Horas/Semana</div></div>"
+            f"<div class='metric-card'><div class='metric-value'>{act_kpis.get('duracion_sesion_prom_min', 0)}m</div><div class='metric-label'>Duracion Prom. Sesion</div></div>"
+            f"</div>"
+        )
+        act_labels = [str(s.get("fecha", ""))[5:] for s in act_serie]
+        act_horas = [_to_number(s.get("horas_activas", 0)) for s in act_serie]
+        act_ingresos = [_to_number(s.get("ingresos", 0)) for s in act_serie]
+        activity_chart_html = ""
+        if act_labels:
+            horas_chart = build_bar_chart_svg("Horas activas por dia (desde el despliegue)", act_labels, act_horas, color="#3f7f66")
+            ingresos_chart = build_line_chart_svg("Ingresos diarios a la plataforma", act_labels, act_ingresos, color="#0EA5E9")
+            activity_chart_html = (
+                (f"<img src='{horas_chart}' class='chart-image' alt='Horas activas por dia' />" if horas_chart else "")
+                + (f"<img src='{ingresos_chart}' class='chart-image' alt='Ingresos diarios' />" if ingresos_chart else "")
+            )
+        activity_rows = "".join([
+            (
+                f"<tr><td>{st.get('nombre', 'N/A')}</td>"
+                f"<td>{st.get('cedula', '')}</td>"
+                f"<td>{st.get('programa', '')}</td>"
+                f"<td>{st.get('ingresos', 0)}</td>"
+                f"<td>{st.get('sesiones', 0)}</td>"
+                f"<td>{st.get('horas_totales', 0)}</td></tr>"
+            )
+            for st in act_estudiantes[:15]
+        ])
+        if not activity_rows:
+            activity_rows = "<tr><td colspan='6'>Sin actividad registrada.</td></tr>"
+
         # Resumen de calificaciones
-        ratings = data["ratings"]
+        ratings = data["ratings"] or []
         ratings_summary = ""
-        if isinstance(ratings, dict):
+        if isinstance(ratings, list):
+            likes = sum(int(r.get("positivas", 0) or 0) for r in ratings)
+            total_r = sum(int(r.get("total", 0) or 0) for r in ratings)
+            dislikes = max(total_r - likes, 0)
+            ratings_summary = (
+                f"<div class='metrics'>"
+                f"<div class='metric-card'><div class='metric-value'>{likes}</div><div class='metric-label'>Positivas</div></div>"
+                f"<div class='metric-card'><div class='metric-value'>{dislikes}</div><div class='metric-label'>No Positivas</div></div>"
+                f"<div class='metric-card'><div class='metric-value'>{total_r}</div><div class='metric-label'>Total Calificaciones</div></div>"
+                f"</div>"
+            )
+        elif isinstance(ratings, dict):
             likes = ratings.get("likes", ratings.get("positivas", 0))
             dislikes = ratings.get("dislikes", ratings.get("negativas", 0))
             neutrals = ratings.get("neutrals", ratings.get("neutras", 0))
@@ -811,13 +872,22 @@ async def export_pdf(
 <p class="explain">Comparativa de tiempo promedio de respuesta entre aciertos y errores por competencia. Tiempos muy altos en errores pueden indicar inseguridad o falta de dominio del tema.</p>
 {response_chart_html}
 <table>
-    <tr><th>Competencia</th><th>Tipo</th><th>Tiempo Promedio</th><th>Total</th></tr>
+    <tr><th>Competencia</th><th>Tiempo Prom.</th><th>Aciertos</th><th>Errores</th><th>Total</th></tr>
     {response_rows}
 </table>
 
 <h2>Calificaciones de Respuestas</h2>
 <p class="explain">Resumen de calificaciones otorgadas por los estudiantes a las respuestas del asistente. Un alto porcentaje de negativas indica necesidad de mejorar la calidad de las respuestas generadas.</p>
 {ratings_summary}
+
+<h2>Actividad y Sesiones de Estudiantes</h2>
+<p class="explain">Ingresos a la plataforma, horas activas por dia y promedio de horas diarias y semanales. Una sesion termina tras 30 minutos de inactividad. La serie arranca desde el despliegue del software.</p>
+{activity_kpis_html}
+{activity_chart_html}
+<table>
+    <tr><th>Estudiante</th><th>Cedula</th><th>Programa</th><th>Ingresos</th><th>Sesiones</th><th>Horas Totales</th></tr>
+    {activity_rows}
+</table>
 
 <h2>Recomendaciones de interpretacion</h2>
 <ul class="guide">
