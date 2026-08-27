@@ -156,6 +156,11 @@ const THEME_LABELS: Record<PromptTheme, string> = {
     general: 'repaso general',
 };
 
+const newSessionId = (): string =>
+    typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : 'sess-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+
 const estimateLevelFromPractice = (items: QueryRecord[]): 'basico' | 'intermedio' | 'avanzado' => {
     const practice = items
         .filter((q) => q.es_practica && q.acierto !== null && q.acierto !== undefined)
@@ -479,7 +484,7 @@ export const ChatPage: React.FC = () => {
     const [practiceTransitioning, setPracticeTransitioning] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 769);
-    const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
+    const [sessionId, setSessionId] = useState(() => newSessionId());
 
     useEffect(() => {
         const mq = window.matchMedia('(min-width: 769px)');
@@ -734,7 +739,7 @@ export const ChatPage: React.FC = () => {
     };
 
     const startNewChat = () => {
-        setSessionId(crypto.randomUUID());
+        setSessionId(newSessionId());
         if (activeWorkspaceFolderId) {
             createChatInFolder(activeWorkspaceFolderId);
             return;
