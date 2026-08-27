@@ -175,10 +175,18 @@ const isGeneralComp = (value: string): boolean => {
     return !!key && key !== 'especifica' && key !== 'todas';
 };
 
-const inferGeneralDifficulty = (ratio: number): 'basico' | 'intermedio' | 'avanzado' => {
+export const inferGeneralDifficulty = (ratio: number): 'basico' | 'intermedio' | 'avanzado' => {
     if (ratio >= 0.8) return 'avanzado';
     if (ratio >= 0.55) return 'intermedio';
     return 'basico';
+};
+
+export type EnglishTarget = 'A2' | 'B1';
+
+export const inferEnglishLevel = (ratio: number, prev: EnglishTarget): EnglishTarget => {
+    if (ratio >= 0.7) return 'B1';
+    if (prev === 'B1' && ratio < 0.5) return 'A2';
+    return prev;
 };
 
 const difficultyLabel = (value: string): string => {
@@ -414,13 +422,17 @@ export const PracticePage: React.FC = () => {
             const selectedComp = competencia || '';
             const isEnglishSession = isEnglishComp(selectedComp);
             const isGeneralSession = isGeneralComp(selectedComp);
+            const adaptiveGeneralTarget =
+                adaptiveTarget === 'basico' || adaptiveTarget === 'intermedio' || adaptiveTarget === 'avanzado'
+                    ? adaptiveTarget
+                    : undefined;
             const res = await aiAPI.sugerencias({
                 programa: student!.programa,
                 competencia: competencia || undefined,
                 cantidad: sessionQuestionCount,
                 nivel_objetivo: isEnglishSession ? (adaptiveTarget === 'A2' || adaptiveTarget === 'B1' ? adaptiveTarget : 'A2') : undefined,
                 dificultad_objetivo: (!isEnglishSession && isGeneralSession)
-                    ? (selectedDifficulty === 'todas' ? undefined : selectedDifficulty)
+                    ? (selectedDifficulty === 'todas' ? adaptiveGeneralTarget : selectedDifficulty)
                     : undefined,
             });
             if (res.data.length === 0) { setError('No hay preguntas disponibles para esos filtros.'); }
@@ -465,9 +477,9 @@ export const PracticePage: React.FC = () => {
                 const nextAnswered = prevAnswered + 1;
                 setAdaptiveCorrect(prevCorrect => {
                     const nextCorrect = prevCorrect + (correcta ? 1 : 0);
-                    if (currentIsEnglish && nextAnswered >= 2) {
+                    if (currentIsEnglish && nextAnswered >= 4) {
                         const ratio = nextCorrect / nextAnswered;
-                        setAdaptiveTarget(ratio >= 0.7 ? 'B1' : 'A2');
+                        setAdaptiveTarget(prev => inferEnglishLevel(ratio, prev === 'B1' ? 'B1' : 'A2'));
                     }
                     if (!currentIsEnglish && nextAnswered >= 3) {
                         const ratio = nextCorrect / nextAnswered;
@@ -572,7 +584,7 @@ export const PracticePage: React.FC = () => {
                     const correct = compPractice.filter((h: any) => h.acierto === true).length;
                     const ratio = correct / total;
                     if (isEnglishComp(selected)) {
-                        setAdaptiveTarget(ratio >= 0.7 ? 'B1' : 'A2');
+                        setAdaptiveTarget(prev => inferEnglishLevel(ratio, prev === 'B1' ? 'B1' : 'A2'));
                     } else {
                         setAdaptiveTarget(inferGeneralDifficulty(ratio));
                     }
@@ -1141,7 +1153,7 @@ export const PracticePage: React.FC = () => {
                                 <div style={{ marginTop: '8px', display: 'grid', gap: '2px' }}>
                                     <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>
                                         Entrenamiento guiado estilo Saber Pro: misma estructura, sin cronometro ni presion.
-                                        Nivel objetivo actual: {isEnglishComp(q.competencia || '') ? adaptiveTarget : difficultyLabel(String(adaptiveTarget))}.
+                                        Nivel adaptativo (segun tus practicas): {isEnglishComp(q.competencia || '') ? adaptiveTarget : difficultyLabel(String(adaptiveTarget))}.
                                     </p>
                                     <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-hint)' }}>
                                         Progreso adaptativo: {adaptiveCorrect}/{adaptiveAnswered} aciertos en {q.competencia.toLowerCase()}.
