@@ -170,10 +170,10 @@ async def rag_query(
     all_metas  = metas_ej + metas_pr
     all_dists  = dists_ej + dists_pr
 
-    # 3. Filtrar por similitud aceptable (umbral relajado para capturar más contexto)
+    # 3. Filtrar por similitud aceptable (umbral calibrado en sandbox: informe_calibracion_coseno.pdf)
     contexto = []
     for doc, meta, dist in zip(all_docs, all_metas, all_dists):
-        if dist < 0.85:
+        if dist < 0.60:
             contexto.append({
                 "text":      doc,
                 "tipo":      meta.get("tipo", "documento"),
@@ -253,7 +253,7 @@ async def rag_query_stream(
 
     contexto = []
     for doc, meta, dist in zip(docs_ej + docs_pr, metas_ej + metas_pr, dists_ej + dists_pr):
-        if dist < 0.85:
+        if dist < 0.60:
             contexto.append({
                 "text":     doc,
                 "tipo":     meta.get("tipo", "documento"),
